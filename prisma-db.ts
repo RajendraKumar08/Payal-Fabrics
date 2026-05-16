@@ -1,4 +1,4 @@
-import { PrismaClient } from "./app/generated/prisma/client";
+import { PrismaClient, Role } from "./app/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 
@@ -17,9 +17,9 @@ const seedProducts = async () => {
   if (count === 0) {
     await prisma.user.createMany({
       data: [
-        { name: "user1", email: "user1@gmail.com" },
-        { name: "user2", email: "user2@gmail.com" },
-        { name: "user3", email: "user3@gmail.com" },
+        { name: "user1", kindeId: "user1", email: "user1@gmail.com", profileImage: "", role: "USER", createdAt: new Date(), updatedAt: new Date() },
+        { name: "user2", kindeId: "user2", email: "user2@gmail.com", profileImage: "", role: "USER", createdAt: new Date(), updatedAt: new Date() },
+        { name: "user3", kindeId: "user3", email: "user3@gmail.com", profileImage: "", role: "USER", createdAt: new Date(), updatedAt: new Date() },
       ],
     });
   }
@@ -38,11 +38,16 @@ export async function getProduct(id : number){
   })
 }
 
-export async function createProduct(name: string, email: string){
+export async function createProduct(name: string, kindeId: string ,email: string, profileImage: string, role: Role, createdAt: Date, updatedAt: Date){
   return prisma.user.create({
     data: {
       name,
-      email
+      email,
+      kindeId,
+      profileImage,
+      role,
+      createdAt,
+      updatedAt
     }
   })
 }
