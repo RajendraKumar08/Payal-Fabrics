@@ -26,7 +26,7 @@ const seedProducts = async () => {
 };
 
 // Run seed if needed
-seedProducts();
+// seedProducts();
 
 export async function getProducts() {
   return prisma.user.findMany();
