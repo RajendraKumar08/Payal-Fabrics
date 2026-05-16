@@ -17,9 +17,9 @@ const seedProducts = async () => {
   if (count === 0) {
     await prisma.user.createMany({
       data: [
-        { name: "user1", email: "user1@gmail.com" },
-        { name: "user2", email: "user2@gmail.com" },
-        { name: "user3", email: "user3@gmail.com" },
+        { name: "user1", email: "user1@gmail.com", kindeId: "", profileImage: "", role: "USER", createdAt: new Date(), updatedAt: new Date() },
+        { name: "user2", email: "user2@gmail.com", kindeId: "", profileImage: "", role: "USER", createdAt: new Date(), updatedAt: new Date() },
+        { name: "user3", email: "user3@gmail.com", kindeId: "", profileImage: "", role: "USER", createdAt: new Date(), updatedAt: new Date() },
       ],
     });
   }
@@ -42,7 +42,12 @@ export async function createProduct(name: string, email: string){
   return prisma.user.create({
     data: {
       name,
-      email
+      email,
+      kindeId:"",
+      profileImage:"",
+      role:"USER",
+      createdAt: new Date(),
+      updatedAt: new Date()
     }
   })
 }
