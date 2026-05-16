@@ -32,10 +32,6 @@ enum Role {
   ADMIN
 }
 
-enum Role {
-  USER
-  ADMIN
-}
 
 
 
