@@ -45,7 +45,7 @@ export async function GET() {
     }
 
     return NextResponse.redirect(
-      new URL("/", process.env.KINDE_SITE_URL || "http://localhost:3000")
+      new URL("/", process.env.KINDE_SITE_URL)
     );
 
   } catch (error) {
