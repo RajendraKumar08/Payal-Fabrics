@@ -17,9 +17,9 @@ const seedProducts = async () => {
   if (count === 0) {
     await prisma.user.createMany({
       data: [
-        { name: "user1", email: "user1@gmail.com" },
-        { name: "user2", email: "user2@gmail.com" },
-        { name: "user3", email: "user3@gmail.com" },
+        { name: "user1", email: "user1@gmail.com", kindeId: "", profileImage: "", role: "USER", createdAt: new Date(), updatedAt: new Date() },
+        { name: "user2", email: "user2@gmail.com", kindeId: "", profileImage: "", role: "USER", createdAt: new Date(), updatedAt: new Date() },
+        { name: "user3", email: "user3@gmail.com", kindeId: "", profileImage: "", role: "USER", createdAt: new Date(), updatedAt: new Date() },
       ],
     });
   }
@@ -28,28 +28,33 @@ const seedProducts = async () => {
 // Run seed if needed
 seedProducts();
 
-export async function getProducts(){
+export async function getProducts() {
   return prisma.user.findMany();
 }
 
-export async function getProduct(id : number){
+export async function getProduct(id: number) {
   return prisma.user.findUnique({
-    where: {id}
+    where: { id }
   })
 }
 
-export async function createProduct(name: string, email: string){
+export async function createProduct(name: string, email: string) {
   return prisma.user.create({
     data: {
       name,
-      email
+      email,
+      kindeId: "",
+      profileImage: "",
+      role: "USER",
+      createdAt: new Date(),
+      updatedAt: new Date()
     }
   })
 }
 
-export async function updateProduct(id: number, name: string, email: string){
+export async function updateProduct(id: number, name: string, email: string) {
   return prisma.user.update({
-    where: {id},
+    where: { id },
     data: {
       name,
       email
@@ -57,8 +62,8 @@ export async function updateProduct(id: number, name: string, email: string){
   })
 }
 
-export async function deleteProduct(id: number){
+export async function deleteProduct(id: number) {
   return prisma.user.delete({
-    where: {id}
+    where: { id }
   })
 }
