@@ -44,7 +44,9 @@ export async function GET() {
       console.log("User created successfully");
     }
 
-    return NextResponse.redirect(
+    return existing_user?.role === "ADMIN" ? NextResponse.redirect(
+      new URL("/admin", process.env.KINDE_SITE_URL)
+    ) : NextResponse.redirect(
       new URL("/", process.env.KINDE_SITE_URL)
     );
 
