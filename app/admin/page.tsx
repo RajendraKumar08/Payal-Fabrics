@@ -36,6 +36,9 @@ const adminpage = () => {
             const result = await response.json();
 
             console.log(result);
+            alert("Product created succefully")
+            window.location.reload();
+
 
         } catch (error) {
 
