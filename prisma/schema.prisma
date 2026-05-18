@@ -14,11 +14,15 @@ datasource db {
 
 model User {
   id            Int    @id @default(autoincrement())
+
   kindeId       String?   @unique
+
   name          String?
   email         String   @unique
   profileImage  String? 
+
   role          Role     @default(USER)
+
   createdAt     DateTime @default(now())
   updatedAt     DateTime? @updatedAt
 }
@@ -27,3 +31,9 @@ enum Role {
   USER
   ADMIN
 }
+
+
+
+
+
+
