@@ -9,7 +9,7 @@ const Homepage = async () => {
 
   const authenticated = await isAuthenticated();
   const user = await getUser();
-
+  console.log(user)
   return (
     <>
       <nav className="flex justify-between bg-[pink] items-center py-3 px-3">
@@ -51,6 +51,15 @@ const Homepage = async () => {
           }
         </ul>
       </nav>
+      {/* {
+        if(user.role == USER){
+          return (
+            <div>
+
+            </div>
+          )
+        }
+      } */}
     </>
   );
 };

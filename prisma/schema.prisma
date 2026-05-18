@@ -14,15 +14,11 @@ datasource db {
 
 model User {
   id            Int    @id @default(autoincrement())
-
   kindeId       String?   @unique
-
   name          String?
   email         String   @unique
   profileImage  String? 
-
   role          Role     @default(USER)
-
   createdAt     DateTime @default(now())
   updatedAt     DateTime? @updatedAt
 }
@@ -47,7 +43,17 @@ enum Role {
   ADMIN
 }
 
-
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  image       String
+  price       Float
+  description String
+  category    String
+  stock       Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
 
 
 

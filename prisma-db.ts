@@ -38,7 +38,7 @@ export async function getProduct(id: number) {
   })
 }
 
-export async function createProduct(name: string, kindeId: string ,email: string, profileImage: string, role: Role, createdAt: Date, updatedAt: Date){
+export async function createProduct(name: string, kindeId: string, email: string, profileImage: string, role: Role, createdAt: Date, updatedAt: Date) {
   return prisma.user.create({
     data: {
       name,
@@ -67,3 +67,4 @@ export async function deleteProduct(id: number) {
     where: { id }
   })
 }
+
