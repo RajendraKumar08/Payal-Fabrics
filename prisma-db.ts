@@ -1,4 +1,4 @@
-import { PrismaClient, Role } from "./app/generated/prisma/client";
+import { PrismaClient, Role } from "@/app/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 
@@ -26,7 +26,7 @@ const seedProducts = async () => {
 };
 
 // Run seed if needed
-// seedProducts();
+seedProducts();
 
 export async function getProducts() {
   return prisma.user.findMany();
@@ -67,4 +67,5 @@ export async function deleteProduct(id: number) {
     where: { id }
   })
 }
+
 
