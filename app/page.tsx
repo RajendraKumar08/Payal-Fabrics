@@ -1,7 +1,11 @@
+
+
 import { RegisterLink, LoginLink } from "@kinde-oss/kinde-auth-nextjs";
 import Link from "next/link";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import { TypeAnimation } from "react-type-animation";
+import TypingText from "@/app/components/TypingText";
 import { Geist, Geist_Mono, Alex_Brush, Josefin_Sans } from "next/font/google";
  const alexBrush = Alex_Brush({
     subsets: ["latin"],
@@ -27,7 +31,10 @@ const Homepage = async () => {
       "url('https://res.cloudinary.com/dvlbebtbw/image/upload/v1779202455/ChatGPT_Image_May_19_2026_08_23_47_PM_f4kdkc.png')",
   }}
 >
+    
+  
   <div className="absolute inset-0 bg-[#1b1024]/25"></div>
+  
 
   <div className="relative z-10 text-center px-6">
     <h1
@@ -36,9 +43,7 @@ const Homepage = async () => {
       Payal Fabrics
     </h1>
 
-    <p className="text-xl md:text-2xl text-[#3E2A4D] font-light tracking-[4px]">
-      Elegant Designs • Premium Fabrics • Perfect Stitching
-    </p>
+    <TypingText />
 
     <div className="mt-10 flex justify-center gap-5 flex-wrap">
       <Link

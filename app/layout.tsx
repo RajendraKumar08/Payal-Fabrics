@@ -5,8 +5,6 @@ import Link from "next/link";
 import { RegisterLink, LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
-
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -49,11 +47,9 @@ export default async function RootLayout({
           <li>
             <Link href="/">Products</Link>
           </li>
-
           <li>
             <Link href="/">Contact us</Link>
           </li>
-
           {
             !authenticated ? (
               <>
@@ -68,7 +64,7 @@ export default async function RootLayout({
             ) : (
               <>
                 <li> Hi {user?.given_name}</li>
-
+                
                 <li>
                   <LogoutLink>Logout</LogoutLink>
                 </li>
@@ -77,7 +73,6 @@ export default async function RootLayout({
           }
         </ul>
       </nav>
-
         {children}
       </body>
     </html>
