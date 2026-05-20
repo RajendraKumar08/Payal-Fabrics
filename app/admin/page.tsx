@@ -21,6 +21,7 @@ const adminpage = () => {
             category: formdata.get("category"),
             stock_quantity: Number(formdata.get("stock_quantity")),
             stock_unit: formdata.get("stock_unit"),
+            highlight : formdata.get("highlight") === "true" ? true : false,
         };
 
         try {
@@ -36,7 +37,7 @@ const adminpage = () => {
             const result = await response.json();
 
             console.log(result);
-            alert("Product created succefully")
+            alert(result.message);
             window.location.reload();
 
 
@@ -97,7 +98,7 @@ const adminpage = () => {
                             Dress Material
                         </option>
 
-                        <option value="fabric">
+                        <option value="fabrics">
                             Fabric
                         </option>
                     </select>
@@ -131,6 +132,23 @@ const adminpage = () => {
                         </select>
 
                     </div>
+                    <select
+                        className="border border-pink-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-pink-400"
+                        name="highlight"
+                        defaultValue=""
+                    >
+                        <option value="" disabled>
+                            Select Highlights
+                        </option>
+
+                        <option value="true">
+                            Yes
+                        </option>
+
+                        <option value="false">
+                            No
+                        </option>
+                    </select>
 
                     <button
                         className="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-3 rounded-xl transition-all duration-300 disabled:bg-pink-300"

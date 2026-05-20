@@ -14,15 +14,17 @@ export async function POST(req: NextRequest) {
             category,
             stock_quantity,
             stock_unit,
+            highlight: highlightValue,
         } = body;
 
         if (
-            !itemname ||
-            !price ||
-            !description ||
-            !category ||
-            !stock_quantity ||
-            !stock_unit
+            itemname == null ||
+            price == null ||
+            description == null ||
+            category == null ||
+            stock_quantity == null ||
+            stock_unit == null ||
+            highlightValue == null
         ) {
             return NextResponse.json(
                 {
@@ -41,6 +43,7 @@ export async function POST(req: NextRequest) {
                 description: description,
                 category: category,
                 stock: Number(stock_quantity),
+                highlight: highlightValue === true || highlightValue === "true",
             },
         });
 

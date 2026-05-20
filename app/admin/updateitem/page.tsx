@@ -28,10 +28,12 @@ const UpdateItemPage = () => {
         const fetchAll = async () => {
             setLoadingList(true);
             try {
-                const res = await fetch("/api/getitems");
+                const res = await fetch("/api/getallitems", {
+                    method: "GET",
+                });
                 const data = await res.json();
-                if (!res.ok) throw new Error(data.message);
-                setProducts(data.products);
+                if (!res.ok) throw new Error(data.message || "Failed to load products.");
+                setProducts(Array.isArray(data) ? data : data.products || []);
             } catch {
                 setListError("Could not load products. Please refresh.");
             } finally {
@@ -184,7 +186,7 @@ const UpdateItemPage = () => {
                                         <select id="category" name="category" className={inputClass} defaultValue={selected.category} required>
                                             <option value="" disabled>Select Category</option>
                                             <option value="dress material">Dress Material</option>
-                                            <option value="fabric">Fabric</option>
+                                            <option value="fabrics">Fabric</option>
                                         </select>
                                     </div>
 
@@ -192,6 +194,28 @@ const UpdateItemPage = () => {
                                     <div className="sm:col-span-2 flex flex-col gap-1.5">
                                         <label className="text-xs font-bold text-gray-500 uppercase tracking-wider" htmlFor="description">Description</label>
                                         <textarea id="description" name="description" className={`${inputClass} resize-none`} rows={4} defaultValue={selected.description} required />
+                                    </div>
+
+                                    <div>
+                                        <select
+                                            className={`w-full border rounded-xl px-4 py-3 outline-none focus:ring-2 `}
+                                            name="highlight"
+                                            defaultValue=""
+                                        >
+                                            <option value="" disabled>
+                                                Select Highlights
+                                            </option>
+
+                                            <option value="true">
+                                                Yes
+                                            </option>
+
+                                            <option value="false">
+                                                No
+                                            </option>
+                                        </select>
+
+                                        
                                     </div>
 
                                     {/* Feedback */}
