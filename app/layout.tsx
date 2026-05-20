@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Alex_Brush, Josefin_Sans, Poppins } from "next/font/google";
 import "./globals.css";
-import Link from "next/link";
-import { RegisterLink, LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,6 +10,21 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const alexBrush = Alex_Brush({
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const josefinSans = Josefin_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "600"],
+});
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -25,10 +37,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-  const { isAuthenticated, getUser } = getKindeServerSession();
-  const authenticated = await isAuthenticated();
-  const user = await getUser();
   return (
     <html
       lang="en"
@@ -36,43 +44,7 @@ export default async function RootLayout({
     >
       
       <body className="min-h-full flex flex-col">
-        <nav className="flex justify-between bg-[#1A1222] text-[#F3EAF8] items-center py-3 px-3 shadow-lg">
-        <h1 className="text-3xl font-bold">Payal Fabrics</h1>
 
-        <ul className="flex gap-3 font-bold items-center">
-          <li>
-            <Link href="/">Home</Link>
-          </li>
-
-          <li>
-            <Link href="/">Products</Link>
-          </li>
-          <li>
-            <Link href="/">Contact us</Link>
-          </li>
-          {
-            !authenticated ? (
-              <>
-                <li>
-                  <RegisterLink>Register</RegisterLink>
-                </li>
-
-                <li>
-                  <LoginLink>Login</LoginLink>
-                </li>
-              </>
-            ) : (
-              <>
-                <li> Hi {user?.given_name}</li>
-                
-                <li>
-                  <LogoutLink>Logout</LogoutLink>
-                </li>
-              </>
-            )
-          }
-        </ul>
-      </nav>
         {children}
       </body>
     </html>
