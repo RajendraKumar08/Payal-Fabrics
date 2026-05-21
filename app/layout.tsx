@@ -56,47 +56,47 @@ export default async function RootLayout({
       <body className="min-h-full flex flex-col">
 
       {/* ── Professional Navbar ── */}
-      <nav className="sticky top-0 z-50 bg-white border-b-2 border-pink-200 shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+      <nav className="sticky top-0 z-50 bg-slate-950 border-b border-slate-800 shadow-lg shadow-slate-950/20">
+        <div className="max-w-7xl mx-auto px-6 py-3 flex flex-wrap items-center justify-between gap-4">
 
           {/* Brand */}
           <Link href="/" className="flex flex-col leading-tight">
-            <span className={`text-3xl text-pink-700 leading-none ${alexBrush.className}`}>Payal Fabric</span>
-            <span className={`text-[10px] text-pink-400 tracking-[0.2em] uppercase ${josefinSans.className}`}>Only For Ladies</span>
+            <span className={`text-3xl text-slate-100 leading-none ${alexBrush.className}`}>Payal Fabric</span>
+            <span className={`text-[10px] text-slate-400 tracking-[0.2em] uppercase ${josefinSans.className}`}>Only For Ladies</span>
           </Link>
 
           {/* Nav Links */}
-          <ul className={`flex items-center gap-7 text-sm font-medium text-gray-700 ${poppins.className}`}>
+          <ul className={`flex flex-wrap items-center gap-5 text-sm font-medium text-slate-300 ${poppins.className}`}>
             <li>
-              <Link href="/" className="relative hover:text-pink-600 transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-pink-500 after:transition-all after:duration-300 hover:after:w-full">Home</Link>
+              <Link href="/" className="relative hover:text-purple-200 transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-purple-400 after:transition-all after:duration-300 hover:after:w-full">Home</Link>
             </li>
             <li>
-              <Link href="/women" className="relative hover:text-pink-600 transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-pink-500 after:transition-all after:duration-300 hover:after:w-full">Women&apos;s Wear</Link>
+              <Link href="/women" className="relative hover:text-purple-200 transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-purple-400 after:transition-all after:duration-300 hover:after:w-full">Women&apos;s Wear</Link>
             </li>
             <li>
-              <Link href="/fabrics" className="relative hover:text-pink-600 transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-pink-500 after:transition-all after:duration-300 hover:after:w-full">Fabrics</Link>
+              <Link href="/fabrics" className="relative hover:text-purple-200 transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-purple-400 after:transition-all after:duration-300 hover:after:w-full">Fabrics</Link>
             </li>
             <li>
-              <Link href="/accessories" className="relative hover:text-pink-600 transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-pink-500 after:transition-all after:duration-300 hover:after:w-full">Accessories</Link>
+              <Link href="/accessories" className="relative hover:text-purple-200 transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-purple-400 after:transition-all after:duration-300 hover:after:w-full">Accessories</Link>
             </li>
             <li>
-              <Link href="/contact" className="relative hover:text-pink-600 transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-pink-500 after:transition-all after:duration-300 hover:after:w-full">Contact</Link>
+              <Link href="/contact" className="relative hover:text-purple-200 transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-purple-400 after:transition-all after:duration-300 hover:after:w-full">Contact</Link>
             </li>
 
             {!authenticated ? (
               <>
                 <li>
-                  <RegisterLink className="px-4 py-1.5 rounded-full border border-pink-400 text-pink-600 hover:bg-pink-50 transition-colors duration-200 text-sm font-medium">Register</RegisterLink>
+                  <RegisterLink className="px-4 py-1.5 rounded-full border border-purple-500 text-purple-200 hover:bg-purple-950/30 transition-colors duration-200 text-sm font-medium">Register</RegisterLink>
                 </li>
                 <li>
-                  <LoginLink className="px-4 py-1.5 rounded-full bg-pink-600 text-white hover:bg-pink-700 transition-colors duration-200 text-sm font-medium">Login</LoginLink>
+                  <LoginLink className="px-4 py-1.5 rounded-full bg-purple-600 text-white hover:bg-purple-500 transition-colors duration-200 text-sm font-medium">Login</LoginLink>
                 </li>
               </>
             ) : (
               <>
-                <li className="text-pink-700 font-semibold">{user?.given_name}</li>
+                <li className="text-purple-200 font-semibold">{user?.given_name}</li>
                 <li>
-                  <LogoutLink className="px-4 py-1.5 rounded-full border border-pink-400 text-pink-600 hover:bg-pink-50 transition-colors duration-200 text-sm font-medium">Logout</LogoutLink>
+                  <LogoutLink className="px-4 py-1.5 rounded-full border border-purple-500 text-purple-200 hover:bg-purple-950/30 transition-colors duration-200 text-sm font-medium">Logout</LogoutLink>
                 </li>
               </>
             )}

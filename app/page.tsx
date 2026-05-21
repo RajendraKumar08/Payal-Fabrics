@@ -1,12 +1,9 @@
 
 
-import { RegisterLink, LoginLink } from "@kinde-oss/kinde-auth-nextjs";
 import Link from "next/link";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
-import { TypeAnimation } from "react-type-animation";
 import TypingText from "@/app/components/TypingText";
-import { Geist, Geist_Mono, Alex_Brush, Josefin_Sans } from "next/font/google";
+import { Alex_Brush } from "next/font/google";
  const alexBrush = Alex_Brush({
     subsets: ["latin"],
     weight: "400",
@@ -33,63 +30,60 @@ const Homepage = async () => {
     <>
 
       <div
-  className="relative min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center"
-  style={{
-    backgroundImage:
-      "url('https://res.cloudinary.com/dvlbebtbw/image/upload/v1779202455/ChatGPT_Image_May_19_2026_08_23_47_PM_f4kdkc.png')",
-  }}
->
-    
-  
-  <div className="absolute inset-0 bg-[#1b1024]/25"></div>
-  
-
-  <div className="relative z-10 text-center px-6">
-    <h1
-      className={`${alexBrush.className} text-6xl md:text-7xl font-semibold text-[#24122E] mb-4 tracking-wide mt-22`}
-    >
-      Payal Fabrics
-    </h1>
-
-    <TypingText />
-
-    <div className="mt-10 flex justify-center gap-5 flex-wrap">
-      <Link
-        href="/products"
-        className="bg-[#5B2C6F] text-white px-8 py-3 rounded-full hover:bg-[#472158] transition-all duration-300 font-semibold shadow-lg"
+        className="relative min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center"
+        style={{
+          backgroundImage:
+            "url('https://res.cloudinary.com/dvlbebtbw/image/upload/v1779202455/ChatGPT_Image_May_19_2026_08_23_47_PM_f4kdkc.png')",
+        }}
       >
-        Explore Collection
-      </Link>
+        <div className="absolute inset-0 bg-slate-950/60"></div>
 
-      <Link
-        href="/contact"
-        className="border-2 border-[#3E2A4D] text-[#3E2A4D] px-8 py-3 rounded-full hover:bg-[#3E2A4D] hover:text-white transition-all duration-300 font-semibold"
-      >
-        Contact Us
-      </Link>
-    </div>
-  </div>
-</div>
+        <div className="relative z-10 text-center px-6">
+          <h1
+            className={`${alexBrush.className} text-6xl md:text-7xl font-semibold text-slate-100 mb-4 tracking-wide mt-22`}
+          >
+            Payal Fabrics
+          </h1>
+
+          <TypingText />
+
+          <div className="mt-10 flex justify-center gap-5 flex-wrap">
+            <Link
+              href="/products"
+              className="bg-purple-700 text-white px-8 py-3 rounded-full hover:bg-purple-600 transition-all duration-300 font-semibold shadow-lg shadow-slate-900/30"
+            >
+              Explore Collection
+            </Link>
+
+            <Link
+              href="/contact"
+              className="border-2 border-slate-300 text-slate-100 px-8 py-3 rounded-full hover:bg-slate-100 hover:text-slate-950 transition-all duration-300 font-semibold"
+            >
+              Contact Us
+            </Link>
+          </div>
+        </div>
+      </div>
 
 {/* Highlights Section */}
-<section className="min-h-screen bg-gradient-to-b from-pink-50 via-white to-rose-50 py-20 px-6">
+<section className="min-h-screen bg-slate-50 py-20 px-6">
 
   <div className="max-w-7xl mx-auto">
 
     <h2
-      className={`text-center text-5xl md:text-6xl text-pink-700 mb-4 ${alexBrush.className}`}
+      className={`text-center text-5xl md:text-6xl text-slate-900 mb-4 ${alexBrush.className}`}
     >
       Highlights
     </h2>
 
-    <p className="text-center text-gray-500 max-w-2xl mx-auto mb-16">
+    <p className="text-center text-slate-600 max-w-2xl mx-auto mb-16">
       Explore our most loved and premium collections crafted with elegance,
       comfort, and timeless beauty.
     </p>
 
     {displayedHighlights.length === 0 ? (
       <div className="text-center py-20">
-        <p className="text-gray-500 text-lg">
+        <p className="text-slate-600 text-lg">
           No highlights available at the moment.
         </p>
       </div>
@@ -99,7 +93,7 @@ const Homepage = async () => {
         {displayedHighlights.map((highlight: any, index: number) => (
           <div
             key={index}
-            className="group relative rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-500 ease-in-out cursor-pointer bg-white border border-pink-100"
+            className="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 ease-in-out cursor-pointer bg-white border border-slate-200"
           >
 
             {/* Image */}
@@ -112,7 +106,7 @@ const Homepage = async () => {
               />
 
               {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-pink-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-8">
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-8">
 
                 <div className="text-center">
                   <span className="text-white text-sm font-semibold tracking-[3px] uppercase border border-white/70 px-5 py-2 rounded-full backdrop-blur-md">
@@ -123,36 +117,36 @@ const Homepage = async () => {
               </div>
 
               {/* Featured Badge */}
-              <div className="absolute top-4 right-4 bg-white text-pink-600 text-xs font-semibold px-4 py-1.5 rounded-full shadow-md">
+              <div className="absolute top-4 right-4 bg-purple-100 text-purple-900 text-xs font-semibold px-4 py-1.5 rounded-full shadow-sm">
                 Featured
               </div>
 
             </div>
 
             {/* Footer */}
-            <div className="px-6 py-5 border-t border-pink-100 bg-white">
+            <div className="px-6 py-5 border-t border-slate-200 bg-white">
 
               <div className="flex items-center justify-between">
 
                 <div>
                   <h3
-                    className={`text-2xl font-semibold text-pink-700 capitalize ${alexBrush.className}`}
+                    className={`text-2xl font-semibold text-slate-900 capitalize ${alexBrush.className}`}
                   >
                     {highlight.name}
                   </h3>
 
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-sm text-slate-500 mt-1">
                     ₹{highlight.price}
                   </p>
                 </div>
 
-                <span className="text-xs text-pink-500 bg-pink-50 border border-pink-200 px-4 py-1.5 rounded-full font-medium">
+                <span className="text-xs text-purple-900 bg-purple-100 border border-purple-200 px-4 py-1.5 rounded-full font-medium">
                   Premium
                 </span>
 
               </div>
 
-              <p className="text-gray-500 text-sm mt-4 line-clamp-2">
+              <p className="text-slate-500 text-sm mt-4 line-clamp-2">
                 {highlight.description}
               </p>
 
@@ -168,19 +162,19 @@ const Homepage = async () => {
 
 </section>
 
-<footer className="bg-[#140C1C] text-[#E7DCEB] py-10 px-6">
+<footer className="bg-slate-950 text-slate-100 py-10 px-6">
   <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10">
 
     <div>
-      <h2 className="text-2xl font-bold mb-4 text-[#C89BFF]">
+      <h2 className="text-2xl font-bold mb-4 text-purple-200">
         Behind Payal Fabrics
       </h2>
 
-      <ul className="space-y-3 text-[#CFC3D7]">
+      <ul className="space-y-3 text-slate-300">
         <li>
           <Link
             href="https://www.instagram.com/payal_tailor10.06/"
-            className="hover:text-[#C89BFF] transition"
+            className="hover:text-white transition"
           >
             Payal Ladies Tailor
           </Link>
@@ -189,7 +183,7 @@ const Homepage = async () => {
         <li>
           <Link
             href="https://www.instagram.com/payal_tailor10.06/"
-            className="hover:text-[#C89BFF] transition"
+            className="hover:text-white transition"
           >
             Gulshan Tailor
           </Link>
@@ -198,7 +192,7 @@ const Homepage = async () => {
         <li>
           <Link
             href="https://www.instagram.com/payal_tailor10.06/"
-            className="hover:text-[#C89BFF] transition"
+            className="hover:text-white transition"
           >
             Payal Tailor
           </Link>
@@ -207,15 +201,15 @@ const Homepage = async () => {
     </div>
 
     <div>
-      <h2 className="text-2xl font-bold mb-4 text-[#C89BFF]">
+      <h2 className="text-2xl font-bold mb-4 text-purple-200">
         Created By
       </h2>
 
-      <ul className="space-y-3 text-[#CFC3D7]">
+      <ul className="space-y-3 text-slate-300">
         <li>
           <Link
             href="https://www.instagram.com/payal_tailor10.06/"
-            className="hover:text-[#C89BFF] transition"
+            className="hover:text-white transition"
           >
             Rajendra
           </Link>
@@ -224,7 +218,7 @@ const Homepage = async () => {
         <li>
           <Link
             href="https://www.instagram.com/payal_tailor10.06/"
-            className="hover:text-[#C89BFF] transition"
+            className="hover:text-white transition"
           >
             Sumit
           </Link>
@@ -234,7 +228,7 @@ const Homepage = async () => {
 
   </div>
 
-  <div className="border-t border-[#352042] mt-8 pt-5 text-center text-[#B8A9C3] text-sm">
+  <div className="border-t border-slate-800 mt-8 pt-5 text-center text-slate-400 text-sm">
     © 2026 Payal Fabrics. All rights reserved.
   </div>
 </footer>
