@@ -3,9 +3,10 @@ import { Geist, Geist_Mono, Alex_Brush, Josefin_Sans, Poppins } from "next/font/
 import "./globals.css";
 import { RegisterLink, LoginLink } from "@kinde-oss/kinde-auth-nextjs";
 import Link from "next/link";
-import Image from "next/image";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import CartBadge from "@/app/components/CartBadge";
+import { CartProvider } from "@/app/components/CartContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,7 +46,7 @@ export default async function RootLayout({
   
   const { isAuthenticated, getUser } = getKindeServerSession();
 
-  const authenticated = await isAuthenticated();
+  const authenticated = Boolean(await isAuthenticated());
   const user = await getUser();
   console.log(user)
   return (
@@ -54,19 +55,19 @@ export default async function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <CartProvider>
+          {/* ── Professional Navbar ── */}
+          <nav className="sticky top-0 z-50 bg-slate-950 border-b border-slate-800 shadow-lg shadow-slate-950/20">
+            <div className="max-w-7xl mx-auto px-6 py-3 flex flex-wrap items-center justify-between gap-4">
 
-      {/* ── Professional Navbar ── */}
-      <nav className="sticky top-0 z-50 bg-slate-950 border-b border-slate-800 shadow-lg shadow-slate-950/20">
-        <div className="max-w-7xl mx-auto px-6 py-3 flex flex-wrap items-center justify-between gap-4">
+              {/* Brand */}
+              <Link href="/" className="flex flex-col leading-tight">
+                <span className={`text-3xl text-slate-100 leading-none ${alexBrush.className}`}>Payal Fabric</span>
+                <span className={`text-[10px] text-slate-400 tracking-[0.2em] uppercase ${josefinSans.className}`}>Only For Ladies</span>
+              </Link>
 
-          {/* Brand */}
-          <Link href="/" className="flex flex-col leading-tight">
-            <span className={`text-3xl text-slate-100 leading-none ${alexBrush.className}`}>Payal Fabric</span>
-            <span className={`text-[10px] text-slate-400 tracking-[0.2em] uppercase ${josefinSans.className}`}>Only For Ladies</span>
-          </Link>
-
-          {/* Nav Links */}
-          <ul className={`flex flex-wrap items-center gap-5 text-sm font-medium text-slate-300 ${poppins.className}`}>
+              {/* Nav Links */}
+              <ul className={`flex flex-wrap items-center gap-5 text-sm font-medium text-slate-300 ${poppins.className}`}>
             <li>
               <Link href="/" className="relative hover:text-purple-200 transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-purple-400 after:transition-all after:duration-300 hover:after:w-full">Home</Link>
             </li>
@@ -81,6 +82,9 @@ export default async function RootLayout({
             </li>
             <li>
               <Link href="/contact" className="relative hover:text-purple-200 transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-purple-400 after:transition-all after:duration-300 hover:after:w-full">Contact</Link>
+            </li>
+            <li>
+              <CartBadge />
             </li>
 
             {!authenticated ? (
@@ -100,10 +104,12 @@ export default async function RootLayout({
                 </li>
               </>
             )}
+
           </ul>
         </div>
       </nav>
-        {children}
+      {children}
+        </CartProvider>
       </body>
     </html>
   );

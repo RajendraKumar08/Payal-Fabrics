@@ -1,5 +1,7 @@
 import Image from 'next/image'
 import { Dancing_Script } from 'next/font/google'
+import AddToCartButton from '@/app/components/AddToCartButton';
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 
 const dancingScript = Dancing_Script({
     subsets: ['latin'],
@@ -16,6 +18,8 @@ export default async function Women() {
 );
 
     const wears = await res.json();
+    const { isAuthenticated } = getKindeServerSession();
+    const authenticated = Boolean(await isAuthenticated());
 
     return (
         <main className="min-h-screen bg-slate-50">
@@ -97,21 +101,33 @@ export default async function Women() {
                                 </div>
 
                                 {/* Footer */}
-                                <div className="px-6 py-5 flex items-center justify-between border-t border-slate-200 bg-white">
+                                <div className="px-6 py-5 border-t border-slate-200 bg-white">
+                                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                                        <div>
+                                            <h3 className={`text-2xl font-semibold text-slate-900 capitalize ${dancingScript.className}`}>
+                                                {wear.name}
+                                            </h3>
 
-                                    <div>
-                                        <h3 className={`text-2xl font-semibold text-slate-900 capitalize ${dancingScript.className}`}>
-                                            {wear.name}
-                                        </h3>
+                                            <p className="text-sm text-slate-500 mt-1">
+                                                ₹{wear.price.toFixed(2)}
+                                            </p>
+                                        </div>
 
-                                        <p className="text-sm text-slate-500 mt-1">
-                                            ₹{wear.price.toFixed(2)}
-                                        </p>
+                                        <div className="flex flex-wrap items-center gap-3">
+                                            <span className="text-xs text-purple-900 bg-purple-100 border border-purple-200 px-4 py-1.5 rounded-full font-medium">
+                                                Premium
+                                            </span>
+                                            <AddToCartButton
+                                                product={{
+                                                    id: wear.id?.toString() || wear.name,
+                                                    name: wear.name,
+                                                    price: Number(wear.price) || 0,
+                                                    image: wear.image || "",
+                                                }}
+                                                authenticated={authenticated}
+                                            />
+                                        </div>
                                     </div>
-
-                                    <span className="text-xs text-purple-900 bg-purple-100 border border-purple-200 px-4 py-1.5 rounded-full font-medium">
-                                        Premium
-                                    </span>
                                 </div>
                             </div>
                         ))}

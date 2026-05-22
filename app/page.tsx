@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import TypingText from "@/app/components/TypingText";
+import AddToCartButton from "@/app/components/AddToCartButton";
 import { Alex_Brush } from "next/font/google";
  const alexBrush = Alex_Brush({
     subsets: ["latin"],
@@ -23,7 +24,7 @@ const Homepage = async () => {
   const highlights = await response.json();
   const displayedHighlights = Array.isArray(highlights) ? highlights.slice(0, 6) : [];
 
-  const authenticated = await isAuthenticated();
+  const authenticated = Boolean(await isAuthenticated());
   const user = await getUser();
   console.log(user)
   return (
@@ -126,7 +127,7 @@ const Homepage = async () => {
             {/* Footer */}
             <div className="px-6 py-5 border-t border-slate-200 bg-white">
 
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
                 <div>
                   <h3
@@ -140,9 +141,20 @@ const Homepage = async () => {
                   </p>
                 </div>
 
-                <span className="text-xs text-purple-900 bg-purple-100 border border-purple-200 px-4 py-1.5 rounded-full font-medium">
-                  Premium
-                </span>
+                <div className="flex flex-wrap items-center gap-3">
+                  <span className="text-xs text-purple-900 bg-purple-100 border border-purple-200 px-4 py-1.5 rounded-full font-medium">
+                    Premium
+                  </span>
+                  <AddToCartButton
+                    product={{
+                      id: highlight.id?.toString() || highlight.name,
+                      name: highlight.name,
+                      price: Number(highlight.price) || 0,
+                      image: highlight.image || "",
+                    }}
+                    authenticated={authenticated}
+                  />
+                </div>
 
               </div>
 
