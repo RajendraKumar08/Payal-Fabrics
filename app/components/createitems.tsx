@@ -1,8 +1,11 @@
 "use client";
 
+
 import { FormEvent, useState } from "react";
 
-const adminpage = () => {
+const createitem = () => {
+
+   
 
     const [loading, setloading] = useState(false);
     const [errors, seterrors] = useState<any>({});
@@ -102,11 +105,11 @@ const adminpage = () => {
         <div className="min-h-screen flex items-center justify-center bg-pink-50 px-4">
 
             <form
-                className="w-full max-w-md bg-white p-8 rounded-3xl shadow-2xl flex flex-col gap-5 text-black"
+                className="w-full max-w-md bg-white p-8 rounded-3xl shadow-2xl flex flex-col gap-5"
                 onSubmit={handlesubmit}
             >
 
-                <h1 className="text-3xl font-bold text-center text-black">
+                <h1 className="text-3xl font-bold text-center text-pink-600">
                     Add Product
                 </h1>
 
@@ -322,4 +325,4 @@ const adminpage = () => {
     );
 };
 
-export default adminpage;
+export default createitem;

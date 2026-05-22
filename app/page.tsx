@@ -6,28 +6,28 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import TypingText from "@/app/components/TypingText";
 import AddToCartButton from "@/app/components/AddToCartButton";
 import { Alex_Brush } from "next/font/google";
- const alexBrush = Alex_Brush({
-    subsets: ["latin"],
-    weight: "400",
-  });
+import { prisma } from "@/prisma-db";
+const alexBrush = Alex_Brush({
+  subsets: ["latin"],
+  weight: "400",
+});
 
 
 const Homepage = async () => {
 
   const { isAuthenticated, getUser } = getKindeServerSession();
 
-  const response = await fetch(
-    "http://localhost:3000/api/getallitems?highlight=true",
-    {
-      cache: "no-store",
-    }
-  );
-  const highlights = await response.json();
+  const highlights = await prisma.product.findMany({
+    where: {
+      highlight: true,
+    },
+    take: 6,
+  });
   const displayedHighlights = Array.isArray(highlights) ? highlights.slice(0, 6) : [];
 
   const authenticated = Boolean(await isAuthenticated());
   const user = await getUser();
-  console.log(user)
+  // console.log(user)
   return (
     <>
 
@@ -67,184 +67,184 @@ const Homepage = async () => {
         </div>
       </div>
 
-{/* Highlights Section */}
-<section className="min-h-screen bg-slate-50 py-20 px-6">
+      {/* Highlights Section */}
+      <section className="min-h-screen bg-slate-50 py-20 px-6">
 
-  <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto">
 
-    <h2
-      className={`text-center text-5xl md:text-6xl text-slate-900 mb-4 ${alexBrush.className}`}
-    >
-      Highlights
-    </h2>
-
-    <p className="text-center text-slate-600 max-w-2xl mx-auto mb-16">
-      Explore our most loved and premium collections crafted with elegance,
-      comfort, and timeless beauty.
-    </p>
-
-    {displayedHighlights.length === 0 ? (
-      <div className="text-center py-20">
-        <p className="text-slate-600 text-lg">
-          No highlights available at the moment.
-        </p>
-      </div>
-    ) : (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-
-        {displayedHighlights.map((highlight: any, index: number) => (
-          <div
-            key={index}
-            className="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 ease-in-out cursor-pointer bg-white border border-slate-200"
+          <h2
+            className={`text-center text-5xl md:text-6xl text-slate-900 mb-4 ${alexBrush.className}`}
           >
+            Highlights
+          </h2>
 
-            {/* Image */}
-            <div className="relative w-full h-[380px] overflow-hidden">
+          <p className="text-center text-slate-600 max-w-2xl mx-auto mb-16">
+            Explore our most loved and premium collections crafted with elegance,
+            comfort, and timeless beauty.
+          </p>
 
-              <img
-                src={highlight.image || "/noimage.jpg"}
-                alt={highlight.name}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out"
-              />
-
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-8">
-
-                <div className="text-center">
-                  <span className="text-white text-sm font-semibold tracking-[3px] uppercase border border-white/70 px-5 py-2 rounded-full backdrop-blur-md">
-                    Explore →
-                  </span>
-                </div>
-
-              </div>
-
-              {/* Featured Badge */}
-              <div className="absolute top-4 right-4 bg-purple-100 text-purple-900 text-xs font-semibold px-4 py-1.5 rounded-full shadow-sm">
-                Featured
-              </div>
-
-            </div>
-
-            {/* Footer */}
-            <div className="px-6 py-5 border-t border-slate-200 bg-white">
-
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-
-                <div>
-                  <h3
-                    className={`text-2xl font-semibold text-slate-900 capitalize ${alexBrush.className}`}
-                  >
-                    {highlight.name}
-                  </h3>
-
-                  <p className="text-sm text-slate-500 mt-1">
-                    ₹{highlight.price}
-                  </p>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-3">
-                  <span className="text-xs text-purple-900 bg-purple-100 border border-purple-200 px-4 py-1.5 rounded-full font-medium">
-                    Premium
-                  </span>
-                  <AddToCartButton
-                    product={{
-                      id: highlight.id?.toString() || highlight.name,
-                      name: highlight.name,
-                      price: Number(highlight.price) || 0,
-                      image: highlight.image || "",
-                    }}
-                    authenticated={authenticated}
-                  />
-                </div>
-
-              </div>
-
-              <p className="text-slate-500 text-sm mt-4 line-clamp-2">
-                {highlight.description}
+          {displayedHighlights.length === 0 ? (
+            <div className="text-center py-20">
+              <p className="text-slate-600 text-lg">
+                No highlights available at the moment.
               </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+
+              {displayedHighlights.map((highlight: any, index: number) => (
+                <div
+                  key={index}
+                  className="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 ease-in-out cursor-pointer bg-white border border-slate-200"
+                >
+
+                  {/* Image */}
+                  <div className="relative w-full h-[380px] overflow-hidden">
+
+                    <img
+                      src={highlight.image || "/noimage.jpg"}
+                      alt={highlight.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out"
+                    />
+
+                    {/* Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-8">
+
+                      <div className="text-center">
+                        <span className="text-white text-sm font-semibold tracking-[3px] uppercase border border-white/70 px-5 py-2 rounded-full backdrop-blur-md">
+                          Explore →
+                        </span>
+                      </div>
+
+                    </div>
+
+                    {/* Featured Badge */}
+                    <div className="absolute top-4 right-4 bg-purple-100 text-purple-900 text-xs font-semibold px-4 py-1.5 rounded-full shadow-sm">
+                      Featured
+                    </div>
+
+                  </div>
+
+                  {/* Footer */}
+                  <div className="px-6 py-5 border-t border-slate-200 bg-white">
+
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+                      <div>
+                        <h3
+                          className={`text-2xl font-semibold text-slate-900 capitalize ${alexBrush.className}`}
+                        >
+                          {highlight.name}
+                        </h3>
+
+                        <p className="text-sm text-slate-500 mt-1">
+                          ₹{highlight.price}
+                        </p>
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-3">
+                        <span className="text-xs text-purple-900 bg-purple-100 border border-purple-200 px-4 py-1.5 rounded-full font-medium">
+                          Premium
+                        </span>
+                        <AddToCartButton
+                          product={{
+                            id: highlight.id?.toString() || highlight.name,
+                            name: highlight.name,
+                            price: Number(highlight.price) || 0,
+                            image: highlight.image || "",
+                          }}
+                          authenticated={authenticated}
+                        />
+                      </div>
+
+                    </div>
+
+                    <p className="text-slate-500 text-sm mt-4 line-clamp-2">
+                      {highlight.description}
+                    </p>
+
+                  </div>
+
+                </div>
+              ))}
 
             </div>
+          )}
 
+        </div>
+
+      </section>
+
+      <footer className="bg-slate-950 text-slate-100 py-10 px-6">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10">
+
+          <div>
+            <h2 className="text-2xl font-bold mb-4 text-purple-200">
+              Behind Payal Fabrics
+            </h2>
+
+            <ul className="space-y-3 text-slate-300">
+              <li>
+                <Link
+                  href="https://www.instagram.com/payal_tailor10.06/"
+                  className="hover:text-white transition"
+                >
+                  Payal Ladies Tailor
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="https://www.instagram.com/payal_tailor10.06/"
+                  className="hover:text-white transition"
+                >
+                  Gulshan Tailor
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="https://www.instagram.com/payal_tailor10.06/"
+                  className="hover:text-white transition"
+                >
+                  Payal Tailor
+                </Link>
+              </li>
+            </ul>
           </div>
-        ))}
 
-      </div>
-    )}
+          <div>
+            <h2 className="text-2xl font-bold mb-4 text-purple-200">
+              Created By
+            </h2>
 
-  </div>
+            <ul className="space-y-3 text-slate-300">
+              <li>
+                <Link
+                  href="https://www.instagram.com/payal_tailor10.06/"
+                  className="hover:text-white transition"
+                >
+                  Rajendra
+                </Link>
+              </li>
 
-</section>
+              <li>
+                <Link
+                  href="https://www.instagram.com/payal_tailor10.06/"
+                  className="hover:text-white transition"
+                >
+                  Sumit
+                </Link>
+              </li>
+            </ul>
+          </div>
 
-<footer className="bg-slate-950 text-slate-100 py-10 px-6">
-  <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10">
+        </div>
 
-    <div>
-      <h2 className="text-2xl font-bold mb-4 text-purple-200">
-        Behind Payal Fabrics
-      </h2>
-
-      <ul className="space-y-3 text-slate-300">
-        <li>
-          <Link
-            href="https://www.instagram.com/payal_tailor10.06/"
-            className="hover:text-white transition"
-          >
-            Payal Ladies Tailor
-          </Link>
-        </li>
-
-        <li>
-          <Link
-            href="https://www.instagram.com/payal_tailor10.06/"
-            className="hover:text-white transition"
-          >
-            Gulshan Tailor
-          </Link>
-        </li>
-
-        <li>
-          <Link
-            href="https://www.instagram.com/payal_tailor10.06/"
-            className="hover:text-white transition"
-          >
-            Payal Tailor
-          </Link>
-        </li>
-      </ul>
-    </div>
-
-    <div>
-      <h2 className="text-2xl font-bold mb-4 text-purple-200">
-        Created By
-      </h2>
-
-      <ul className="space-y-3 text-slate-300">
-        <li>
-          <Link
-            href="https://www.instagram.com/payal_tailor10.06/"
-            className="hover:text-white transition"
-          >
-            Rajendra
-          </Link>
-        </li>
-
-        <li>
-          <Link
-            href="https://www.instagram.com/payal_tailor10.06/"
-            className="hover:text-white transition"
-          >
-            Sumit
-          </Link>
-        </li>
-      </ul>
-    </div>
-
-  </div>
-
-  <div className="border-t border-slate-800 mt-8 pt-5 text-center text-slate-400 text-sm">
-    © 2026 Payal Fabrics. All rights reserved.
-  </div>
-</footer>
+        <div className="border-t border-slate-800 mt-8 pt-5 text-center text-slate-400 text-sm">
+          © 2026 Payal Fabrics. All rights reserved.
+        </div>
+      </footer>
     </>
   );
 };
