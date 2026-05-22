@@ -1,5 +1,4 @@
 
-
 import { RegisterLink, LoginLink } from "@kinde-oss/kinde-auth-nextjs";
 import Link from "next/link";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
