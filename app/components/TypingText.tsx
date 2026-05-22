@@ -22,7 +22,7 @@ const TypingText = () => {
             wrapper="p"
             speed={50}
             repeat={Infinity}
-            className="text-xl md:text-2xl text-[#3E2A4D] font-light tracking-[4px]"
+            className="text-xl md:text-2xl text-[#ffd1d9] font-light tracking-[4px]"
         />
     );
 };

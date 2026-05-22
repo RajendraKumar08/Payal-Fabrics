@@ -18,6 +18,7 @@ model User {
   kindeId       String?   @unique
   name          String?
   email         String   @unique
+  cartItems     CartItem[]
   profileImage  String? 
   role          Role     @default(USER)
   createdAt     DateTime @default(now())
@@ -34,7 +35,24 @@ model Product {
   stock       Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  cartItems    CartItem[]
   highlight   Boolean @default(false)
+}
+
+model CartItem {
+  id         Int      @id @default(autoincrement())
+
+  userId     Int
+  productId  String
+
+  quantity   Int      @default(1)
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, productId])
 }
 
 
