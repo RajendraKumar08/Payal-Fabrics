@@ -1,6 +1,8 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import Razorpay from "razorpay";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { prisma } from "@/prisma-db";
 
 const generatesig  = async (paymentId: string, orderId: string) => {
     const keySecret = process.env.RAZORPAY_SECRET_ID;
@@ -19,6 +21,62 @@ export async function POST(req: NextRequest) {
     const generatedSignature = await generatesig(paymentId, orderId);
 
     if (generatedSignature === signature)   {
+        const { getUser } = getKindeServerSession();
+        const user = await getUser();
+            if (!user || !user.id) {
+                return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+            }
+        const dbuser = await prisma.user.findUnique({
+            where: {
+                kindeId: user.id
+            },
+            include: {
+                cartItems: {
+                    include: {
+                        product: true
+                    }
+                }
+            }
+        });
+        if (!dbuser) {
+            return NextResponse.json({ message: "User not found" }, { status: 404 });
+        }
+        const totalAmount = dbuser.cartItems.reduce(
+            (sum, item) => {
+                return (
+                    sum +
+                    item.product.price * item.quantity
+                );
+            },
+            0
+        );
+        const order = await prisma.order.create({
+            data: {
+                userId: dbuser.id,
+                totalAmount,
+                razorpayOrderId : orderId,
+                razorpayPaymentId: paymentId,
+                paymentStatus: "PAID",
+
+            }
+        });
+        for (const item of dbuser.cartItems) {
+            await prisma.orderItem.create({
+                data: {
+                    orderId: order.id,
+                    productId: item.productId,
+                    quantity: item.quantity,
+                    price: item.product.price
+                }
+            });
+        }
+
+        await prisma.cartItem.deleteMany({
+            where: {
+                userId: dbuser.id
+            }
+        });
+        
         return NextResponse.json({ message: "Payment verified successfully.", isOk: true });
     } else {
         return NextResponse.json({ message: "Payment verification failed.", isOk: false }, { status: 400 });

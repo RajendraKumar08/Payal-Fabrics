@@ -19,6 +19,7 @@ model User {
   name          String?
   email         String   @unique
   cartItems     CartItem[]
+  orders        Order[]
   profileImage  String? 
   role          Role     @default(USER)
   createdAt     DateTime @default(now())
@@ -35,7 +36,8 @@ model Product {
   stock       Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  cartItems    CartItem[]
+  cartItems   CartItem[]
+  orderItems  OrderItem[]
   highlight   Boolean @default(false)
 }
 
@@ -54,6 +56,46 @@ model CartItem {
 
   @@unique([userId, productId])
 }
+
+model Order {
+  id                 String          @id @default(cuid())
+
+  userId             Int
+  user               User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  totalAmount        Float
+
+  razorpayOrderId    String?         @unique
+  razorpayPaymentId  String?         @unique
+
+  paymentStatus      PaymentStatus   @default(PENDING)
+
+
+  orderItems         OrderItem[]
+
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+}
+
+model OrderItem {
+  id          Int       @id @default(autoincrement())
+
+  orderId     String
+  order       Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  productId   String
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  quantity    Int
+  price       Float
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+}
+
 
 
 

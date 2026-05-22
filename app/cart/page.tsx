@@ -19,13 +19,18 @@ export default function CartPage() {
 
     const paymentOptions = {
       key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "", // Razorpay Key ID
+
       amount: total * 100, // Amount in paise,
       currency: orderData.currency,
+
       name: "Payal Fabrics",
       description: "Complete your purchase",
+
       order_id: orderData.id, // Razorpay Order ID from server
+
       handler: async function (response: any) {
         console.log("Payment response from Razorpay:", response);
+        
         const res = await fetch('api/verifyorder', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
