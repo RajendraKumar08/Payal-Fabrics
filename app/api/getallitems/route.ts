@@ -9,9 +9,9 @@ export async function GET(req: NextRequest) {
     if (category) where.category = category;
     if (highlight === "true") where.highlight = true;
 
-    const products = await prisma.product.findMany({
+   const products = await prisma.product.findMany({
         where: Object.keys(where).length ? where : undefined,
-    });
+   })
 
     return NextResponse.json(products);
 }

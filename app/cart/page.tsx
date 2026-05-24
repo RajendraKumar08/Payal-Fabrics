@@ -1,16 +1,48 @@
 "use client";
 
 import { useCart } from "@/app/components/CartContext";
+import DeliveryForm from "@/app/components/DeliveryForm";
 import Script from "next/script";
 import { useState } from "react";
+
+import {
+    get_token,
+    get_rates,
+    create_order,
+    assign_awb,
+} from "@/app/utils/shiprocket";
+
+interface DeliveryFormData {
+  billing_customer_name: string;
+  billing_phone: string;
+  billing_address: string;
+  billing_city: string;
+  billing_pincode: string;
+  billing_state: string;
+  billing_country: string;
+  length: number;
+  breadth: number;
+  height: number;
+  weight: number;
+  pickup_location?: string;
+}
+
 export default function CartPage() {
   const { items, count, clearCart, removeItem } = useCart();
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+  const [showDeliveryForm, setShowDeliveryForm] = useState(false);
+  const [deliveryData, setDeliveryData] = useState<DeliveryFormData | null>(null);
 
-  const handleCheckout = async () => {
+  const [token, setToken] = useState<string | null>(null);
+
+  const handleDeliverySubmit = (data: DeliveryFormData) => {
+    setDeliveryData(data);
+    handleCheckout(data);
+  };
+
+  const handleCheckout = async (deliveryFormData?: DeliveryFormData) => {
     try {
       setError(null);
       setLoading(true);
@@ -63,8 +95,43 @@ export default function CartPage() {
 
             const data = await verifyRes.json();
             if (data.isOk) {
+              // Create ShipRocket order after payment verification
+              if (deliveryFormData) {
+                try {
+                  const shipRocketRes = await fetch('/api/shiprocket', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      razorpayOrderId: response.razorpay_order_id,
+                      razorpayPaymentId: response.razorpay_payment_id,
+                      deliveryData: deliveryFormData,
+                      orderData: {
+                        email: 'user@example.com', // Get from user context/auth
+                        items: items.map(item => ({
+                          productId: item.id,
+                          quantity: item.quantity,
+                          name: item.name,
+                          price: item.price,
+                        })),
+                        total: total,
+                      }
+                    })
+                  });
+
+                  if (shipRocketRes.ok) {
+                    const shipRocketData = await shipRocketRes.json();
+                    console.log("ShipRocket order created:", shipRocketData);
+                  } else {
+                    console.error("ShipRocket order creation failed");
+                  }
+                } catch (err) {
+                  console.error("ShipRocket integration error:", err);
+                }
+              }
+
               alert("Payment successful and verified! Click Ok to proceed.");
               clearCart();
+              setShowDeliveryForm(false);
               setLoading(false);
             } else {
               alert("Payment verification failed. Please contact support.");
@@ -170,6 +237,18 @@ export default function CartPage() {
   );
 }
 
+if (showDeliveryForm) {
+  return (
+    <>
+      <Script
+        src="https://checkout.razorpay.com/v1/checkout.js"
+        strategy="lazyOnload"
+      />
+      <DeliveryForm onSubmit={handleDeliverySubmit} loading={loading} />
+    </>
+  );
+}
+
   return (
     <main className="min-h-screen bg-slate-50 px-6 py-20 text-slate-900">
       <Script
@@ -237,7 +316,7 @@ export default function CartPage() {
               <p className="text-sm text-slate-600">Total</p>
               <p className="mt-2 text-3xl font-bold">₹{total.toFixed(2)}</p>
               <button 
-                onClick={handleCheckout} 
+                onClick={() => setShowDeliveryForm(true)} 
                 disabled={loading} 
                 className="mt-4 rounded-full bg-green-600 px-6 py-3 text-white font-semibold transition hover:bg-green-700 disabled:bg-slate-400 disabled:cursor-not-allowed flex items-center justify-center gap-2 mx-auto"
               >
@@ -250,6 +329,7 @@ export default function CartPage() {
                   "Proceed to Checkout"
                 )}
               </button>
+              
             </div>
 
           )}
