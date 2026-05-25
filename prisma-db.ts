@@ -1,17 +1,26 @@
-import { PrismaClient, Role } from "@/app/generated/prisma/client";
+import { PrismaClient } from "@/app/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 
+const globalforprisma = globalThis as unknown as {
+    prisma: PrismaClient | undefined;
+};
+
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+    connectionString: process.env.DATABASE_URL,
 });
 
 const adapter = new PrismaPg(pool);
 
-export const prisma = new PrismaClient({
-  adapter,
-});
+export const prisma =
+    globalforprisma.prisma ??
+    new PrismaClient({
+        adapter,
+    });
 
+if (process.env.NODE_ENV !== "production") {
+    globalforprisma.prisma = prisma;
+}
 // const seedProducts = async () => {
 //   const count = await prisma.user.count();
 //   if (count === 0) {
@@ -67,5 +76,4 @@ export const prisma = new PrismaClient({
 //     where: { id }
 //   })
 // }
-
 

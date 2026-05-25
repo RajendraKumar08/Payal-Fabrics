@@ -16,6 +16,7 @@ const alexBrush = Alex_Brush({
 const Homepage = async () => {
 
   const { isAuthenticated, getUser } = getKindeServerSession();
+  // console.log("ENV db url", process.env.DATABASE_URL)
 
   const highlights = await prisma.product.findMany({
     where: {

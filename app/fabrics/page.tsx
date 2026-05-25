@@ -15,7 +15,9 @@ export default async function Fabrics() {
             cache: "no-store",
         }
     );
-
+    if(!res.ok){
+        throw new Error("Failed to fetch fabrics");
+    }
     const fabrics = await res.json();
     const { isAuthenticated } = getKindeServerSession();
     const authenticated = Boolean(await isAuthenticated());

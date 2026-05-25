@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ message: "User not found" }, { status: 404 });
         }
         const totalAmount = dbuser.cartItems.reduce(
-            (sum, item) => {
+            (sum , item) => {
                 return (
                     sum +
                     item.product.price * item.quantity

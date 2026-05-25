@@ -23,7 +23,9 @@ export async function POST() {
             return NextResponse.json(
                 {
                     message: "ShipRocket authentication failed",
-                    error: data,
+                    error: data,    
+                    
+                    
                 },
                 { status: response.status }
             );

@@ -79,7 +79,7 @@ export default function CartPage() {
           try {
             console.log("Payment response from Razorpay:", response);
             
-            const verifyRes = await fetch('api/verifyorder', {
+            const verifyRes = await fetch('/api/verifyorder', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
