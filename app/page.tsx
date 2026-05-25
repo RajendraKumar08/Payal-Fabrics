@@ -108,15 +108,17 @@ const Homepage = async () => {
                     />
 
                     {/* Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-8">
+                    <Link href={`/product/${highlight.id}`}>
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-8">
 
-                      <div className="text-center">
-                        <span className="text-white text-sm font-semibold tracking-[3px] uppercase border border-white/70 px-5 py-2 rounded-full backdrop-blur-md">
-                          Explore →
-                        </span>
+                        <div className="text-center">
+                          <span className="text-white text-sm font-semibold tracking-[3px] uppercase border border-white/70 px-5 py-2 rounded-full backdrop-blur-md hover:bg-white/10 transition-colors cursor-pointer">
+                            Explore →
+                          </span>
+                        </div>
+
                       </div>
-
-                    </div>
+                    </Link>
 
                     {/* Featured Badge */}
                     <div className="absolute top-4 right-4 bg-purple-100 text-purple-900 text-xs font-semibold px-4 py-1.5 rounded-full shadow-sm">

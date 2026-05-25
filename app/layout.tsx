@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Alex_Brush, Josefin_Sans, Poppins } from "next/font/google";
 import "./globals.css";
-import { RegisterLink, LoginLink } from "@kinde-oss/kinde-auth-nextjs";
+import { RegisterLink, LoginLink, KindeProvider } from "@kinde-oss/kinde-auth-nextjs";
 import Link from "next/link";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
@@ -55,9 +55,10 @@ export default async function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <CartProvider>
-          {/* ── Professional Navbar ── */}
-          <nav className="sticky top-0 z-50 bg-slate-950 border-b border-slate-800 shadow-lg shadow-slate-950/20">
+        <KindeProvider>
+          <CartProvider>
+            {/* ── Professional Navbar ── */}
+            <nav className="sticky top-0 z-50 bg-slate-950 border-b border-slate-800 shadow-lg shadow-slate-950/20">
             <div className="max-w-7xl mx-auto px-6 py-3 flex flex-wrap items-center justify-between gap-4">
 
               {/* Brand */}
@@ -108,8 +109,9 @@ export default async function RootLayout({
           </ul>
         </div>
       </nav>
-      {children}
-        </CartProvider>
+          {children}
+          </CartProvider>
+        </KindeProvider>
       </body>
     </html>
   );
