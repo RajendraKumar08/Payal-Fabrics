@@ -3,8 +3,8 @@ import { prisma } from "@/prisma-db";
 
 // ShipRocket API configuration
 const SHIPROCKET_API_URL = "https://apiv2.shiprocket.in/v1/external";
-const SHIPROCKET_EMAIL = process.env.SHIPROCKET_EMAIL || "";
-const SHIPROCKET_PASSWORD = process.env.SHIPROCKET_PASSWORD || "";
+const SHIPROCKET_EMAIL = process.env.SHIPROCKET_API_EMAIL || "";
+const SHIPROCKET_PASSWORD = process.env.SHIPROCKET_API_PASSWORD || "";
 
 interface OrderItem {
   productId: string;
@@ -30,6 +30,9 @@ interface DeliveryData {
 
 // Get ShipRocket Auth Token
 async function getShipRocketToken() {
+  console.log("Shiprocket url" , SHIPROCKET_API_URL);
+  console.log("Shiprocket email" , SHIPROCKET_EMAIL);
+  console.log("Shiprocket password" , SHIPROCKET_PASSWORD);
   try {
     const response = await fetch(`${SHIPROCKET_API_URL}/auth/login`, {
       method: "POST",
@@ -132,13 +135,19 @@ export async function POST(request: NextRequest) {
       },
       deliveryData
     );
+    console.log("ShipRocket response:", shipRocketResponse);
 
-    if (!shipRocketResponse.success) {
-      return NextResponse.json(
-        { error: "Failed to create ShipRocket order", details: shipRocketResponse },
-        { status: 400 }
-      );
+    if (!shipRocketResponse.shipment_id) {
+  return NextResponse.json(
+    {
+      error: "Failed to create ShipRocket order",
+      details: shipRocketResponse,
+    },
+    {
+      status: 400,
     }
+  );
+}
 
     // Save delivery info to database (optional)
     // You can extend your Prisma schema to include a DeliveryInfo model
@@ -146,7 +155,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      shipRocketOrderId: shipRocketResponse.data.shipment_id,
+      shipRocketOrderId: shipRocketResponse.shipment_id,
       message: "Order created successfully",
     });
   } catch (error) {
