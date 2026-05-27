@@ -3,19 +3,23 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useCart, CartProduct } from "@/app/components/CartContext";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 type AddToCartButtonProps = {
   product: CartProduct;
-  authenticated: boolean;
+  authenticated?: boolean;
 };
 
 export default function AddToCartButton({ product, authenticated }: AddToCartButtonProps) {
   const router = useRouter();
   const { addItem } = useCart();
   const [added, setAdded] = useState(false);
+  const { isAuthenticated } = useKindeBrowserClient();
 
   const handleClick = () => {
-    if (!authenticated) {
+    const isAuth = authenticated ?? Boolean(isAuthenticated);
+
+    if (!isAuth) {
       router.push("/login");
       return;
     }
