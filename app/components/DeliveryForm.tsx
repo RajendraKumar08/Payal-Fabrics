@@ -4,6 +4,7 @@ import { useState } from "react";
 
 interface DeliveryFormData {
   billing_customer_name: string;
+  billing_email: string;
   billing_phone: string;
   billing_address: string;
   billing_city: string;
@@ -25,6 +26,7 @@ interface DeliveryFormProps {
 export default function DeliveryForm({ onSubmit, loading = false }: DeliveryFormProps) {
   const [formData, setFormData] = useState<DeliveryFormData>({
     billing_customer_name: "",
+    billing_email: "",
     billing_phone: "",
     billing_address: "",
     billing_city: "",
@@ -73,6 +75,13 @@ export default function DeliveryForm({ onSubmit, loading = false }: DeliveryForm
     if (formData.weight <= 0) {
       newErrors.weight = "Weight must be greater than 0";
     }
+    if (
+      !formData.billing_email.trim() ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.billing_email)
+    ) {
+      newErrors.billing_email =
+        "Valid email required";
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -82,7 +91,7 @@ export default function DeliveryForm({ onSubmit, loading = false }: DeliveryForm
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name.includes("length") || name.includes("breadth") || name.includes("height") || name.includes("weight") 
+      [name]: name.includes("length") || name.includes("breadth") || name.includes("height") || name.includes("weight")
         ? parseFloat(value) || 0
         : value,
     }));
@@ -120,12 +129,41 @@ export default function DeliveryForm({ onSubmit, loading = false }: DeliveryForm
                 value={formData.billing_customer_name}
                 onChange={handleChange}
                 placeholder="Enter your full name"
-                className={`w-full rounded-lg border-2 px-4 py-3 text-slate-900 placeholder-slate-400 transition focus:outline-none ${
-                  errors.billing_customer_name ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50 focus:border-purple-500"
-                }`}
+                className={`w-full rounded-lg border-2 px-4 py-3 text-slate-900 placeholder-slate-400 transition focus:outline-none ${errors.billing_customer_name ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50 focus:border-purple-500"
+                  }`}
               />
               {errors.billing_customer_name && (
                 <p className="mt-1 text-sm text-red-600">{errors.billing_customer_name}</p>
+              )}
+            </div>
+
+            {/* Email */}
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">
+                Email *
+              </label>
+
+              <input
+                type="email"
+
+                name="billing_email"
+
+                value={formData.billing_email}
+
+                onChange={handleChange}
+
+                placeholder="Enter your email"
+
+                className={`w-full rounded-lg border-2 px-4 py-3 text-slate-900 placeholder-slate-400 transition focus:outline-none ${errors.billing_email
+                    ? "border-red-500 bg-red-50"
+                    : "border-slate-200 bg-slate-50 focus:border-purple-500"
+                  }`}
+              />
+
+              {errors.billing_email && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.billing_email}
+                </p>
               )}
             </div>
 
@@ -140,9 +178,8 @@ export default function DeliveryForm({ onSubmit, loading = false }: DeliveryForm
                 value={formData.billing_phone}
                 onChange={handleChange}
                 placeholder="Enter your 10-digit phone number"
-                className={`w-full rounded-lg border-2 px-4 py-3 text-slate-900 placeholder-slate-400 transition focus:outline-none ${
-                  errors.billing_phone ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50 focus:border-purple-500"
-                }`}
+                className={`w-full rounded-lg border-2 px-4 py-3 text-slate-900 placeholder-slate-400 transition focus:outline-none ${errors.billing_phone ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50 focus:border-purple-500"
+                  }`}
               />
               {errors.billing_phone && (
                 <p className="mt-1 text-sm text-red-600">{errors.billing_phone}</p>
@@ -160,9 +197,8 @@ export default function DeliveryForm({ onSubmit, loading = false }: DeliveryForm
                 onChange={handleChange}
                 placeholder="Enter your full address"
                 rows={3}
-                className={`w-full rounded-lg border-2 px-4 py-3 text-slate-900 placeholder-slate-400 transition focus:outline-none ${
-                  errors.billing_address ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50 focus:border-purple-500"
-                }`}
+                className={`w-full rounded-lg border-2 px-4 py-3 text-slate-900 placeholder-slate-400 transition focus:outline-none ${errors.billing_address ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50 focus:border-purple-500"
+                  }`}
               />
               {errors.billing_address && (
                 <p className="mt-1 text-sm text-red-600">{errors.billing_address}</p>
@@ -180,9 +216,8 @@ export default function DeliveryForm({ onSubmit, loading = false }: DeliveryForm
                 value={formData.billing_city}
                 onChange={handleChange}
                 placeholder="Enter your city"
-                className={`w-full rounded-lg border-2 px-4 py-3 text-slate-900 placeholder-slate-400 transition focus:outline-none ${
-                  errors.billing_city ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50 focus:border-purple-500"
-                }`}
+                className={`w-full rounded-lg border-2 px-4 py-3 text-slate-900 placeholder-slate-400 transition focus:outline-none ${errors.billing_city ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50 focus:border-purple-500"
+                  }`}
               />
               {errors.billing_city && (
                 <p className="mt-1 text-sm text-red-600">{errors.billing_city}</p>
@@ -200,9 +235,8 @@ export default function DeliveryForm({ onSubmit, loading = false }: DeliveryForm
                 value={formData.billing_pincode}
                 onChange={handleChange}
                 placeholder="Enter 6-digit pincode"
-                className={`w-full rounded-lg border-2 px-4 py-3 text-slate-900 placeholder-slate-400 transition focus:outline-none ${
-                  errors.billing_pincode ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50 focus:border-purple-500"
-                }`}
+                className={`w-full rounded-lg border-2 px-4 py-3 text-slate-900 placeholder-slate-400 transition focus:outline-none ${errors.billing_pincode ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50 focus:border-purple-500"
+                  }`}
               />
               {errors.billing_pincode && (
                 <p className="mt-1 text-sm text-red-600">{errors.billing_pincode}</p>
@@ -220,9 +254,8 @@ export default function DeliveryForm({ onSubmit, loading = false }: DeliveryForm
                 value={formData.billing_state}
                 onChange={handleChange}
                 placeholder="Enter your state"
-                className={`w-full rounded-lg border-2 px-4 py-3 text-slate-900 placeholder-slate-400 transition focus:outline-none ${
-                  errors.billing_state ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50 focus:border-purple-500"
-                }`}
+                className={`w-full rounded-lg border-2 px-4 py-3 text-slate-900 placeholder-slate-400 transition focus:outline-none ${errors.billing_state ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50 focus:border-purple-500"
+                  }`}
               />
               {errors.billing_state && (
                 <p className="mt-1 text-sm text-red-600">{errors.billing_state}</p>
@@ -260,9 +293,8 @@ export default function DeliveryForm({ onSubmit, loading = false }: DeliveryForm
                     onChange={handleChange}
                     step="0.1"
                     min="0"
-                    className={`w-full rounded-lg border-2 px-3 py-2 text-slate-900 transition focus:outline-none ${
-                      errors.length ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50 focus:border-purple-500"
-                    }`}
+                    className={`w-full rounded-lg border-2 px-3 py-2 text-slate-900 transition focus:outline-none ${errors.length ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50 focus:border-purple-500"
+                      }`}
                   />
                   {errors.length && (
                     <p className="mt-1 text-xs text-red-600">{errors.length}</p>
@@ -280,9 +312,8 @@ export default function DeliveryForm({ onSubmit, loading = false }: DeliveryForm
                     onChange={handleChange}
                     step="0.1"
                     min="0"
-                    className={`w-full rounded-lg border-2 px-3 py-2 text-slate-900 transition focus:outline-none ${
-                      errors.breadth ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50 focus:border-purple-500"
-                    }`}
+                    className={`w-full rounded-lg border-2 px-3 py-2 text-slate-900 transition focus:outline-none ${errors.breadth ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50 focus:border-purple-500"
+                      }`}
                   />
                   {errors.breadth && (
                     <p className="mt-1 text-xs text-red-600">{errors.breadth}</p>
@@ -300,9 +331,8 @@ export default function DeliveryForm({ onSubmit, loading = false }: DeliveryForm
                     onChange={handleChange}
                     step="0.1"
                     min="0"
-                    className={`w-full rounded-lg border-2 px-3 py-2 text-slate-900 transition focus:outline-none ${
-                      errors.height ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50 focus:border-purple-500"
-                    }`}
+                    className={`w-full rounded-lg border-2 px-3 py-2 text-slate-900 transition focus:outline-none ${errors.height ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50 focus:border-purple-500"
+                      }`}
                   />
                   {errors.height && (
                     <p className="mt-1 text-xs text-red-600">{errors.height}</p>
@@ -320,9 +350,8 @@ export default function DeliveryForm({ onSubmit, loading = false }: DeliveryForm
                     onChange={handleChange}
                     step="0.1"
                     min="0"
-                    className={`w-full rounded-lg border-2 px-3 py-2 text-slate-900 transition focus:outline-none ${
-                      errors.weight ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50 focus:border-purple-500"
-                    }`}
+                    className={`w-full rounded-lg border-2 px-3 py-2 text-slate-900 transition focus:outline-none ${errors.weight ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50 focus:border-purple-500"
+                      }`}
                   />
                   {errors.weight && (
                     <p className="mt-1 text-xs text-red-600">{errors.weight}</p>
