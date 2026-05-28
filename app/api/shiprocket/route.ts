@@ -1,10 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/prisma-db";
-
-// ShipRocket API configuration
-const SHIPROCKET_API_URL = "https://apiv2.shiprocket.in/v1/external";
-const SHIPROCKET_EMAIL = process.env.SHIPROCKET_API_EMAIL || "";
-const SHIPROCKET_PASSWORD = process.env.SHIPROCKET_API_PASSWORD || "";
 
 interface OrderItem {
   productId: string;
@@ -15,6 +9,7 @@ interface OrderItem {
 
 interface DeliveryData {
   billing_customer_name: string;
+  billing_email: string;
   billing_phone: string;
   billing_address: string;
   billing_city: string;
@@ -25,144 +20,253 @@ interface DeliveryData {
   breadth: number;
   height: number;
   weight: number;
-  pickup_location?: string;
 }
 
-// Get ShipRocket Auth Token
-async function getShipRocketToken() {
-  console.log("Shiprocket url" , SHIPROCKET_API_URL);
-  console.log("Shiprocket email" , SHIPROCKET_EMAIL);
-  console.log("Shiprocket password" , SHIPROCKET_PASSWORD);
-  try {
-    const response = await fetch(`${SHIPROCKET_API_URL}/auth/login`, {
+async function get_shiprocket_token() {
+
+  const response = await fetch(
+    `${process.env.SHIPROCKET_API_URL}/auth/login`,
+    {
       method: "POST",
+
       headers: {
         "Content-Type": "application/json",
       },
+
       body: JSON.stringify({
-        email: SHIPROCKET_EMAIL,
-        password: SHIPROCKET_PASSWORD,
+        email: process.env.SHIPROCKET_API_EMAIL,
+        password: process.env.SHIPROCKET_API_PASSWORD,
       }),
-    });
-
-    const data = await response.json();
-    if (data.token) {
-      return data.token;
     }
-    throw new Error("Failed to get ShipRocket token");
-  } catch (error) {
-    console.error("ShipRocket auth error:", error);
-    throw error;
+  );
+
+  const data = await response.json();
+
+  console.log("ShipRocket Auth Response:", data);
+
+  if (!response.ok) {
+
+    throw new Error(
+      JSON.stringify(data)
+    );
   }
+
+  return data.token;
 }
 
-// Create order in ShipRocket
-async function createShipRocketOrder(
-  token: string,
-  orderData: any,
-  deliveryData: DeliveryData
-) {
+export async function POST(req: NextRequest) {
+
   try {
-    const payload = {
-      order_id: orderData.orderId,
-      order_date: new Date().toISOString(),
-      pickup_location: deliveryData.pickup_location || "Home",
-      billing_customer_name: deliveryData.billing_customer_name,
-      billing_email: orderData.email,
-      billing_phone: deliveryData.billing_phone,
-      billing_address: deliveryData.billing_address,
-      billing_address_2: "",
-      billing_city: deliveryData.billing_city,
-      billing_pincode: deliveryData.billing_pincode,
-      billing_state: deliveryData.billing_state,
-      billing_country: deliveryData.billing_country,
-      billing_isd_code: "+91",
-      shipping_is_billing: true,
-      order_items: orderData.items.map((item: OrderItem) => ({
-        name: item.name,
-        sku: item.productId,
-        units: item.quantity,
-        selling_price: item.price,
-      })),
-      payment_method: "Prepaid",
-      sub_total: orderData.total,
-      length: deliveryData.length,
-      breadth: deliveryData.breadth,
-      height: deliveryData.height,
-      weight: deliveryData.weight,
-    };
 
-    const response = await fetch(`${SHIPROCKET_API_URL}/orders/create/adhoc`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(payload),
-    });
+    const body = await req.json();
 
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("ShipRocket order creation error:", error);
-    throw error;
-  }
-}
+    const {
+      razorpayOrderId,
+      razorpayPaymentId,
+      deliveryData,
+      orderData,
+    } = body;
 
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const { razorpayOrderId, razorpayPaymentId, deliveryData, orderData } = body;
+    if (
+      !razorpayOrderId ||
+      !razorpayPaymentId ||
+      !deliveryData ||
+      !orderData
+    ) {
 
-    if (!razorpayOrderId || !razorpayPaymentId || !deliveryData || !orderData) {
       return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
+        {
+          error: "Missing required fields",
+        },
+        {
+          status: 400,
+        }
       );
     }
 
-    // Get ShipRocket token
-    const token = await getShipRocketToken();
+    const token = await get_shiprocket_token();
 
-    // Create order in ShipRocket
-    const shipRocketResponse = await createShipRocketOrder(
-      token,
-      {
-        orderId: razorpayOrderId,
-        email: orderData.email,
-        items: orderData.items,
-        total: orderData.total,
-      },
-      deliveryData
+    const payload = {
+
+      order_id: razorpayOrderId,
+
+      order_date: new Date().toISOString(),
+
+      pickup_location: "warehouse",
+
+      billing_customer_name:
+        deliveryData.billing_customer_name,
+
+      billing_last_name: "",
+
+      billing_address:
+        deliveryData.billing_address,
+
+      billing_address_2: "",
+
+      billing_city:
+        deliveryData.billing_city,
+
+      billing_pincode:
+        deliveryData.billing_pincode,
+
+      billing_state:
+        deliveryData.billing_state,
+
+      billing_country:
+        deliveryData.billing_country,
+
+      billing_email:
+        orderData.email,
+
+      billing_phone:
+        deliveryData.billing_phone,
+
+      shipping_is_billing: true,
+
+      order_items: orderData.items.map(
+        (item: OrderItem) => ({
+          name: item.name,
+
+          sku: String(item.productId),
+
+          units: item.quantity,
+
+          selling_price: item.price,
+        })
+      ),
+
+      payment_method: "Prepaid",
+
+      sub_total: orderData.total,
+
+      length: deliveryData.length,
+
+      breadth: deliveryData.breadth,
+
+      height: deliveryData.height,
+
+      weight: deliveryData.weight,
+    };
+
+    console.log(
+      "ShipRocket Payload:",
+      payload
     );
-    console.log("ShipRocket response:", shipRocketResponse);
 
-    if (!shipRocketResponse.shipment_id) {
-  return NextResponse.json(
-    {
-      error: "Failed to create ShipRocket order",
-      details: shipRocketResponse,
-    },
-    {
-      status: 400,
+    const response = await fetch(
+      `${process.env.SHIPROCKET_API_URL}/orders/create/adhoc`,
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+
+          Authorization: `Bearer ${token}`,
+        },
+
+        body: JSON.stringify(payload),
+      }
+    );
+
+    const data = await response.json();
+
+    console.log(
+      "ShipRocket Create Order Response:",
+      data
+    );
+
+    if (!response.ok) {
+
+      return NextResponse.json(
+        {
+          error: data,
+        },
+        {
+          status: response.status,
+        }
+      );
     }
-  );
-}
 
-    // Save delivery info to database (optional)
-    // You can extend your Prisma schema to include a DeliveryInfo model
-    // and save the delivery details here
+    if (!data.shipment_id) {
+
+      return NextResponse.json(
+        {
+          error: "Shipment ID missing",
+
+          details: data,
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    const shipment_id = data.shipment_id;
+
+    const assign_response = await fetch(
+      `${process.env.SHIPROCKET_API_URL}/courier/assign/awb`,
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+
+          Authorization: `Bearer ${token}`,
+        },
+
+        body: JSON.stringify({
+          shipment_id: shipment_id,
+        }),
+      }
+    );
+
+    const assign_data =
+      await assign_response.json();
+
+    console.log(
+      "ShipRocket Assign AWB Response:",
+      assign_data
+    );
+
+    if (!assign_response.ok) {
+
+      return NextResponse.json(
+        {
+          error: "AWB assign failed",
+
+          details: assign_data,
+        },
+        {
+          status: assign_response.status,
+        }
+      );
+    }
 
     return NextResponse.json({
       success: true,
-      shipRocketOrderId: shipRocketResponse.shipment_id,
-      message: "Order created successfully",
+
+      shipment_id: shipment_id,
+
+      awb_data: assign_data,
+
+      order_data: data,
     });
-  } catch (error) {
-    console.error("ShipRocket API error:", error);
+
+  } catch (error: any) {
+
+    console.log(
+      "ShipRocket Main Error:",
+      error
+    );
+
     return NextResponse.json(
-      { error: "Internal server error", details: String(error) },
-      { status: 500 }
+      {
+        error: error.message,
+      },
+      {
+        status: 500,
+      }
     );
   }
 }

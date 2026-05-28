@@ -15,6 +15,7 @@ import {
 
 interface DeliveryFormData {
   billing_customer_name: string;
+  billing_email: string;
   billing_phone: string;
   billing_address: string;
   billing_city: string;
@@ -110,7 +111,7 @@ export default function CartPage() {
                       razorpayPaymentId: response.razorpay_payment_id,
                       deliveryData: deliveryFormData,
                       orderData: {
-                        email: 'user@gamil.com', // Get from user context/auth
+                        email: deliveryFormData.billing_email,
                         items: items.map(item => ({
                           productId: item.id,
                           quantity: item.quantity,
