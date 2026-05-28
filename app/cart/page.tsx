@@ -126,7 +126,8 @@ export default function CartPage() {
                     const shipRocketData = await shipRocketRes.json();
                     console.log("ShipRocket order created:", shipRocketData);
                   } else {
-                    console.error("ShipRocket order creation failed");
+                    const shipRocketData = await shipRocketRes.json();
+                    console.error("ShipRocket order creation failed:", shipRocketData);
                   }
                 } catch (err) {
                   console.error("ShipRocket integration error:", err);
