@@ -28,7 +28,7 @@ const Homepage = async () => {
 
   const authenticated = Boolean(await isAuthenticated());
   const user = await getUser();
-  // console.log(user)
+  console.log("user in homepage", user);
   return (
     <>
 
@@ -40,6 +40,7 @@ const Homepage = async () => {
         }}
       >
         <div className="absolute inset-0 bg-slate-950/60"></div>
+        
 
         <div className="relative z-10 text-center px-6">
           <h1

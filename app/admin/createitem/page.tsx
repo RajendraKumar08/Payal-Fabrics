@@ -99,7 +99,7 @@ const adminpage = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-pink-50 px-4">
+        <div className="min-h-screen flex items-center justify-center bg-pink-50 px-4 text-black">
 
             <form
                 className="w-full max-w-md bg-white p-8 rounded-3xl shadow-2xl flex flex-col gap-5 text-black"

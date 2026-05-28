@@ -73,10 +73,10 @@ export default async function RootLayout({
               <Link href="/" className="relative hover:text-purple-200 transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-purple-400 after:transition-all after:duration-300 hover:after:w-full">Home</Link>
             </li>
             <li>
-              <Link href="/women" className="relative hover:text-purple-200 transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-purple-400 after:transition-all after:duration-300 hover:after:w-full">Women&apos;s Wear</Link>
+              <Link href="/dress%20material" className="relative hover:text-purple-200 transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-purple-400 after:transition-all after:duration-300 hover:after:w-full">Women&apos;s Wear</Link>
             </li>
             <li>
-              <Link href="/fabrics" className="relative hover:text-purple-200 transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-purple-400 after:transition-all after:duration-300 hover:after:w-full">Fabrics</Link>
+              <Link href="/fabric" className="relative hover:text-purple-200 transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-purple-400 after:transition-all after:duration-300 hover:after:w-full">Fabrics</Link>
             </li>
             <li>
               <Link href="/accessories" className="relative hover:text-purple-200 transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-purple-400 after:transition-all after:duration-300 hover:after:w-full">Accessories</Link>

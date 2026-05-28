@@ -4,6 +4,7 @@ import { useCart } from "@/app/components/CartContext";
 import DeliveryForm from "@/app/components/DeliveryForm";
 import Script from "next/script";
 import { useState } from "react";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 import {
     get_token,
@@ -36,6 +37,9 @@ export default function CartPage() {
   const [deliveryData, setDeliveryData] = useState<DeliveryFormData | null>(null);
 
   const [token, setToken] = useState<string | null>(null);
+  const { getUser } = getKindeServerSession();
+  const user = getUser();
+  console.log("user in cart page", user);
 
   const handleDeliverySubmit = (data: DeliveryFormData) => {
     setDeliveryData(data);
@@ -106,7 +110,7 @@ export default function CartPage() {
                       razorpayPaymentId: response.razorpay_payment_id,
                       deliveryData: deliveryFormData,
                       orderData: {
-                        email: 'user@example.com', // Get from user context/auth
+                        email: 'user@gamil.com', // Get from user context/auth
                         items: items.map(item => ({
                           productId: item.id,
                           quantity: item.quantity,
