@@ -1,10 +1,7 @@
 
-import { RegisterLink, LoginLink } from "@kinde-oss/kinde-auth-nextjs";
-
 import Link from "next/link";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import TypingText from "@/app/components/TypingText";
-import AddToCartButton from "@/app/components/AddToCartButton";
 import { Alex_Brush } from "next/font/google";
 import { prisma } from "@/prisma-db";
 const alexBrush = Alex_Brush({
@@ -15,7 +12,7 @@ const alexBrush = Alex_Brush({
 
 const Homepage = async () => {
 
-  const { isAuthenticated, getUser } = getKindeServerSession();
+  const { getUser } = getKindeServerSession();
   // console.log("ENV db url", process.env.DATABASE_URL)
 
   const highlights = await prisma.product.findMany({
@@ -26,7 +23,6 @@ const Homepage = async () => {
   });
   const displayedHighlights = Array.isArray(highlights) ? highlights.slice(0, 6) : [];
 
-  const authenticated = Boolean(await isAuthenticated());
   const user = await getUser();
   console.log("user in homepage", user);
   return (
@@ -150,15 +146,11 @@ const Homepage = async () => {
                         <span className="text-xs text-purple-900 bg-purple-100 border border-purple-200 px-4 py-1.5 rounded-full font-medium">
                           Premium
                         </span>
-                        <AddToCartButton
-                          product={{
-                            id: highlight.id?.toString() || highlight.name,
-                            name: highlight.name,
-                            price: Number(highlight.price) || 0,
-                            image: highlight.image || "",
-                          }}
-                          authenticated={authenticated}
-                        />
+                        {highlight.stock <= 0 && (
+                            <span className="text-xs text-red-900 bg-red-100 border border-red-200 px-4 py-1.5 rounded-full font-medium">
+                                Out of Stock
+                            </span>
+                        )}
                       </div>
 
                     </div>

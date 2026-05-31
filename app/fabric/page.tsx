@@ -1,8 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Dancing_Script } from 'next/font/google'
-import AddToCartButton from '@/app/components/AddToCartButton';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 
 const dancingScript = Dancing_Script({
     subsets: ['latin'],
@@ -20,8 +18,6 @@ export default async function Fabrics() {
         throw new Error("Failed to fetch fabrics");
     }
     const fabrics = await res.json();
-    const { isAuthenticated } = getKindeServerSession();
-    const authenticated = Boolean(await isAuthenticated());
 
     return (
         <main className="min-h-screen bg-slate-50">
@@ -114,7 +110,7 @@ export default async function Fabrics() {
                                             </h3>
 
                                             <p className="text-sm text-slate-500 mt-1">
-                                                ₹{fabric.price.toFixed(2)}
+                                                ₹{fabric.price.toFixed(2)}/Meter
                                             </p>
                                         </div>
 
@@ -122,15 +118,11 @@ export default async function Fabrics() {
                                             <span className="text-xs text-purple-900 bg-purple-100 border border-purple-200 px-4 py-1.5 rounded-full font-medium">
                                                 Premium
                                             </span>
-                                            <AddToCartButton
-                                                product={{
-                                                    id: fabric.id?.toString() || fabric.name,
-                                                    name: fabric.name,
-                                                    price: Number(fabric.price) || 0,
-                                                    image: fabric.image || "",
-                                                }}
-                                                authenticated={authenticated}
-                                            />
+                                            {fabric.stock <= 0 && (
+                                                <span className="text-xs text-red-900 bg-red-100 border border-red-200 px-4 py-1.5 rounded-full font-medium">
+                                                    Out of Stock
+                                                </span>
+                                            )}
                                         </div>
                                     </div>
                                 </div>

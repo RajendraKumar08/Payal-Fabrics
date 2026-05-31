@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import AddToCartButton from '@/app/components/AddToCartButton';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import { Dancing_Script } from 'next/font/google';
+import Select from 'react-select';
 
 const dancingScript = Dancing_Script({
     subsets: ['latin'],
@@ -32,6 +33,29 @@ export default function ProductDetail() {
     const [error, setError] = useState<string | null>(null);
     const { isAuthenticated } = useKindeBrowserClient();
     const authenticated = Boolean(isAuthenticated);
+    const [quantity, setQuantity] = useState(0.5);
+    const options = [
+                    { value: 0.5, label: "0.5 Meter" },
+                    { value: 1, label: "1.0 Meter" },
+                    { value: 1.5, label: "1.5 Meters" },
+                    { value: 2, label: "2.0 Meters" },
+                    { value: 2.5, label: "2.5 Meters" },
+                    { value: 3, label: "3.0 Meters" },
+                    { value: 3.5, label: "3.5 Meters" },
+                    { value: 4, label: "4.0 Meters" },
+                    { value: 4.5, label: "4.5 Meters" },
+                    { value: 5, label: "5.0 Meters" },
+                    { value: 5.5, label: "5.5 Meters" },
+                    { value: 6, label: "6.0 Meters" },
+                    { value: 6.5, label: "6.5 Meters" },
+                    { value: 7, label: "7.0 Meters" },
+                    { value: 7.5, label: "7.5 Meters" },
+                    { value: 8, label: "8.0 Meters" },
+                    { value: 8.5, label: "8.5 Meters" },
+                    { value: 9, label: "9.0 Meters" },
+                    { value: 9.5, label: "9.5 Meters" },
+                    { value: 10, label: "10.0 Meters" },
+                    ];
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -149,7 +173,9 @@ export default function ProductDetail() {
                         {/* Price */}
                         <div className="mb-6 pb-6 border-b border-slate-200">
                             <p className="text-4xl font-bold text-purple-600">
-                                ₹{product.price.toFixed(2)}
+                                {product.category.toLowerCase() === 'fabric'
+                                    ? `₹${product.price.toFixed(2)}/Meter`
+                                    : `₹${product.price.toFixed(2)}`}
                             </p>
                             <p className="text-sm text-slate-500 mt-2">
                                 Inclusive of all taxes
@@ -181,6 +207,16 @@ export default function ProductDetail() {
 
                         {/* Add to Cart & Actions */}
                         <div className="flex flex-col gap-4">
+                            {product.category.toLowerCase() === 'fabric' && (
+                                <Select
+                                    placeholder="0.5 Meter"
+                                    options={options}
+                                    onChange={(selected) => setQuantity(selected?.value || 0.5)}
+                                    menuPlacement="auto"
+                                    maxMenuHeight={200}
+                                    className="text-black w-48"
+                                />
+                            )}
                             {product.stock > 0 ? (
                                 <AddToCartButton
                                     product={{
@@ -188,6 +224,7 @@ export default function ProductDetail() {
                                         name: product.name,
                                         price: product.price,
                                         image: product.image || '',
+                                        quantity: parseFloat(quantity.toString()),
                                     }}
                                     authenticated={authenticated}
                                 />
