@@ -6,6 +6,7 @@ import Script from "next/script";
 import { useState } from "react";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
+
 import {
     get_token,
     get_rates,
@@ -30,24 +31,45 @@ interface DeliveryFormData {
 }
 
 export default function CartPage() {
+  
   const { items, count, clearCart, removeItem } = useCart();
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showDeliveryForm, setShowDeliveryForm] = useState(false);
   const [deliveryData, setDeliveryData] = useState<DeliveryFormData | null>(null);
-
+  const [pickupOptionincart, setPickupOptionincart] = useState("home");
   const [token, setToken] = useState<string | null>(null);
   const { getUser } = getKindeServerSession();
   const user = getUser();
   console.log("user in cart page", user);
 
-  const handleDeliverySubmit = (data: DeliveryFormData) => {
-    setDeliveryData(data);
-    handleCheckout(data);
-  };
+  const handleDeliverySubmit = (
+    data: DeliveryFormData,
+    pickupOption: string
+) => {
 
-  const handleCheckout = async (deliveryFormData?: DeliveryFormData) => {
+    console.log(
+        "pickupOption",
+        pickupOption
+    );
+
+    setDeliveryData(data);
+
+    setPickupOptionincart(
+        pickupOption
+    );
+
+    handleCheckout(
+        data,
+        pickupOption
+    );
+};
+
+  console.log("pickup option in cart page", pickupOptionincart);
+  // console.log("pickup option in form page", pickupOption);
+
+  const handleCheckout = async (deliveryFormData?: DeliveryFormData, pickupOption?: string) => {
     try {
       setError(null);
       setLoading(true);
@@ -101,7 +123,7 @@ export default function CartPage() {
             const data = await verifyRes.json();
             if (data.isOk) {
               // Create ShipRocket order after payment verification
-              if (deliveryFormData) {
+              if (deliveryFormData && pickupOption === "home") {
                 try {
                   const shipRocketRes = await fetch('/api/shiprocket', {
                     method: 'POST',

@@ -18,12 +18,15 @@ interface DeliveryFormData {
   pickup_location?: string;
 }
 
+
+
 interface DeliveryFormProps {
-  onSubmit: (data: DeliveryFormData) => void;
+  onSubmit: (data: DeliveryFormData, pickup_option: string) => void;
   loading?: boolean;
 }
 
 export default function DeliveryForm({ onSubmit, loading = false }: DeliveryFormProps) {
+  const [pickupOption, setPickupOption] = useState("home");
   const [formData, setFormData] = useState<DeliveryFormData>({
     billing_customer_name: "",
     billing_email: "",
@@ -37,7 +40,7 @@ export default function DeliveryForm({ onSubmit, loading = false }: DeliveryForm
     breadth: 10,
     height: 10,
     weight: 0.5,
-    pickup_location: "Home",
+    pickup_location: "warehouse",
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -45,39 +48,39 @@ export default function DeliveryForm({ onSubmit, loading = false }: DeliveryForm
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.billing_customer_name.trim()) {
+    if (!formData.billing_customer_name.trim() && pickupOption === "Home") {
       newErrors.billing_customer_name = "Name is required";
     }
-    if (!formData.billing_phone.trim() || !/^\d{10}$/.test(formData.billing_phone)) {
+    if ((!formData.billing_phone.trim() || !/^\d{10}$/.test(formData.billing_phone)) && pickupOption === "Home") {
       newErrors.billing_phone = "Valid 10-digit phone number required";
     }
-    if (!formData.billing_address.trim()) {
+    if (!formData.billing_address.trim() && pickupOption === "Home") {
       newErrors.billing_address = "Address is required";
     }
-    if (!formData.billing_city.trim()) {
+    if (!formData.billing_city.trim() && pickupOption === "Home") {
       newErrors.billing_city = "City is required";
     }
-    if (!formData.billing_pincode.trim() || !/^\d{6}$/.test(formData.billing_pincode)) {
+    if ((!formData.billing_pincode.trim() || !/^\d{6}$/.test(formData.billing_pincode)) && pickupOption === "Home") {
       newErrors.billing_pincode = "Valid 6-digit pincode required";
     }
-    if (!formData.billing_state.trim()) {
+    if (!formData.billing_state.trim() && pickupOption === "Home") {
       newErrors.billing_state = "State is required";
     }
-    if (formData.length <= 0) {
+    if (formData.length <= 0 && pickupOption === "Home") {
       newErrors.length = "Length must be greater than 0";
     }
-    if (formData.breadth <= 0) {
+    if (formData.breadth <= 0 && pickupOption === "Home") {
       newErrors.breadth = "Breadth must be greater than 0";
     }
-    if (formData.height <= 0) {
+    if (formData.height <= 0 && pickupOption === "Home") {
       newErrors.height = "Height must be greater than 0";
     }
-    if (formData.weight <= 0) {
+    if (formData.weight <= 0 && pickupOption === "Home") {
       newErrors.weight = "Weight must be greater than 0";
     }
     if (
-      !formData.billing_email.trim() ||
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.billing_email)
+      (!formData.billing_email.trim() ||
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.billing_email)) && pickupOption === "Home"
     ) {
       newErrors.billing_email =
         "Valid email required";
@@ -106,13 +109,22 @@ export default function DeliveryForm({ onSubmit, loading = false }: DeliveryForm
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      onSubmit(formData);
+      onSubmit(formData, pickupOption);
     }
   };
 
+
+
   return (
-    <div className="min-h-screen bg-slate-50 px-6 py-20 text-slate-900">
-      <div className="mx-auto max-w-2xl">
+    <div className="min-h-screen bg-slate-50 px-6 py-20 text-slate-900 flex flex-col justify-center items-center">
+      <div className="mx-auto border max-w-2xl">
+        <h1>Check if you will pickup your order from the given address</h1>
+        <select value={pickupOption} onChange={(e) => setPickupOption(e.target.value)} className="w-full rounded-lg border-2 border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 transition focus:border-purple-500 focus:outline-none mb-6">
+          <option value="warehouse">Warehouse</option>
+          <option value="home">Home</option>
+        </select>
+      </div>
+      {pickupOption === "home" && (<div className="mx-auto max-w-2xl">
         <div className="rounded-3xl bg-white p-8 shadow-xl">
           <h1 className="text-4xl font-bold mb-2">Delivery Details</h1>
           <p className="text-slate-600 mb-8">Please provide your delivery information</p>
@@ -155,8 +167,8 @@ export default function DeliveryForm({ onSubmit, loading = false }: DeliveryForm
                 placeholder="Enter your email"
 
                 className={`w-full rounded-lg border-2 px-4 py-3 text-slate-900 placeholder-slate-400 transition focus:outline-none ${errors.billing_email
-                    ? "border-red-500 bg-red-50"
-                    : "border-slate-200 bg-slate-50 focus:border-purple-500"
+                  ? "border-red-500 bg-red-50"
+                  : "border-slate-200 bg-slate-50 focus:border-purple-500"
                   }`}
               />
 
@@ -361,18 +373,22 @@ export default function DeliveryForm({ onSubmit, loading = false }: DeliveryForm
             </div>
 
             {/* Submit Button */}
-            <div className="flex gap-4 pt-6 border-t border-slate-200">
-              <button
-                type="submit"
-                disabled={loading}
-                className="flex-1 rounded-full bg-purple-600 px-6 py-3 text-white font-semibold transition hover:bg-purple-700 disabled:bg-slate-400 disabled:cursor-not-allowed"
-              >
-                {loading ? "Processing..." : "Proceed to Checkout"}
-              </button>
-            </div>
+
           </form>
         </div>
+      </div>)}
+
+      <form onSubmit={handleSubmit} className="w-full max-w-md mt-8">
+       <div className="flex gap-4 pt-6 border-t border-slate-200">
+        <button
+          type="submit"
+          disabled={loading}
+          className="flex-1 rounded-full bg-purple-600 px-6 py-3 text-white font-semibold transition hover:bg-purple-700 disabled:bg-slate-400 disabled:cursor-not-allowed"
+        >
+          {loading ? "Processing..." : "Proceed to Checkout"}
+        </button>
       </div>
+      </form>
     </div>
   );
 }

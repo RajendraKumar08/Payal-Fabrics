@@ -27,6 +27,12 @@ const AdminLayout = ({
                 >
                     Update Product
                 </Link>
+                <Link
+                    className="bg-pink-500 text-white px-4 py-2 rounded-xl hover:bg-pink-600 transition-all"
+                    href="/admin/orderspage"
+                >
+                    Orders
+                </Link>
 
             </nav>
 
