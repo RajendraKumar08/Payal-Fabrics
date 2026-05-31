@@ -69,6 +69,17 @@ export async function POST(req: NextRequest) {
                     price: item.product.price
                 }
             });
+
+            await prisma.product.update({
+                where: {
+                    id: item.productId
+                },
+                data: {
+                    stock: {
+                        decrement: item.quantity
+                    }
+                }
+            });
         }
 
         await prisma.cartItem.deleteMany({
@@ -76,7 +87,7 @@ export async function POST(req: NextRequest) {
                 userId: dbuser.id
             }
         });
-        
+
         return NextResponse.json({ message: "Payment verified successfully.", isOk: true });
     } else {
         return NextResponse.json({ message: "Payment verification failed.", isOk: false }, { status: 400 });
