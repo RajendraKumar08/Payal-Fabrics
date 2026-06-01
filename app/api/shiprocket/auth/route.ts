@@ -1,10 +1,16 @@
 // import axios from "axios";
 import { NextResponse } from "next/server";
+import {cookies} from "next/headers";
 
 export async function POST() {
     console.log("url", process.env.SHIPROCKET_API_URL);
     console.log("email", process.env.SHIPROCKET_API_EMAIL);
     console.log("password", process.env.SHIPROCKET_API_PASSWORD);
+    const cookieStore = await cookies();
+    const token = cookieStore.get("shiprocket_token")?.value;
+    if(token){
+        return NextResponse.json({token});
+    }
     try {
         const response = await fetch(`${process.env.SHIPROCKET_API_URL}/auth/login`, {
             method: "POST",
@@ -40,6 +46,13 @@ export async function POST() {
                 { status: 500 }
             );
         }
+
+        cookieStore.set("shiprocket_token", data.token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            maxAge: 60 * 60 * 24, // 1 hour
+            path: "/",
+        });
 
         return NextResponse.json({
             token: data.token,
