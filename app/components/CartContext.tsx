@@ -11,7 +11,7 @@ export type CartProduct = {
   quantity?: number; // optional for product definition, will be managed in cart
 };
 
-export type CartItem = CartProduct;
+export type CartItem = CartProduct & { quantity: number };
 
 type CartContextValue = {
   items: CartItem[];
@@ -38,7 +38,7 @@ function readCartStorage(): CartItem[] {
       price: Number(item.price) || 0,
       image: item.image,
       stock: Number(item.stock) || 0,
-      quantity: Number(item.quantity),
+      quantity: Number(item.quantity) || 0,
     }));
   } catch {
     return [];
@@ -62,18 +62,21 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           const data = await res.json();
           if (Array.isArray(data.cart)) {
             setItems(
-              data.cart.map((it: any) => ({
-                id: String(it.id),
-                name: it.name,
-                price: Number(it.price) || 0,
-                image: it.image || "",
-                quantity: Number(it.quantity) || 1,
-              }))
+              data.cart.map((it: unknown) => {
+                const item = it as Record<string, unknown>;
+                return {
+                  id: String(item.id),
+                  name: String(item.name ?? ""),
+                  price: Number(item.price) || 0,
+                  image: String(item.image ?? ""),
+                  quantity: Number(item.quantity) || 1,
+                };
+              })
             );
             return;
           }
         }
-      } catch (e) {
+      } catch {
         // ignore and fall back
       }
 
@@ -94,7 +97,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ cart: items }),
         });
-      } catch (e) {
+      } catch {
         // ignore
       }
     };
@@ -103,17 +106,19 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [items]);
 
   const addItem = (product: CartProduct) => {
+    const quantityToAdd = Number(product.quantity) || 1;
+
     setItems((current) => {
       const existing = current.find((item) => item.id === product.id);
       if (existing) {
         return current.map((item) =>
           item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
+            ? { ...item, quantity: item.quantity + quantityToAdd }
             : item
         );
       }
 
-      return [...current, { ...product, quantity: 1 }];
+      return [...current, { ...product, quantity: quantityToAdd }];
     });
   };
 
@@ -125,10 +130,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setItems([]);
   };
 
-  const count = useMemo(
-    () => items.reduce((total, item) => total + item.quantity, 0),
-    [items]
-  );
+  const count = useMemo(() => items.length, [items]);
 
   return (
     <CartContext.Provider value={{ items, count, addItem, removeItem, clearCart }}>

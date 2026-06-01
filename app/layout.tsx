@@ -7,6 +7,7 @@ import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import CartBadge from "@/app/components/CartBadge";
 import { CartProvider } from "@/app/components/CartContext";
+import Image from "next/image";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -99,7 +100,9 @@ export default async function RootLayout({
               </>
             ) : (
               <>
-                <li className="text-purple-200 font-semibold">{user?.given_name}</li>
+                <li className="text-purple-200 font-semibold">
+                 {user?.given_name || user?.email}
+                </li>
                 <li>
                   <LogoutLink className="px-4 py-1.5 rounded-full border border-purple-500 text-purple-200 hover:bg-purple-950/30 transition-colors duration-200 text-sm font-medium">Logout</LogoutLink>
                 </li>
