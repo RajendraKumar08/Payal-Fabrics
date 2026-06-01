@@ -7,11 +7,11 @@ export type CartProduct = {
   name: string;
   price: number;
   image?: string;
+  stock: number;
+  quantity?: number; // optional for product definition, will be managed in cart
 };
 
-export type CartItem = CartProduct & {
-  quantity: number;
-};
+export type CartItem = CartProduct;
 
 type CartContextValue = {
   items: CartItem[];
@@ -37,7 +37,8 @@ function readCartStorage(): CartItem[] {
       name: item.name,
       price: Number(item.price) || 0,
       image: item.image,
-      quantity: Number(item.quantity) || 1,
+      stock: Number(item.stock) || 0,
+      quantity: Number(item.quantity),
     }));
   } catch {
     return [];
