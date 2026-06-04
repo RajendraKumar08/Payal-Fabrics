@@ -210,6 +210,7 @@ export default function ProductDetail() {
                             {product.category.toLowerCase() === 'fabric' && (
                                 <Select
                                     placeholder="0.5 Meter"
+                                    value={options.find((option) => option.value === quantity)}
                                     options={options}
                                     onChange={(selected) => setQuantity(selected?.value || 0.5)}
                                     menuPlacement="auto"
@@ -224,7 +225,8 @@ export default function ProductDetail() {
                                         name: product.name,
                                         price: product.price,
                                         image: product.image || '',
-                                        quantity: parseFloat(quantity.toString()),
+                                        stock: product.stock,
+                                        quantity: product.category.toLowerCase() === 'fabric' ? parseFloat(quantity.toString()) : 1,
                                     }}
                                     authenticated={authenticated}
                                 />
