@@ -316,19 +316,26 @@ if (showDeliveryForm) {
             <div className="space-y-4">
               {items.map((item) => (
                 <div
-                  key={item.id}
+                  key={item.uid}
                   className="flex flex-col gap-4 rounded-3xl border border-slate-200 bg-slate-50 p-6 sm:flex-row sm:items-center sm:justify-between"
                 >
                   <div>
                     <h2 className="text-xl font-semibold text-slate-900">{item.name}</h2>
-                    <p className="mt-2 text-sm text-slate-600">Qty: {item.quantity}</p>
+                    {item.category?.toLowerCase() === "fabric" ? (
+                      <>
+                        <p className="mt-2 text-sm text-slate-600">Qty: 1</p>
+                        <p className="mt-1 text-sm text-slate-600">Meter: {item.quantity}</p>
+                      </>
+                    ) : (
+                      <p className="mt-2 text-sm text-slate-600">Qty: {item.quantity}</p>
+                    )}
                     <p className="mt-1 text-sm text-slate-700">Price: ₹{item.price.toFixed(2)}</p>
                   </div>
                   <div className="flex items-center gap-3">
                     <p className="text-lg font-semibold text-slate-900">₹{(item.price * item.quantity).toFixed(2)}</p>
                     <button
                       type="button"
-                      onClick={() => removeItem(item.id)}
+                      onClick={() => removeItem(item.uid)}
                       className="rounded-full bg-red-100 px-4 py-2 text-sm font-semibold text-red-700 transition hover:bg-red-200"
                     >
                       Remove

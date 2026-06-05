@@ -226,6 +226,7 @@ export default function ProductDetail() {
                                         price: product.price,
                                         image: product.image || '',
                                         stock: product.stock,
+                                        category: product.category,
                                         quantity: product.category.toLowerCase() === 'fabric' ? parseFloat(quantity.toString()) : 1,
                                     }}
                                     authenticated={authenticated}

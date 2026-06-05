@@ -8,21 +8,29 @@ export type CartProduct = {
   price: number;
   image?: string;
   stock: number;
+  category?: string;
   quantity?: number; // optional for product definition, will be managed in cart
 };
 
-export type CartItem = CartProduct & { quantity: number };
+export type CartItem = CartProduct & { quantity: number; uid: string };
 
 type CartContextValue = {
   items: CartItem[];
   count: number;
   addItem: (product: CartProduct) => void;
-  removeItem: (id: string) => void;
+  removeItem: (uid: string) => void;
   clearCart: () => void;
 };
 
 const CartContext = createContext<CartContextValue | undefined>(undefined);
 const STORAGE_KEY = "payal-fabrics-cart";
+
+function generateUid() {
+  if (typeof window === "undefined") return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  return typeof crypto !== "undefined" && "randomUUID" in crypto
+    ? (crypto as Crypto).randomUUID()
+    : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
 
 function readCartStorage(): CartItem[] {
   if (typeof window === "undefined") return [];
@@ -38,7 +46,9 @@ function readCartStorage(): CartItem[] {
       price: Number(item.price) || 0,
       image: item.image,
       stock: Number(item.stock) || 0,
+      category: item.category,
       quantity: Number(item.quantity) || 0,
+      uid: item.uid || generateUid(),
     }));
   } catch {
     return [];
@@ -52,27 +62,36 @@ function writeCartStorage(items: CartItem[]) {
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
     // Try server-side cart first; if unauthorized or error, fall back to localStorage
     const fetchServerCart = async () => {
+      const localCart = readCartStorage();
+
       try {
-        const res = await fetch("http://localhost:3000/api/cart", { method : 'GET', cache: "no-store" });
+        const res = await fetch("/api/cart", { method: "GET", cache: "no-store" });
         if (res.ok) {
           const data = await res.json();
           if (Array.isArray(data.cart)) {
-            setItems(
-              data.cart.map((it: unknown) => {
-                const item = it as Record<string, unknown>;
-                return {
-                  id: String(item.id),
-                  name: String(item.name ?? ""),
-                  price: Number(item.price) || 0,
-                  image: String(item.image ?? ""),
-                  quantity: Number(item.quantity) || 1,
-                };
-              })
-            );
+            const serverCart = data.cart.map((it: unknown) => {
+              const item = it as Record<string, unknown>;
+              return {
+                id: String(item.id),
+                name: String(item.name ?? ""),
+                price: Number(item.price) || 0,
+                image: String(item.image ?? ""),
+                category: String(item.category ?? ""),
+                quantity: Number(item.quantity) || 1,
+                uid: generateUid(),
+              };
+            });
+
+            if (localCart.length > serverCart.length) {
+              setItems(localCart);
+            } else {
+              setItems(serverCart);
+            }
             return;
           }
         }
@@ -80,19 +99,23 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         // ignore and fall back
       }
 
-      setItems(readCartStorage());
+      setItems(localCart);
     };
 
-    fetchServerCart();
+    fetchServerCart().finally(() => {
+      setIsInitialized(true);
+    });
   }, []);
 
   useEffect(() => {
+    if (!isInitialized) return;
+
     writeCartStorage(items);
 
     // Try to persist to server; ignore failures (user not authenticated)
     const persist = async () => {
       try {
-        await fetch("http://localhost:3000/api/cart", {
+        await fetch("/api/cart", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ cart: items }),
@@ -103,27 +126,19 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     };
 
     persist();
-  }, [items]);
+  }, [items, isInitialized]);
 
   const addItem = (product: CartProduct) => {
     const quantityToAdd = Number(product.quantity) || 1;
 
-    setItems((current) => {
-      const existing = current.find((item) => item.id === product.id);
-      if (existing) {
-        return current.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + quantityToAdd }
-            : item
-        );
-      }
-
-      return [...current, { ...product, quantity: quantityToAdd }];
-    });
+    setItems((current) => [
+      ...current,
+      { ...product, quantity: quantityToAdd, uid: generateUid() },
+    ]);
   };
 
-  const removeItem = (id: string) => {
-    setItems((current) => current.filter((item) => item.id !== id));
+  const removeItem = (uid: string) => {
+    setItems((current) => current.filter((item) => item.uid !== uid));
   };
 
   const clearCart = () => {

@@ -28,6 +28,7 @@ export async function GET() {
     name: item.product.name,
     price: item.product.price,
     image: item.product.image ?? "",
+    category: item.product.category,
     quantity: item.quantity,
   })) ?? [];
 
@@ -67,36 +68,32 @@ export async function POST(req: Request) {
   }
 
   const userId = dbUser.id;
-  const incomingProductIds = cart.map((item) => item.id);
 
-  await prisma.$transaction([
-    prisma.cartItem.deleteMany({
-      where: {
-        userId,
-        productId: {
-          notIn: incomingProductIds.length > 0 ? incomingProductIds : undefined,
-        },
-      },
-    }),
-    ...cart.map((item) =>
-      prisma.cartItem.upsert({
-        where: {
-          userId_productId: {
-            userId,
-            productId: item.id,
-          },
-        },
-        create: {
+  const operations = [
+    prisma.cartItem.deleteMany({ where: { userId } }),
+  ];
+
+  if (cart.length > 0) {
+    operations.push(
+      prisma.cartItem.createMany({
+        data: cart.map((item) => ({
           userId,
           productId: item.id,
           quantity: item.quantity,
-        },
-        update: {
-          quantity: item.quantity,
-        },
+        })),
+        skipDuplicates: true,
       })
-    ),
-  ]);
+    );
+  }
+
+  try {
+    await prisma.$transaction(operations);
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Cart update failed", error: String(error) },
+      { status: 500 }
+    );
+  }
 
   return NextResponse.json({ message: "Cart updated" });
 }
