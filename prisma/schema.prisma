@@ -49,6 +49,7 @@ model CartItem {
 model Order {
   id                String        @id @default(cuid())
   userId            Int
+  orderedBy         String
   totalAmount       Float
   razorpayOrderId   String?       @unique
   razorpayPaymentId String?       @unique

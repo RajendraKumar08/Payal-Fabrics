@@ -50,6 +50,10 @@ export async function POST(req: NextRequest) {
             },
             0
         );
+        
+        const orderedBy = dbuser.name || "Unknown";
+    
+
         const order = await prisma.order.create({
             data: {
                 userId: dbuser.id,
@@ -57,6 +61,7 @@ export async function POST(req: NextRequest) {
                 razorpayOrderId : orderId,
                 razorpayPaymentId: paymentId,
                 paymentStatus: "PAID",
+                orderedBy: orderedBy,
 
             }
         });

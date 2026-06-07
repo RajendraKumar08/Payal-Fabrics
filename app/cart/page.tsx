@@ -8,10 +8,10 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 
 import {
-    get_token,
-    get_rates,
-    create_order,
-    assign_awb,
+  get_token,
+  get_rates,
+  create_order,
+  assign_awb,
 } from "@/app/utils/shiprocket";
 
 interface DeliveryFormData {
@@ -31,7 +31,7 @@ interface DeliveryFormData {
 }
 
 export default function CartPage() {
-  
+
   const { items, count, clearCart, removeItem } = useCart();
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const [loading, setLoading] = useState(false);
@@ -47,24 +47,24 @@ export default function CartPage() {
   const handleDeliverySubmit = (
     data: DeliveryFormData,
     pickupOption: string
-) => {
+  ) => {
 
     console.log(
-        "pickupOption",
-        pickupOption
+      "pickupOption",
+      pickupOption
     );
 
     setDeliveryData(data);
 
     setPickupOptionincart(
-        pickupOption
+      pickupOption
     );
 
     handleCheckout(
-        data,
-        pickupOption
+      data,
+      pickupOption
     );
-};
+  };
 
   console.log("pickup option in cart page", pickupOptionincart);
   // console.log("pickup option in form page", pickupOption);
@@ -105,7 +105,7 @@ export default function CartPage() {
         handler: async function (response: any) {
           try {
             console.log("Payment response from Razorpay:", response);
-            
+
             const verifyRes = await fetch('/api/verifyorder', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -200,82 +200,28 @@ export default function CartPage() {
     }
   }
 
- if (loading) {
-  return (
-    <main className="min-h-screen bg-white flex items-center justify-center px-6 overflow-hidden">
-      
-      <div className="relative w-full max-w-xl rounded-[32px] border border-purple-100 bg-white p-10 shadow-[0_20px_60px_rgba(168,85,247,0.12)]">
-
-        {/* Glow Effects */}
-        <div className="absolute -top-20 -left-20 h-40 w-40 rounded-full bg-purple-200/40 blur-3xl"></div>
-        <div className="absolute -bottom-20 -right-20 h-52 w-52 rounded-full bg-fuchsia-200/40 blur-3xl"></div>
-
-        <div className="relative z-10 text-center">
-
-          {/* Animated Loader */}
-          <div className="flex justify-center mb-8">
-            <div className="relative h-20 w-20">
-              
-              <div className="absolute inset-0 rounded-full border-[6px] border-purple-100"></div>
-
-              <div className="absolute inset-0 rounded-full border-[6px] border-transparent border-t-purple-700 border-r-purple-500 animate-spin"></div>
-
-              <div className="absolute inset-3 rounded-full bg-purple-50 flex items-center justify-center">
-                <div className="h-3 w-3 rounded-full bg-purple-600 animate-pulse"></div>
-              </div>
-
-            </div>
-          </div>
-
-          {/* Heading */}
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-purple-800">
-            Processing Payment
-          </h1>
-
-          {/* Subtitle */}
-          <p className="mt-4 text-base md:text-lg leading-relaxed text-purple-600">
-            Please wait while we securely complete your transaction.
-          </p>
-
-          {/* Rounded Loading Bar */}
-          <div className="mt-10 overflow-hidden rounded-full bg-purple-100 h-3">
-            <div className="h-full w-1/2 rounded-full bg-gradient-to-r from-purple-500 via-fuchsia-500 to-purple-700 animate-[loading_1.8s_ease-in-out_infinite]"></div>
-          </div>
-
-          {/* Footer Text */}
-          <p className="mt-5 text-sm text-slate-500">
-            Do not close this window or refresh the page.
-          </p>
-
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-600"></div>
+          <p className="mt-4 text-slate-600">Processing your payment...</p>
         </div>
-      </div>
+      </main>
+    );
+  }
 
-      <style jsx>{`
-        @keyframes loading {
-          0% {
-            transform: translateX(-100%);
-          }
-          100% {
-            transform: translateX(250%);
-          }
-        }
-      `}</style>
-
-    </main>
-  );
-}
-
-if (showDeliveryForm) {
-  return (
-    <>
-      <Script
-        src="https://checkout.razorpay.com/v1/checkout.js"
-        strategy="lazyOnload"
-      />
-      <DeliveryForm onSubmit={handleDeliverySubmit} loading={loading} />
-    </>
-  );
-}
+  if (showDeliveryForm) {
+    return (
+      <>
+        <Script
+          src="https://checkout.razorpay.com/v1/checkout.js"
+          strategy="lazyOnload"
+        />
+        <DeliveryForm onSubmit={handleDeliverySubmit} loading={loading} />
+      </>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-slate-50 px-6 py-20 text-slate-900">
@@ -347,9 +293,9 @@ if (showDeliveryForm) {
             <div className="rounded-3xl border border-slate-200 bg-slate-100 p-6 text-right text-slate-900">
               <p className="text-sm text-slate-600">Total</p>
               <p className="mt-2 text-3xl font-bold">₹{total.toFixed(2)}</p>
-              <button 
-                onClick={() => setShowDeliveryForm(true)} 
-                disabled={loading} 
+              <button
+                onClick={() => setShowDeliveryForm(true)}
+                disabled={loading}
                 className="mt-4 rounded-full bg-green-600 px-6 py-3 text-white font-semibold transition hover:bg-green-700 disabled:bg-slate-400 disabled:cursor-not-allowed flex items-center justify-center gap-2 mx-auto"
               >
                 {loading ? (
@@ -361,7 +307,7 @@ if (showDeliveryForm) {
                   "Proceed to Checkout"
                 )}
               </button>
-              
+
             </div>
 
           )}
