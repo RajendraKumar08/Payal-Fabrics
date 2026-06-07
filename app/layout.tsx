@@ -1,13 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Alex_Brush, Josefin_Sans, Poppins } from "next/font/google";
 import "./globals.css";
-import { RegisterLink, LoginLink, KindeProvider } from "@kinde-oss/kinde-auth-nextjs";
-import Link from "next/link";
-import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import { KindeProvider } from "@kinde-oss/kinde-auth-nextjs";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import CartBadge from "@/app/components/CartBadge";
 import { CartProvider } from "@/app/components/CartContext";
-import Image from "next/image";
+import ScrollNavbar from "@/app/components/ScrollNavbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -58,61 +55,14 @@ export default async function RootLayout({
       <body className="min-h-full flex flex-col">
         <KindeProvider>
           <CartProvider>
-            {/* ── Professional Navbar ── */}
-            <nav className="sticky top-0 z-50 bg-slate-950 border-b border-slate-800 shadow-lg shadow-slate-950/20">
-            <div className="max-w-7xl mx-auto px-6 py-3 flex flex-wrap items-center justify-between gap-4">
-
-              {/* Brand */}
-              <Link href="/" className="flex flex-col leading-tight">
-                <span className={`text-3xl text-slate-100 leading-none ${alexBrush.className}`}>Payal Fabric</span>
-                <span className={`text-[10px] text-slate-400 tracking-[0.2em] uppercase ${josefinSans.className}`}>Only For Ladies</span>
-              </Link>
-
-              {/* Nav Links */}
-              <ul className={`flex flex-wrap items-center gap-5 text-sm font-medium text-slate-300 ${poppins.className}`}>
-            <li>
-              <Link href="/" className="relative hover:text-purple-200 transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-purple-400 after:transition-all after:duration-300 hover:after:w-full">Home</Link>
-            </li>
-            <li>
-              <Link href="/dress%20material" className="relative hover:text-purple-200 transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-purple-400 after:transition-all after:duration-300 hover:after:w-full">Women&apos;s Wear</Link>
-            </li>
-            <li>
-              <Link href="/fabric" className="relative hover:text-purple-200 transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-purple-400 after:transition-all after:duration-300 hover:after:w-full">Fabrics</Link>
-            </li>
-            <li>
-              <Link href="/accessories" className="relative hover:text-purple-200 transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-purple-400 after:transition-all after:duration-300 hover:after:w-full">Accessories</Link>
-            </li>
-            <li>
-              <Link href="/contact" className="relative hover:text-purple-200 transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-purple-400 after:transition-all after:duration-300 hover:after:w-full">Contact</Link>
-            </li>
-            <li>
-              <CartBadge />
-            </li>
-
-            {!authenticated ? (
-              <>
-                <li>
-                  <RegisterLink className="px-4 py-1.5 rounded-full border border-purple-500 text-purple-200 hover:bg-purple-950/30 transition-colors duration-200 text-sm font-medium">Register</RegisterLink>
-                </li>
-                <li>
-                  <LoginLink className="px-4 py-1.5 rounded-full bg-purple-600 text-white hover:bg-purple-500 transition-colors duration-200 text-sm font-medium">Login</LoginLink>
-                </li>
-              </>
-            ) : (
-              <>
-                <li className="text-purple-200 font-semibold">
-                 {user?.given_name || user?.email}
-                </li>
-                <li>
-                  <LogoutLink className="px-4 py-1.5 rounded-full border border-purple-500 text-purple-200 hover:bg-purple-950/30 transition-colors duration-200 text-sm font-medium">Logout</LogoutLink>
-                </li>
-              </>
-            )}
-
-          </ul>
-        </div>
-      </nav>
-          {children}
+            <ScrollNavbar
+              authenticated={authenticated}
+              user={user}
+              alexBrushClass={alexBrush.className}
+              josefinSansClass={josefinSans.className}
+              poppinsClass={poppins.className}
+            />
+            {children}
           </CartProvider>
         </KindeProvider>
       </body>

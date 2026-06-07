@@ -48,14 +48,14 @@ export default function Contact() {
 
             {/* ── Hero Banner ── */}
             <section className="relative bg-slate-950 py-16 px-6 text-center overflow-hidden">
-                <span className="absolute -top-10 -left-10 w-48 h-48 rounded-full bg-purple-200/40 blur-2xl" />
+                <span className="absolute -top-10 -left-10 w-48 h-48 rounded-full bg-gray-200/40 blur-2xl" />
                 <span className="absolute -bottom-10 -right-10 w-64 h-64 rounded-full bg-slate-100/40 blur-2xl" />
 
                 <p className="text-sm uppercase tracking-widest text-purple-600 mb-2">Payal Fabrics</p>
                 <h1 className={`text-5xl md:text-6xl font-bold text-white drop-shadow-md ${dancingScript.className}`}>
                     Get in Touch
                 </h1>
-                <p className="mt-3 text-purple-300 text-base max-w-md mx-auto">
+                <p className="mt-3 text-gray-300 text-base max-w-md mx-auto">
                     We&apos;d love to hear from you — reach out anytime!
                 </p>
 
@@ -83,7 +83,7 @@ export default function Contact() {
                         >
                             <div className="flex items-center gap-3 mb-3">
                                 <span className="text-2xl">{info.icon}</span>
-                                <span className="text-sm font-semibold text-purple-700 uppercase tracking-widest">{info.type}</span>
+                                <span className="text-sm font-semibold text-black uppercase tracking-widest">{info.type}</span>
                             </div>
                             <ul className="flex flex-col gap-1.5">
                                 {info.values.map((val) => (
@@ -97,11 +97,11 @@ export default function Contact() {
                     <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
                         <div className="flex items-center gap-3 mb-3">
                             <span className="text-2xl">🕐</span>
-                            <span className="text-sm font-semibold text-purple-700 uppercase tracking-widest">Business Hours</span>
+                            <span className="text-sm font-semibold text-black uppercase tracking-widest">Business Hours</span>
                         </div>
                         <ul className="text-sm text-slate-600 flex flex-col gap-1 pl-9">
                             <li>Mon – Sat: <span className="font-medium text-slate-800">10:00 AM – 7:00 PM</span></li>
-                            <li>Sunday: <span className="font-medium text-purple-600">Closed</span></li>
+                            <li>Sunday: <span className="font-medium text-black">Closed</span></li>
                         </ul>
                     </div>
                 </div>
@@ -112,7 +112,7 @@ export default function Contact() {
                     <p className="text-slate-500 text-sm mb-6">Fill in the form below and we&apos;ll get back to you shortly.</p>
 
                     {sent && (
-                        <div className="mb-5 px-4 py-3 rounded-xl bg-purple-50 border border-purple-200 text-purple-700 text-sm font-medium text-center">
+                        <div className="mb-5 px-4 py-3 rounded-xl bg-gray-100 border border-gray-200 text-gray-700 text-sm font-medium text-center">
                             ✅ Your message has been sent! We&apos;ll reply soon.
                         </div>
                     )}
@@ -173,7 +173,7 @@ export default function Contact() {
                         {/* Submit */}
                         <button
                             type="submit"
-                            className="mt-2 w-full bg-gradient-to-r from-purple-600 to-violet-500 text-white font-semibold py-3 rounded-xl hover:from-purple-700 hover:to-violet-600 transition-all duration-300 shadow-md hover:shadow-lg tracking-wide"
+                            className="mt-2 w-full bg-gradient-to-r from-gray-600 to-black text-white font-semibold py-3 rounded-xl hover:from-black hover:to-gray-600 transition-all duration-300 shadow-md hover:shadow-lg tracking-wide"
                         >
                             Send Message ✉️
                         </button>

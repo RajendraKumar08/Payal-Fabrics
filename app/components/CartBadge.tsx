@@ -9,10 +9,10 @@ export default function CartBadge() {
   return (
     <Link
       href="/cart"
-      className="inline-flex items-center gap-2 rounded-full border border-purple-500 bg-slate-900/90 px-4 py-1.5 text-xs font-semibold text-slate-100 transition hover:bg-purple-600 hover:text-white"
+      className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/5 px-4 py-1.5 text-xs font-semibold text-white transition hover:bg-white/15 hover:text-white"
     >
       <span>Cart</span>
-      <span className="inline-flex h-6 min-w-[1.5rem] items-center justify-center rounded-full bg-purple-600 px-2 text-sm text-white">
+      <span className="inline-flex h-6 min-w-[1.5rem] items-center justify-center rounded-full bg-white px-2 text-sm font-semibold text-black">
         {count}
       </span>
     </Link>

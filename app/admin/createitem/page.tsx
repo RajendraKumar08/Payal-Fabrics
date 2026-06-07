@@ -1,25 +1,39 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 
-const adminpage = () => {
+type FormValues = {
+    itemname: FormDataEntryValue | null;
+    price: FormDataEntryValue | null;
+    description: FormDataEntryValue | null;
+    category: FormDataEntryValue | null;
+    stock_quantity: FormDataEntryValue | null;
+    stock_unit: FormDataEntryValue | null;
+    highlight: FormDataEntryValue | null;
+    image: FormDataEntryValue | null;
+};
+
+type Errors = Record<string, string>;
+
+const AdminPage = () => {
 
     const [loading, setloading] = useState(false);
-    const [errors, seterrors] = useState<any>({});
+    const [errors, seterrors] = useState<Errors>({});
+    const [imagePreview, setImagePreview] = useState<string>("");
 
-    const validate = (data: any) => {
+    const validate = (data: FormValues) => {
 
-        const newerrors: any = {};
+        const newerrors: Errors = {};
 
-        if (!data.itemname?.trim()) {
+        if (!data.itemname?.toString().trim()) {
             newerrors.itemname = "Item name is required";
         }
 
-        if (!data.price || Number(data.price) <= 0) {
+        if (!data.price || Number(data.price.toString()) <= 0) {
             newerrors.price = "Valid price is required";
         }
 
-        if (!data.description?.trim()) {
+        if (!data.description?.toString().trim()) {
             newerrors.description = "Description is required";
         }
 
@@ -27,7 +41,7 @@ const adminpage = () => {
             newerrors.category = "Category is required";
         }
 
-        if (!data.stock_quantity || Number(data.stock_quantity) <= 0) {
+        if (!data.stock_quantity || Number(data.stock_quantity.toString()) <= 0) {
             newerrors.stock_quantity = "Stock quantity is required";
         }
 
@@ -35,11 +49,24 @@ const adminpage = () => {
             newerrors.stock_unit = "Stock unit is required";
         }
 
+        if (!data.image || !(data.image instanceof File) || data.image.size === 0) {
+            newerrors.image = "Product image is required";
+        }
+
         if (data.highlight === "") {
             newerrors.highlight = "Please select highlight option";
         }
 
         return newerrors;
+    };
+
+    const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0] ?? null;
+        if (file) {
+            setImagePreview(URL.createObjectURL(file));
+        } else {
+            setImagePreview("");
+        }
     };
 
     const handlesubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -56,9 +83,10 @@ const adminpage = () => {
             stock_quantity: formdata.get("stock_quantity"),
             stock_unit: formdata.get("stock_unit"),
             highlight: formdata.get("highlight"),
+            image: formdata.get("image"),
         };
 
-        const validationerrors = validate(data);
+        const validationerrors = validate(data as FormValues);
 
         if (Object.keys(validationerrors).length > 0) {
             seterrors(validationerrors);
@@ -72,14 +100,7 @@ const adminpage = () => {
 
             const response = await fetch("/api/createitem", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    ...data,
-                    stock_quantity: Number(data.stock_quantity),
-                    highlight: data.highlight === "true",
-                }),
+                body: formdata,
             });
 
             const result = await response.json();
@@ -219,6 +240,42 @@ const adminpage = () => {
                     )}
                 </div>
 
+                {/* Image Upload */}
+                <div>
+                    <label htmlFor="image" className="block text-sm font-medium text-slate-700 mb-2">
+                        Product Image
+                    </label>
+                    <input
+                        id="image"
+                        className={`w-full border rounded-xl px-4 py-3 bg-white outline-none focus:ring-2 ${
+                            errors.image
+                                ? "border-red-500 focus:ring-red-300"
+                                : "border-pink-200 focus:ring-pink-400"
+                        }`}
+                        type="file"
+                        name="image"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                    />
+
+                    {imagePreview && (
+                        <div className="mt-3 rounded-3xl overflow-hidden border border-pink-100 shadow-sm">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                                src={imagePreview}
+                                alt="Preview"
+                                className="w-full h-48 object-cover"
+                            />
+                        </div>
+                    )}
+
+                    {errors.image && (
+                        <p className="text-red-500 text-sm mt-1">
+                            {errors.image}
+                        </p>
+                    )}
+                </div>
+
                 {/* Stock */}
                 <div className="flex gap-3">
 
@@ -322,4 +379,4 @@ const adminpage = () => {
     );
 };
 
-export default adminpage;
+export default AdminPage;
