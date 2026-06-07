@@ -1,0 +1,12 @@
+-- DropIndex
+DROP INDEX "CartItem_userId_productId_key";
+
+-- AlterTable
+ALTER TABLE "CartItem" ALTER COLUMN "quantity" SET DEFAULT 1,
+ALTER COLUMN "quantity" SET DATA TYPE DOUBLE PRECISION;
+
+-- AlterTable
+ALTER TABLE "OrderItem" ALTER COLUMN "quantity" SET DATA TYPE DOUBLE PRECISION;
+
+-- AlterTable
+ALTER TABLE "Product" ALTER COLUMN "stock" SET DATA TYPE DOUBLE PRECISION;

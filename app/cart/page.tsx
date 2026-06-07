@@ -322,10 +322,7 @@ if (showDeliveryForm) {
                   <div>
                     <h2 className="text-xl font-semibold text-slate-900">{item.name}</h2>
                     {item.category?.toLowerCase() === "fabric" ? (
-                      <>
-                        <p className="mt-2 text-sm text-slate-600">Qty: 1</p>
-                        <p className="mt-1 text-sm text-slate-600">Meter: {item.quantity}</p>
-                      </>
+                      <p className="mt-2 text-sm text-slate-600">Meter: {item.quantity}</p>
                     ) : (
                       <p className="mt-2 text-sm text-slate-600">Qty: {item.quantity}</p>
                     )}
