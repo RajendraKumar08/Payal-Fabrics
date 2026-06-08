@@ -1,11 +1,13 @@
 'use client'
 
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 const OrdersInAdmin = () => {
     const [orders, set_orders] = useState<any[]>([]);
     const [loading, set_loading] = useState(true);
     const [error, set_error] = useState<string | null>(null);
+    const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
 
     useEffect(() => {
         const fetch_orders = async () => {
@@ -36,36 +38,172 @@ const OrdersInAdmin = () => {
         fetch_orders();
     }, []);
 
+    const getStatusColor = (status: string) => {
+        switch (status?.toUpperCase()) {
+            case 'PAID':
+                return 'bg-green-100 text-green-800';
+            case 'PENDING':
+                return 'bg-yellow-100 text-yellow-800';
+            case 'FAILED':
+                return 'bg-red-100 text-red-800';
+            default:
+                return 'bg-gray-100 text-gray-800';
+        }
+    };
+
+    const formatDate = (date: string) => {
+        return new Date(date).toLocaleDateString('en-IN', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+        });
+    };
+
     if (loading) {
-        return <p>Loading...</p>;
+        return (
+            <main className="min-h-screen bg-gradient-to-br from-purple-50 to-slate-50 px-6 py-12">
+                <div className="mx-auto max-w-6xl">
+                    <div className="flex items-center justify-center">
+                        <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-600"></div>
+                    </div>
+                    <p className="mt-4 text-center text-slate-600">Loading orders...</p>
+                </div>
+            </main>
+        );
     }
 
     return (
-        <>
-            <h1>Orders in Admin</h1>
-
-            {error && (
-                <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
-                    {error}
+        <main className="min-h-screen bg-gradient-to-br from-purple-50 to-slate-50 px-6 py-12">
+            <div className="mx-auto max-w-6xl">
+                {/* Header */}
+                <div className="mb-8">
+                    <h1 className="text-4xl font-bold text-slate-900 mb-2">Orders Management</h1>
+                    <p className="text-slate-600">Track and manage all customer orders</p>
                 </div>
-            )}
 
-            <div>
-                {orders.length === 0 ? (
-                    <p>No orders found.</p>
-                ) : (
-                    orders.map((order: any) => (
-                        <div key={order.id}>
-                            <h2>Order {order.id}</h2>
-                            <p>Customer: {order.orderedBy}</p>
-                            <p>
-                                Total Amount: ₹{order.totalAmount.toFixed(2)}
-                            </p>
+                {/* Error Alert */}
+                {error && (
+                    <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 flex items-start gap-3">
+                        <span className="text-red-600 text-xl">⚠️</span>
+                        <div>
+                            <h3 className="font-semibold text-red-900">Error</h3>
+                            <p className="text-red-800 text-sm">{error}</p>
                         </div>
-                    ))
+                    </div>
+                )}
+
+                {/* Orders List */}
+                {orders.length === 0 ? (
+                    <div className="rounded-xl border-2 border-dashed border-slate-300 bg-white p-12 text-center">
+                        <p className="text-xl text-slate-600 mb-2">📦 No orders found</p>
+                        <p className="text-slate-500">Orders will appear here once customers place them.</p>
+                    </div>
+                ) : (
+                    <div className="space-y-4">
+                        <div className="text-sm text-slate-600 mb-4">
+                            Showing {orders.length} order{orders.length !== 1 ? 's' : ''}
+                        </div>
+                        {orders.map((order: any) => (
+                            <div
+                                key={order.id}
+                                className="rounded-lg border border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow"
+                            >
+                                {/* Order Header */}
+                                <button
+                                    onClick={() =>
+                                        setExpandedOrderId(
+                                            expandedOrderId === order.id ? null : order.id
+                                        )
+                                    }
+                                    className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-slate-50 transition-colors"
+                                >
+                                    <div className="flex-1 grid grid-cols-1 md:grid-cols-4 gap-4">
+                                        <div>
+                                            <p className="text-xs text-slate-500 uppercase tracking-wide">Order ID</p>
+                                            <p className="text-sm font-semibold text-slate-900 truncate">
+                                                {order.id.slice(0, 8)}...
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-slate-500 uppercase tracking-wide">Customer</p>
+                                            <p className="text-sm font-semibold text-slate-900">{order.orderedBy}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-slate-500 uppercase tracking-wide">Total Amount</p>
+                                            <p className="text-sm font-semibold text-purple-600">
+                                                ₹{order.totalAmount.toFixed(2)}
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-slate-500 uppercase tracking-wide">Status</p>
+                                            <span
+                                                className={`inline-block text-xs font-semibold px-2.5 py-1 rounded-full ${getStatusColor(
+                                                    order.paymentStatus
+                                                )}`}
+                                            >
+                                                {order.paymentStatus}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div className="ml-4">
+                                        <span className="text-slate-400">
+                                            {expandedOrderId === order.id ? '▼' : '▶'}
+                                        </span>
+                                    </div>
+                                </button>
+
+                                {/* Order Details - Expanded */}
+                                {expandedOrderId === order.id && (
+                                    <div className="border-t border-slate-200 px-6 py-4 bg-slate-50 space-y-4">
+                                        {/* Order Info */}
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                            <div>
+                                                <p className="text-xs text-slate-500 uppercase tracking-wide mb-1">
+                                                    Order Date
+                                                </p>
+                                                <p className="text-sm text-slate-900">
+                                                    {formatDate(order.createdAt)}
+                                                </p>
+                                            </div>
+                                            <div>
+                                                <p className="text-xs text-slate-500 uppercase tracking-wide mb-1">
+                                                    Full Order ID
+                                                </p>
+                                                <p className="text-xs font-mono text-slate-700 truncate">{order.id}</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-xs text-slate-500 uppercase tracking-wide mb-1">
+                                                    Payment ID
+                                                </p>
+                                                <p className="text-xs font-mono text-slate-700 truncate">
+                                                    {order.razorpayPaymentId || 'N/A'}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        {/* Additional Info */}
+                                        <div className="pt-2 border-t border-slate-200 text-xs text-slate-600 mb-4">
+                                            <p>Order Status: <span className="font-semibold text-slate-900">{order.status}</span></p>
+                                        </div>
+
+                                        {/* View Details Button */}
+                                        <div className="flex gap-2">
+                                            <button className="inline-flex items-center justify-center px-4 py-2 bg-purple-600 text-white text-sm font-semibold rounded-lg hover:bg-purple-700 transition-colors">
+                                                <Link href={`/admin/order/${order.id}`}>
+                                                    View Full Order Details
+                                                </Link>
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
                 )}
             </div>
-        </>
+        </main>
     );
 };
 
