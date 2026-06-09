@@ -8,6 +8,7 @@ const OrdersInAdmin = () => {
     const [loading, set_loading] = useState(true);
     const [error, set_error] = useState<string | null>(null);
     const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
+    const [shiprocketResponse, setShiprocketResponse] = useState<any>(null);
 
     useEffect(() => {
         const fetch_orders = async () => {
@@ -40,6 +41,7 @@ const OrdersInAdmin = () => {
 
     const getStatusColor = (status: string) => {
         switch (status?.toUpperCase()) {
+            case 'SHIPPED':
             case 'PAID':
                 return 'bg-green-100 text-green-800';
             case 'PENDING':
@@ -60,6 +62,42 @@ const OrdersInAdmin = () => {
             minute: '2-digit',
         });
     };
+
+    const isOrderShipped = (order: any) => order?.status?.toString().toUpperCase() === 'SHIPPED';
+
+    const handleshipbtn = async () => {
+        if (!expandedOrderId) {
+            alert('Please expand an order first before marking it as shipped.');
+            return;
+        }
+
+        alert("This will mark the order as shipped and update the status in the database. You can also integrate with Shiprocket API to create a shipment and get tracking details.");
+
+        try {
+            const res = await fetch(`/api/admin/shiporder/${expandedOrderId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const data = await res.json();
+            if (!res.ok) {
+                throw new Error(data?.error || `Server returned ${res.status}`);
+            }
+
+            console.log('Shiprocket API response:', data);
+            setShiprocketResponse(data);
+            set_orders((prevOrders) =>
+                prevOrders.map((order) =>
+                    order.id === expandedOrderId ? { ...order, status: 'SHIPPED' } : order
+                )
+            );
+        } catch (err) {
+            console.error('Error calling shiporder API:', err);
+            alert('Failed to mark order as shipped. Please try again.');
+        }
+    }
 
     if (loading) {
         return (
@@ -137,14 +175,17 @@ const OrdersInAdmin = () => {
                                             </p>
                                         </div>
                                         <div>
-                                            <p className="text-xs text-slate-500 uppercase tracking-wide">Status</p>
+                                            <p className="text-xs text-slate-500 uppercase tracking-wide">Shipping Status</p>
                                             <span
                                                 className={`inline-block text-xs font-semibold px-2.5 py-1 rounded-full ${getStatusColor(
-                                                    order.paymentStatus
+                                                    order.status
                                                 )}`}
                                             >
-                                                {order.paymentStatus}
+                                                {order.status}
                                             </span>
+                                            <p className="text-[10px] text-slate-500 mt-1">
+                                                Payment: {order.paymentStatus}
+                                            </p>
                                         </div>
                                     </div>
                                     <div className="ml-4">
@@ -186,6 +227,15 @@ const OrdersInAdmin = () => {
                                         {/* Additional Info */}
                                         <div className="pt-2 border-t border-slate-200 text-xs text-slate-600 mb-4">
                                             <p>Order Status: <span className="font-semibold text-slate-900">{order.status}</span></p>
+                                            <button
+                                                onClick={handleshipbtn}
+                                                disabled={isOrderShipped(order)}
+                                                className={`cursor-pointer inline-flex items-center justify-center px-4 py-2 text-sm font-semibold rounded-lg transition-colors ${isOrderShipped(order)
+                                                    ? 'bg-gray-400 text-white cursor-not-allowed'
+                                                    : 'bg-green-600 text-white hover:bg-green-700'}`}
+                                            >
+                                                {isOrderShipped(order) ? 'Shipped' : 'Mark as Shipped'}
+                                            </button>
                                         </div>
 
                                         {/* View Details Button */}
