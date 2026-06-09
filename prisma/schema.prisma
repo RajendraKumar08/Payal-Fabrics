@@ -65,6 +65,7 @@ model OrderItem {
   id        Int     @id @default(autoincrement())
   orderId   String
   productId String
+  productName String @default("Product")
   quantity  Float
   price     Float
   order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)

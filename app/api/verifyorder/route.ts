@@ -70,6 +70,7 @@ export async function POST(req: NextRequest) {
                 data: {
                     orderId: order.id,
                     productId: item.productId,
+                    productName: item.product.name,
                     quantity: item.quantity,
                     price: item.product.price
                 }
