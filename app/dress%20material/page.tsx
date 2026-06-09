@@ -38,7 +38,7 @@ export default async function Women() {
                     Women&apos;s Collection
                 </h1>
 
-                <p className="max-w-2xl mx-auto text-purple-300 text-base md:text-lg leading-relaxed">
+                <p className="max-w-2xl mx-auto text-gray-300 text-base md:text-lg leading-relaxed">
                     Elegance woven into every thread — explore our premium ethnic wear collection.
                 </p>
 
@@ -68,7 +68,7 @@ export default async function Women() {
                         {wears.map((wear: any, index: number) => (
                             <div
                                 key={index}
-                                className="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 ease-in-out cursor-pointer bg-white border border-slate-200"
+                                className="group relative  overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 ease-in-out cursor-pointer bg-white border border-slate-200"
                             >
 
                                 {/* Image */}
@@ -96,7 +96,7 @@ export default async function Women() {
 
                                     {/* Featured Badge */}
                                     {wear.highlight && (
-                                        <div className="absolute top-4 right-4 bg-purple-100 text-purple-900 text-xs font-semibold px-4 py-1.5 rounded-full shadow-sm">
+                                        <div className="absolute top-4 right-4 bg-gray-600 text-white text-xs font-semibold px-4 py-1.5 rounded-full shadow-sm">
                                             Featured
                                         </div>
                                     )}
@@ -116,7 +116,7 @@ export default async function Women() {
                                         </div>
 
                                         <div className="flex flex-wrap items-center gap-3">
-                                            <span className="text-xs text-purple-900 bg-purple-100 border border-purple-200 px-4 py-1.5 rounded-full font-medium">
+                                            <span className="text-xs text-white bg-black border border-black px-4 py-1.5 rounded-full font-medium">
                                                 Premium
                                             </span>
                                             {wear.stock <= 0 && (

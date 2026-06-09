@@ -1,9 +1,9 @@
-
 import Link from "next/link";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import TypingText from "@/app/components/TypingText";
 import { Alex_Brush } from "next/font/google";
 import { prisma } from "@/prisma-db";
+import ChangeBgImage from "@/app/components/changeBgimage";
+import { FaChevronDown } from "react-icons/fa";
 const alexBrush = Alex_Brush({
   subsets: ["latin"],
   weight: "400",
@@ -14,7 +14,6 @@ const Homepage = async () => {
 
   const { getUser } = getKindeServerSession();
   // console.log("ENV db url", process.env.DATABASE_URL)
-
   const highlights = await prisma.product.findMany({
     where: {
       highlight: true,
@@ -27,59 +26,27 @@ const Homepage = async () => {
   console.log("user in homepage", user);
   return (
     <>
-
-      <div
-        className="relative min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center"
-        style={{
-          backgroundImage:
-            "url('https://res.cloudinary.com/dvlbebtbw/image/upload/v1779202455/ChatGPT_Image_May_19_2026_08_23_47_PM_f4kdkc.png')",
-        }}
-      >
-        <div className="absolute inset-0 bg-slate-950/60"></div>
-        
-
-        <div className="relative z-10 text-center px-6">
-          <h1
-            className={`${alexBrush.className} text-6xl md:text-7xl font-semibold text-slate-100 mb-4 tracking-wide mt-22`}
-          >
-            Payal Fabrics
-          </h1>
-
-          <TypingText />
-
-          <div className="mt-10 flex justify-center gap-5 flex-wrap">
-            <Link
-              href="/products"
-              className="bg-purple-700 text-white px-8 py-3 rounded-full hover:bg-purple-600 transition-all duration-300 font-semibold shadow-lg shadow-slate-900/30"
-            >
-              Explore Collection
-            </Link>
-
-            <Link
-              href="/contact"
-              className="border-2 border-slate-300 text-slate-100 px-8 py-3 rounded-full hover:bg-slate-100 hover:text-slate-950 transition-all duration-300 font-semibold"
-            >
-              Contact Us
-            </Link>
-          </div>
-        </div>
-      </div>
-
+    <div className="bg-white">
+      <ChangeBgImage />
       {/* Highlights Section */}
-      <section className="min-h-screen bg-slate-50 py-20 px-6">
+      <section className="min-h-screen bg-slate-50 py-20 px-6 z-10 pt-[40px] relative bg-transparent">
 
         <div className="max-w-7xl mx-auto">
+          <div className="bg-gray-100/40 rounded-3xl h-70 px-10 py-12 mb-16 flex justify-center flex-col items-center gap-4">
+            <h2
+              className={`text-center text-5xl md:text-6xl text-black ${alexBrush.className}`}
+              >
+              Highlights
+            </h2>
 
-          <h2
-            className={`text-center text-5xl md:text-6xl text-slate-900 mb-4 ${alexBrush.className}`}
-          >
-            Highlights
-          </h2>
-
-          <p className="text-center text-slate-600 max-w-2xl mx-auto mb-16">
-            Explore our most loved and premium collections crafted with elegance,
-            comfort, and timeless beauty.
-          </p>
+            <p className="text-center text-white mx-auto">
+              Explore our most loved and premium collections crafted with elegance,
+              comfort, and timeless beauty.
+            </p>
+            <span className="text-sm mb-2">Scroll Down</span>
+            <FaChevronDown className="text-2xl animate-bounce" />
+          </div>
+          
 
           {displayedHighlights.length === 0 ? (
             <div className="text-center py-20">
@@ -93,7 +60,7 @@ const Homepage = async () => {
               {displayedHighlights.map((highlight: any, index: number) => (
                 <div
                   key={index}
-                  className="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 ease-in-out cursor-pointer bg-white border border-slate-200"
+                  className="group relative overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 ease-in-out cursor-pointer bg-white border border-slate-200"
                 >
 
                   {/* Image */}
@@ -119,7 +86,7 @@ const Homepage = async () => {
                     </Link>
 
                     {/* Featured Badge */}
-                    <div className="absolute top-4 right-4 bg-purple-100 text-purple-900 text-xs font-semibold px-4 py-1.5 rounded-full shadow-sm">
+                    <div className="absolute top-4 right-4 bg-gray-600 text-white text-xs font-semibold px-4 py-1.5 rounded-full shadow-sm">
                       Featured
                     </div>
 
@@ -143,7 +110,7 @@ const Homepage = async () => {
                       </div>
 
                       <div className="flex flex-wrap items-center gap-3">
-                        <span className="text-xs text-purple-900 bg-purple-100 border border-purple-200 px-4 py-1.5 rounded-full font-medium">
+                        <span className="text-xs text-white bg-black px-4 py-1.5 rounded-full font-medium">
                           Premium
                         </span>
                         {highlight.stock <= 0 && (
@@ -170,12 +137,12 @@ const Homepage = async () => {
         </div>
 
       </section>
-
+      </div>
       <footer className="bg-slate-950 text-slate-100 py-10 px-6">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10">
 
           <div>
-            <h2 className="text-2xl font-bold mb-4 text-purple-200">
+            <h2 className="text-2xl font-bold mb-4 text-white">
               Behind Payal Fabrics
             </h2>
 
@@ -210,7 +177,7 @@ const Homepage = async () => {
           </div>
 
           <div>
-            <h2 className="text-2xl font-bold mb-4 text-purple-200">
+            <h2 className="text-2xl font-bold mb-4 text-white">
               Created By
             </h2>
 
