@@ -192,7 +192,7 @@ export default function ProductDetail() {
                             <div>
                                 <p className="text-sm text-slate-500 uppercase tracking-wider">Stock Available</p>
                                 <p className={`text-lg font-semibold ${product.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                                    {product.stock > 0 ? `${product.stock} items` : 'Out of Stock'}
+                                    {product.stock > 0 ? `${product.stock} ${product.category.toLowerCase() === 'fabric' ? 'Meters' : 'Items'}` : 'Out of Stock'}
                                 </p>
                             </div>
                         </div>

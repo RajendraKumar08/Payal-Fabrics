@@ -33,19 +33,24 @@ function generateUid() {
 }
 
 function dedupeCartItems(items: CartItem[]) {
-  const map = new Map<string, CartItem>();
+  const merged: CartItem[] = [];
 
   for (const item of items) {
-    const existing = map.get(item.id);
+    // For fabric items we want to keep separate entries (allow multiple meter selections)
+    if (item.category && String(item.category).toLowerCase() === "fabric") {
+      merged.push({ ...item });
+      continue;
+    }
 
+    const existing = merged.find((m) => m.id === item.id && !(m.category && String(m.category).toLowerCase() === "fabric"));
     if (existing) {
       existing.quantity = existing.quantity + item.quantity;
     } else {
-      map.set(item.id, { ...item });
+      merged.push({ ...item });
     }
   }
 
-  return Array.from(map.values());
+  return merged;
 }
 
 function readCartStorage(): CartItem[] {
@@ -157,6 +162,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     const quantityToAdd = Number(product.quantity) || 1;
 
     setItems((current) => {
+      // If product is fabric, always add a new entry so different meter selections remain separate
+      if (product.category && String(product.category).toLowerCase() === "fabric") {
+        return [...current, { ...product, quantity: quantityToAdd, uid: generateUid() }];
+      }
+
       const existingIndex = current.findIndex((item) => item.id === product.id);
       if (existingIndex !== -1) {
         const updated = [...current];
