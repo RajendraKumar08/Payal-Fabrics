@@ -19,7 +19,6 @@ export default function AddToCartButton({ product, authenticated }: AddToCartBut
 
   const handleClick = () => {
     const isAuth = authenticated ?? Boolean(isAuthenticated);
-
     if (!isAuth) {
       router.push("/login");
       return;

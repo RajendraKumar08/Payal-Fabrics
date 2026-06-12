@@ -32,6 +32,22 @@ function generateUid() {
     : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
 
+function dedupeCartItems(items: CartItem[]) {
+  const map = new Map<string, CartItem>();
+
+  for (const item of items) {
+    const existing = map.get(item.id);
+
+    if (existing) {
+      existing.quantity = existing.quantity + item.quantity;
+    } else {
+      map.set(item.id, { ...item });
+    }
+  }
+
+  return Array.from(map.values());
+}
+
 function readCartStorage(): CartItem[] {
   if (typeof window === "undefined") return [];
 
@@ -40,16 +56,22 @@ function readCartStorage(): CartItem[] {
     if (!raw) return [];
     const parsed = JSON.parse(raw) as CartItem[];
     if (!Array.isArray(parsed)) return [];
-    return parsed.map((item) => ({
-      id: item.id,
-      name: item.name,
-      price: Number(item.price) || 0,
-      image: item.image,
-      stock: Number(item.stock) || 0,
-      category: item.category,
-      quantity: Number(item.quantity) || 0,
-      uid: item.uid || generateUid(),
-    }));
+
+    const items = parsed
+      .filter((item) => item && typeof item === "object" && typeof item.id === "string")
+      .map((item) => ({
+        id: String(item.id),
+        name: String(item.name ?? ""),
+        price: Number(item.price) || 0,
+        image: item.image,
+        stock: Number(item.stock) || 0,
+        category: item.category,
+        quantity: Number(item.quantity) || 0,
+        uid: String(item.uid || generateUid()),
+      }))
+      .filter((item) => item.quantity > 0);
+
+    return dedupeCartItems(items);
   } catch {
     return [];
   }
@@ -57,7 +79,7 @@ function readCartStorage(): CartItem[] {
 
 function writeCartStorage(items: CartItem[]) {
   if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(dedupeCartItems(items)));
 }
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
@@ -65,7 +87,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    // Try server-side cart first; if unauthorized or error, fall back to localStorage
     const fetchServerCart = async () => {
       const localCart = readCartStorage();
 
@@ -74,23 +95,26 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         if (res.ok) {
           const data = await res.json();
           if (Array.isArray(data.cart)) {
-            const serverCart = data.cart.map((it: unknown) => {
-              const item = it as Record<string, unknown>;
-              return {
-                id: String(item.id),
-                name: String(item.name ?? ""),
-                price: Number(item.price) || 0,
-                image: String(item.image ?? ""),
-                category: String(item.category ?? ""),
-                quantity: Number(item.quantity) || 1,
-                uid: generateUid(),
-              };
-            });
+            const serverCart = dedupeCartItems(
+              data.cart.map((it: unknown) => {
+                const item = it as Record<string, unknown>;
+                return {
+                  id: String(item.id),
+                  name: String(item.name ?? ""),
+                  price: Number(item.price) || 0,
+                  image: String(item.image ?? ""),
+                  stock: Number(item.stock) || 0,
+                  category: String(item.category ?? ""),
+                  quantity: Number(item.quantity) || 1,
+                  uid: generateUid(),
+                };
+              })
+            );
 
-            if (localCart.length > serverCart.length) {
-              setItems(localCart);
-            } else {
+            if (serverCart.length > 0) {
               setItems(serverCart);
+            } else {
+              setItems(localCart);
             }
             return;
           }
@@ -110,7 +134,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!isInitialized) return;
 
-    writeCartStorage(items);
+    const normalizedItems = dedupeCartItems(items);
+    writeCartStorage(normalizedItems);
 
     // Try to persist to server; ignore failures (user not authenticated)
     const persist = async () => {
@@ -118,7 +143,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         await fetch("/api/cart", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ cart: items }),
+          body: JSON.stringify({ cart: normalizedItems }),
         });
       } catch {
         // ignore
@@ -131,10 +156,19 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const addItem = (product: CartProduct) => {
     const quantityToAdd = Number(product.quantity) || 1;
 
-    setItems((current) => [
-      ...current,
-      { ...product, quantity: quantityToAdd, uid: generateUid() },
-    ]);
+    setItems((current) => {
+      const existingIndex = current.findIndex((item) => item.id === product.id);
+      if (existingIndex !== -1) {
+        const updated = [...current];
+        updated[existingIndex] = {
+          ...updated[existingIndex],
+          quantity: updated[existingIndex].quantity + quantityToAdd,
+        };
+        return updated;
+      }
+
+      return [...current, { ...product, quantity: quantityToAdd, uid: generateUid() }];
+    });
   };
 
   const removeItem = (uid: string) => {
