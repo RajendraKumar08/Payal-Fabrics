@@ -104,10 +104,12 @@ export default function CartPage() {
 
         handler: async function (response: any) {
           try {
+            console.log("=== Razorpay payment success ===");
             console.log("Payment response from Razorpay:", response);
 
             const verifyRes = await fetch('/api/verifyorder', {
               method: 'POST',
+              credentials: 'include',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 paymentId: response.razorpay_payment_id,
@@ -116,11 +118,27 @@ export default function CartPage() {
               })
             });
 
-            if (!verifyRes.ok) {
-              throw new Error("Verification request failed.");
+            console.log("=== Verification response ===");
+            console.log("Status:", verifyRes.status);
+            console.log("OK:", verifyRes.ok);
+            console.log("Headers:", Object.fromEntries(verifyRes.headers.entries()));
+
+            let data;
+            try {
+              const text = await verifyRes.text();
+              console.log("Response text:", text);
+              data = text ? JSON.parse(text) : {};
+            } catch (parseErr) {
+              console.error("JSON parse error:", parseErr);
+              throw new Error("Invalid response from verification server");
             }
 
-            const data = await verifyRes.json();
+            console.log("Parsed data:", data);
+
+            if (!verifyRes.ok) {
+              console.error("Verification failed:", data);
+              throw new Error(`Verification request failed: ${data?.message || 'Unknown error'}`);
+            }
             if (data.isOk) {
               // Create ShipRocket order after payment verification
               if (deliveryFormData && pickupOption === "home") {

@@ -21,9 +21,7 @@ export async function GET(){
         return NextResponse.json({message: "Unauthorized"}, {status: 401});
     }
     try{
-        const response = await prisma.order.findMany({
-            where: {userId: dbuser.id}
-        })
+        const response = await prisma.order.findMany()
         
         return NextResponse.json(response);
     }

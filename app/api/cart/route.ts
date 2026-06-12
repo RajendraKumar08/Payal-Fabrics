@@ -23,16 +23,31 @@ export async function GET() {
     },
   });
 
-  const cart = dbUser?.cartItems?.map((item) => ({
-    id: item.productId,
-    name: item.product.name,
-    price: item.product.price,
-    image: item.product.image ?? "",
-    category: item.product.category,
-    quantity: item.quantity,
-  })) ?? [];
+  const cart = (dbUser?.cartItems ?? []).reduce<Record<string, {
+    id: string;
+    name: string;
+    price: number;
+    image: string;
+    category: string | null;
+    quantity: number;
+  }>>((acc, item) => {
+    const key = item.productId;
+    if (acc[key]) {
+      acc[key].quantity += item.quantity;
+    } else {
+      acc[key] = {
+        id: item.productId,
+        name: item.product.name,
+        price: item.product.price,
+        image: item.product.image ?? "",
+        category: item.product.category,
+        quantity: item.quantity,
+      };
+    }
+    return acc;
+  }, {});
 
-  return NextResponse.json({ cart });
+  return NextResponse.json({ cart: Object.values(cart) });
 }
 
 export async function POST(req: Request) {
@@ -62,6 +77,17 @@ export async function POST(req: Request) {
       }))
     : [];
 
+  const dedupedCart = cart.reduce<Record<string, CartPayloadItem>>((acc, item) => {
+    if (acc[item.id]) {
+      acc[item.id].quantity += item.quantity;
+    } else {
+      acc[item.id] = { ...item };
+    }
+    return acc;
+  }, {});
+
+  const uniqueCartItems = Object.values(dedupedCart);
+
   const dbUser = await prisma.user.findUnique({ where: { kindeId: user.id } });
   if (!dbUser) {
     return NextResponse.json({ message: "User not found" }, { status: 404 });
@@ -73,10 +99,10 @@ export async function POST(req: Request) {
     prisma.cartItem.deleteMany({ where: { userId } }),
   ];
 
-  if (cart.length > 0) {
+  if (uniqueCartItems.length > 0) {
     operations.push(
       prisma.cartItem.createMany({
-        data: cart.map((item) => ({
+        data: uniqueCartItems.map((item) => ({
           userId,
           productId: item.id,
           quantity: item.quantity,
