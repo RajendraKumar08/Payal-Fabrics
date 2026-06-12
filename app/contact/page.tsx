@@ -17,17 +17,17 @@ const contactInfo = [
     {
         type: 'Email',
         icon: '✉️',
-        values: ['rkdbprjr343040@gmail.com', 'golasumit55@gamil.com'],
+        values: ['gulshanteilor12345@gmail.com'],
     },
     {
         type: 'Phone',
         icon: '📞',
-        values: ['+91 82338 80779', '+91 79838 17141'],
+        values: ['+91 98989 76916'],
     },
     {
         type: 'Address',
         icon: '📍',
-        values: ['123, Textile Market, Jaipur, Rajasthan — 302001'],
+        values: ['Shop No. 6, Payal Tailor, Decent Apartment, near Bus Depo Gandevi, Navsari, Gujarat 396360'],
     },
 ];
 
@@ -100,8 +100,8 @@ export default function Contact() {
                             <span className="text-sm font-semibold text-black uppercase tracking-widest">Business Hours</span>
                         </div>
                         <ul className="text-sm text-slate-600 flex flex-col gap-1 pl-9">
-                            <li>Mon – Sat: <span className="font-medium text-slate-800">10:00 AM – 7:00 PM</span></li>
-                            <li>Sunday: <span className="font-medium text-black">Closed</span></li>
+                            <li>Mon – Sat: <span className="font-medium text-slate-800">10:00 AM – 8:00 PM</span></li>
+                            <li>Purnima (Full moon): <span className="font-medium text-black">Closed</span></li>
                         </ul>
                     </div>
                 </div>

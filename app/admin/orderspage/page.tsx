@@ -9,6 +9,7 @@ const OrdersInAdmin = () => {
     const [error, set_error] = useState<string | null>(null);
     const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
     const [shiprocketResponse, setShiprocketResponse] = useState<any>(null);
+    const [orderstatusloading, setOrderStatusLoading] = useState(false);
 
     useEffect(() => {
         const fetch_orders = async () => {
@@ -72,7 +73,7 @@ const OrdersInAdmin = () => {
         }
 
         alert("This will mark the order as shipped and update the status in the database. You can also integrate with Shiprocket API to create a shipment and get tracking details.");
-
+        setOrderStatusLoading(true);
         try {
             const res = await fetch(`/api/admin/shiporder/${expandedOrderId}`, {
                 method: 'POST',
@@ -96,6 +97,8 @@ const OrdersInAdmin = () => {
         } catch (err) {
             console.error('Error calling shiporder API:', err);
             alert('Failed to mark order as shipped. Please try again.');
+        } finally {
+            setOrderStatusLoading(false);
         }
     }
 
@@ -232,9 +235,11 @@ const OrdersInAdmin = () => {
                                                 disabled={isOrderShipped(order)}
                                                 className={`cursor-pointer inline-flex items-center justify-center px-4 py-2 text-sm font-semibold rounded-lg transition-colors ${isOrderShipped(order)
                                                     ? 'bg-gray-400 text-white cursor-not-allowed'
-                                                    : 'bg-green-600 text-white hover:bg-green-700'}`}
+                                                    : 'bg-green-600 text-white hover:bg-green-700'} ${orderstatusloading && !isOrderShipped(order) ? 'bg-yellow-500 cursor-wait hover:bg-yellow-500' : ''}`}
                                             >
-                                                {isOrderShipped(order) ? 'Shipped' : 'Mark as Shipped'}
+                                                {
+                                                    isOrderShipped(order) ? 'Already Shipped' : (orderstatusloading ? "Wait..." : "Mark as Shipped")
+                                                }
                                             </button>
                                         </div>
 

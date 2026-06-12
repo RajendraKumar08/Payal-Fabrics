@@ -30,6 +30,7 @@ const OrderDetailsPage = () => {
                             <p>Quantity: {item.quantity}</p>
                             <p>Price: {item.price}</p>
                             <p>Total: {item.price * item.quantity}</p>
+                            <p>Hello worlds</p>
                        </div>
                     </div>
                 )

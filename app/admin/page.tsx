@@ -24,7 +24,7 @@ const adminpage = async () => {
 
     return(
         <>
-            <CreateItemForm />
+            <h1>Create, Update, Manage orders</h1>
         </>
     )
 }
