@@ -95,7 +95,7 @@ const OrderDetailsPage = () => {
                                         </p>
 
                                         <p className="text-lg font-semibold text-gray-800">
-                                            {item.quantity}
+                                            {item.quantity} {item.category === "fabric" ? "meters" : "units"}
                                         </p>
                                     </div>
 

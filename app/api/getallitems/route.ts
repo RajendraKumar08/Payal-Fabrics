@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
     const where: Record<string, unknown> = {};
     if (category) where.category = category;
     if (highlight === "true") where.highlight = true;
-    if (color) where.color = color;
+    if (color) where.Color = color;
 
    const products = await prisma.product.findMany({
         where: Object.keys(where).length ? where : undefined,

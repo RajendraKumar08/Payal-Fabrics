@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const myPhone = process.env.WHATSAPP_PHONE; // your WhatsApp number
+    const myPhone = process.env.WHATSAPP_PHONE;
 
     const formattedMessage = `
 *New Contact Form Message*

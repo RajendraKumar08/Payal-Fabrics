@@ -7,7 +7,6 @@ export async function POST(req: NextRequest) {
     try {
 
         const formData = await req.formData();
-
         const itemname = formData.get("itemname");
         const price = formData.get("price");
         const description = formData.get("description");
@@ -17,7 +16,7 @@ export async function POST(req: NextRequest) {
         const highlightValue = formData.get("highlight");
         const imageFile = formData.get("image");
         const fabricCategory = formData.get("fabricCategory");
-        const color = formData.get("color")?.toString().toLowerCase();
+        const Color = formData.get("color")?.toString().toLowerCase();
         
 
         if (
@@ -29,7 +28,7 @@ export async function POST(req: NextRequest) {
             stock_unit == null ||
             highlightValue == null ||
             imageFile == null ||
-            color == null
+            Color == null
         ) {
             return NextResponse.json(
                 {
@@ -64,7 +63,7 @@ export async function POST(req: NextRequest) {
                 stock: Number(stock_quantity),
                 highlight: String(highlightValue) === "true",
                 fabricCategory: String(fabricCategory),
-                color: String(color),
+                Color: String(Color),
             },
         });
 
