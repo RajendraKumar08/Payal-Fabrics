@@ -11,7 +11,7 @@ const dancingScript = Dancing_Script({
 export default async function Women() {
 
     const res = await fetch(
-    "http://localhost:3000/api/getallitems?category=dress material",
+    `${process.env.PUBLIC_BASE_URL}/api/getallitems?category=dress material`,
     {
         cache: "no-store",
     }

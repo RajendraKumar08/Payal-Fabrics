@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Alex_Brush, Josefin_Sans, Poppins } from "next/font/google";
 import "./globals.css";
-import { KindeProvider } from "@kinde-oss/kinde-auth-nextjs";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { CartProvider } from "@/app/components/CartContext";
 import ScrollNavbar from "@/app/components/ScrollNavbar";
+import { Providers } from "@/app/providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -53,18 +52,16 @@ export default async function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <KindeProvider>
-          <CartProvider>
-            <ScrollNavbar
-              authenticated={authenticated}
-              user={user}
-              alexBrushClass={alexBrush.className}
-              josefinSansClass={josefinSans.className}
-              poppinsClass={poppins.className}
-            />
-            {children}
-          </CartProvider>
-        </KindeProvider>
+        <Providers>
+          <ScrollNavbar
+            authenticated={authenticated}
+            user={user}
+            alexBrushClass={alexBrush.className}
+            josefinSansClass={josefinSans.className}
+            poppinsClass={poppins.className}
+          />
+          {children}
+        </Providers>
       </body>
     </html>
   );

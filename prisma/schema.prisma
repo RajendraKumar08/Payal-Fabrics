@@ -28,6 +28,8 @@ model Product {
   price       Float
   description String
   category    String
+  fabricCategory String @default("Unknown")
+  Color       String @default("Unknown")
   stock       Float
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt

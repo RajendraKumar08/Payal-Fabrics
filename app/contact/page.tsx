@@ -38,6 +38,7 @@ export default function Contact() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         // TODO: wire up to email API
+        console.log("From submission:", e);
         setSent(true);
         setForm({ name: '', email: '', subject: '', message: '' });
         setTimeout(() => setSent(false), 4000);

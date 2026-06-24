@@ -16,6 +16,9 @@ export async function POST(req: NextRequest) {
         const stock_unit = formData.get("stock_unit");
         const highlightValue = formData.get("highlight");
         const imageFile = formData.get("image");
+        const fabricCategory = formData.get("fabricCategory");
+        const color = formData.get("color")?.toString().toLowerCase();
+        
 
         if (
             itemname == null ||
@@ -25,7 +28,8 @@ export async function POST(req: NextRequest) {
             stock_quantity == null ||
             stock_unit == null ||
             highlightValue == null ||
-            imageFile == null
+            imageFile == null ||
+            color == null
         ) {
             return NextResponse.json(
                 {
@@ -59,6 +63,8 @@ export async function POST(req: NextRequest) {
                 category: String(category),
                 stock: Number(stock_quantity),
                 highlight: String(highlightValue) === "true",
+                fabricCategory: String(fabricCategory),
+                color: String(color),
             },
         });
 
