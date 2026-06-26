@@ -25,6 +25,7 @@ interface Product {
     highlight: boolean;
 }
 
+
 export default function ProductDetail() {
     const params = useParams();
     const id = params?.id as string | undefined;
@@ -35,27 +36,28 @@ export default function ProductDetail() {
     const authenticated = Boolean(isAuthenticated);
     const [quantity, setQuantity] = useState(0.5);
     const options = [
-                    { value: 0.5, label: "0.5 Meter" },
-                    { value: 1, label: "1.0 Meter" },
-                    { value: 1.5, label: "1.5 Meters" },
-                    { value: 2, label: "2.0 Meters" },
-                    { value: 2.5, label: "2.5 Meters" },
-                    { value: 3, label: "3.0 Meters" },
-                    { value: 3.5, label: "3.5 Meters" },
-                    { value: 4, label: "4.0 Meters" },
-                    { value: 4.5, label: "4.5 Meters" },
-                    { value: 5, label: "5.0 Meters" },
-                    { value: 5.5, label: "5.5 Meters" },
-                    { value: 6, label: "6.0 Meters" },
-                    { value: 6.5, label: "6.5 Meters" },
-                    { value: 7, label: "7.0 Meters" },
-                    { value: 7.5, label: "7.5 Meters" },
-                    { value: 8, label: "8.0 Meters" },
-                    { value: 8.5, label: "8.5 Meters" },
-                    { value: 9, label: "9.0 Meters" },
-                    { value: 9.5, label: "9.5 Meters" },
-                    { value: 10, label: "10.0 Meters" },
-                    ];
+        { value: 0.5, label: "0.5 Meter" },
+        { value: 1, label: "1.0 Meter" },
+        { value: 1.5, label: "1.5 Meters" },
+        { value: 2, label: "2.0 Meters" },
+        { value: 2.5, label: "2.5 Meters" },
+        { value: 3, label: "3.0 Meters" },
+        { value: 3.5, label: "3.5 Meters" },
+        { value: 4, label: "4.0 Meters" },
+        { value: 4.5, label: "4.5 Meters" },
+        { value: 5, label: "5.0 Meters" },
+        { value: 5.5, label: "5.5 Meters" },
+        { value: 6, label: "6.0 Meters" },
+        { value: 6.5, label: "6.5 Meters" },
+        { value: 7, label: "7.0 Meters" },
+        { value: 7.5, label: "7.5 Meters" },
+        { value: 8, label: "8.0 Meters" },
+        { value: 8.5, label: "8.5 Meters" },
+        { value: 9, label: "9.0 Meters" },
+        { value: 9.5, label: "9.5 Meters" },
+        { value: 10, label: "10.0 Meters" },
+    ];
+    const [showpopup, setShowpopup] = useState(false);
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -139,7 +141,7 @@ export default function ProductDetail() {
             {/* Product Detail Section */}
             <section className="max-w-7xl mx-auto px-6 py-16">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                    
+
                     {/* Product Image */}
                     <div className="flex items-center justify-center">
                         <div className="relative w-full h-[500px] rounded-2xl overflow-hidden bg-white shadow-lg border border-slate-200">
@@ -155,7 +157,7 @@ export default function ProductDetail() {
 
                     {/* Product Info */}
                     <div className="flex flex-col justify-start">
-                        
+
                         {/* Badge */}
                         {product.highlight && (
                             <div className="inline-block mb-4 w-fit">
@@ -206,37 +208,113 @@ export default function ProductDetail() {
                         </div>
 
                         {/* Add to Cart & Actions */}
-                        <div className="flex flex-col gap-4">
-                            {product.category.toLowerCase() === 'fabric' && (
-                                <Select
-                                    placeholder="0.5 Meter"
-                                    value={options.find((option) => option.value === quantity)}
-                                    options={options}
-                                    onChange={(selected) => setQuantity(selected?.value || 0.5)}
-                                    menuPlacement="auto"
-                                    maxMenuHeight={200}
-                                    className="text-black w-48"
-                                />
-                            )}
-                            {product.stock > 0 ? (
-                                <AddToCartButton
-                                    product={{
-                                        id: product.id,
-                                        name: product.name,
-                                        price: product.price,
-                                        image: product.image || '',
-                                        stock: product.stock,
-                                        category: product.category,
-                                        quantity: product.category.toLowerCase() === 'fabric' ? quantity : 1,
-                                    }}
-                                    authenticated={authenticated}
-                                />
-                            ) : (
-                                <button disabled className="px-6 py-3 bg-slate-300 text-slate-600 font-semibold rounded-lg cursor-not-allowed">
-                                    Out of Stock
+                        <div className="mb-8 flex flex-col gap-4">
+                            <div className="flex flex-col gap-4">
+                                {product.category.toLowerCase() === 'fabric' && (
+                                    <Select
+                                        placeholder="0.5 Meter"
+                                        value={options.find((option) => option.value === quantity)}
+                                        options={options}
+                                        onChange={(selected) => setQuantity(selected?.value || 0.5)}
+                                        menuPlacement="auto"
+                                        maxMenuHeight={200}
+                                        className="text-black w-48"
+                                    />
+                                )}
+                                {product.stock > 0 ? (
+                                    <AddToCartButton
+                                        product={{
+                                            id: product.id,
+                                            name: product.name,
+                                            price: product.price,
+                                            image: product.image || '',
+                                            stock: product.stock,
+                                            category: product.category,
+                                            quantity: product.category.toLowerCase() === 'fabric' ? quantity : 1,
+                                        }}
+                                        authenticated={authenticated}
+                                    />
+                                ) : (
+                                    <button disabled className="px-6 py-3 bg-slate-300 text-slate-600 font-semibold rounded-lg cursor-not-allowed">
+                                        Out of Stock
+                                    </button>
+                                )}
+                            </div>
+                            <div>
+                                <button
+                                    onClick={() => setShowpopup(true)}
+                                    className="text-white bg-blue-600 rounded-lg px-6 py-2 hover:bg-blue-700 font-semibold"
+                                >
+                                    Size Guide
                                 </button>
-                            )}
+
+                                {showpopup && (
+                                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+
+                                        {/* Modal Box */}
+                                        <div className="bg-white rounded-xl shadow-2xl w-[80%] max-w-5xl h-[80vh] relative p-8 overflow-y-auto">
+
+                                            {/* Close Button */}
+                                            <button
+                                                onClick={() => setShowpopup(false)}
+                                                className="absolute top-4 right-5 text-3xl font-bold text-gray-600 hover:text-black"
+                                            >
+                                                ×
+                                            </button>
+
+                                            {/* Heading */}
+                                            <h2 className="text-3xl font-bold text-center mb-6 text-black">
+                                                Size Guide
+                                            </h2>
+
+                                            {/* Content */}
+                                            <p className="text-center text-gray-600 mb-8">
+                                                Find the perfect fit with our detailed size guide.
+                                            </p>
+
+                                            {/* Example Table */}
+                                            <div className="overflow-x-auto">
+                                                <table className="w-full border border-gray-300 text-center text-black">
+                                                    <thead>
+                                                        <tr className="bg-gray-100">
+                                                            <th className="border p-3">Garment Pattern</th>
+                                                            <th className="border p-3">Meter (Estimate for L size)</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr><td className="border p-3">Anarkali</td><td className="border p-3">4</td></tr>
+                                                        <tr><td className="border p-3">Blouse</td><td className="border p-3">1</td></tr>
+                                                        <tr><td className="border p-3">Co-ord Set</td><td className="border p-3">4.5</td></tr>
+                                                        <tr><td className="border p-3">Crop Top</td><td className="border p-3">1.5</td></tr>
+                                                        <tr><td className="border p-3">Flared Kurti</td><td className="border p-3">3 to 4 depending on flare</td></tr>
+                                                        <tr><td className="border p-3">Floor Length Kurti</td><td className="border p-3">3</td></tr>
+                                                        <tr><td className="border p-3">Kaftan</td><td className="border p-3">3 & above</td></tr>
+                                                        <tr><td className="border p-3">High Low Kurti</td><td className="border p-3">3.5 & above</td></tr>
+                                                        <tr><td className="border p-3">High Low Dress</td><td className="border p-3">4</td></tr>
+                                                        <tr><td className="border p-3">High Waist Skirt</td><td className="border p-3">5</td></tr>
+                                                        <tr><td className="border p-3">Mini Dress</td><td className="border p-3">3.5</td></tr>
+                                                        <tr><td className="border p-3">Patiyala</td><td className="border p-3">5</td></tr>
+                                                        <tr><td className="border p-3">Palazzo</td><td className="border p-3">3.5</td></tr>
+                                                        <tr><td className="border p-3">Salwaar</td><td className="border p-3">2.5</td></tr>
+                                                        <tr><td className="border p-3">Saree</td><td className="border p-3">5.5 to 6</td></tr>
+                                                        <tr><td className="border p-3">Short Kurti</td><td className="border p-3">2</td></tr>
+                                                        <tr><td className="border p-3">Stole</td><td className="border p-3">1.5</td></tr>
+                                                        <tr><td className="border p-3">Straight Kurti</td><td className="border p-3">3.5</td></tr>
+                                                        <tr><td className="border p-3">Top</td><td className="border p-3">2</td></tr>
+                                                        <tr><td className="border p-3">Tunics</td><td className="border p-3">2.5</td></tr>
+                                                        <tr><td className="border p-3">Wrap Dress</td><td className="border p-3">5.5 & above</td></tr>
+                                                    </tbody>
+                                                </table>
+                                                
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                         </div>
+
 
                         {/* Trust Badges */}
                         <div className="mt-12 pt-8 border-t border-slate-200">
