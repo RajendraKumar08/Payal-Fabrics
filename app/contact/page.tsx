@@ -34,7 +34,7 @@ const contactInfo = [
 export default function Contact() {
     const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
     const [sent, setSent] = useState(false);
-
+    const [submitting, setSubmitting] = useState(false);
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         // TODO: wire up to email API
@@ -42,6 +42,33 @@ export default function Contact() {
         setSent(true);
         setForm({ name: '', email: '', subject: '', message: '' });
         setTimeout(() => setSent(false), 4000);
+    };
+    const sendMessage = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setSubmitting(true);
+
+        try {
+            const res = await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(form),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || 'Something went wrong');
+            }
+
+            // Success
+            setSent(true);
+            setForm({ name: '', email: '', subject: '', message: '' });
+            setTimeout(() => setSent(false), 4000);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     return (
@@ -174,9 +201,11 @@ export default function Contact() {
                         {/* Submit */}
                         <button
                             type="submit"
+                            disabled={submitting}
+                            onClick={sendMessage}
                             className="mt-2 w-full bg-gradient-to-r from-gray-600 to-black text-white font-semibold py-3 rounded-xl hover:from-black hover:to-gray-600 transition-all duration-300 shadow-md hover:shadow-lg tracking-wide"
                         >
-                            Send Message ✉️
+                            {submitting ? 'Sending...' : 'Send Message ✉️'}
                         </button>
                     </form>
                 </div>
