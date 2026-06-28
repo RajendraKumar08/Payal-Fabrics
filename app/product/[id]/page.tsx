@@ -247,6 +247,12 @@ export default function ProductDetail() {
                                 >
                                     Size Guide
                                 </button>
+                                <p> Fabric stitching ke liye WhatsApp par baat karein 👇 </p>
+                                <a href="https://wa.me/919898976916?text=Hello%20I%20want%20to%20know%20more"
+                                    target="_blank"
+                                    rel="noopener noreferrer">
+                                    💬 WhatsApp Karein
+                                </a>
 
                                 {showpopup && (
                                     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -305,7 +311,16 @@ export default function ProductDetail() {
                                                         <tr><td className="border p-3">Wrap Dress</td><td className="border p-3">5.5 & above</td></tr>
                                                     </tbody>
                                                 </table>
-                                                
+                                                <div className="flex flex-col gap-2">
+                                                    <h1>Size ko lekar confused ho?</h1>
+                                                    <p>Bas hume WhatsApp karein, hum aapko sahi size aur best fit choose karne mein help karenge 😊</p>
+                                                    <a href="https://wa.me/919898976916?text=Hello%20I%20want%20to%20know%20more"
+                                                        target="_blank"
+                                                        rel="noopener noreferrer">
+                                                        💬 Humse Baat Karein
+                                                    </a>
+
+                                                </div>
 
                                             </div>
 
