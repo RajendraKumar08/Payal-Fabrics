@@ -137,8 +137,8 @@ export default function DeliveryForm({ onSubmit, loading = false }: DeliveryForm
                 onChange={(e) => setPickupOption(e.target.value)}
                 className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 shadow-sm transition focus:border-purple-500 focus:outline-none"
               >
-                <option value="warehouse">Warehouse</option>
-                <option value="home">Home</option>
+                <option value="warehouse">Warehouse (You Will take your order by yourself) </option>
+                <option value="home">Home (We will collect your order from your address)</option>
               </select>
             </div>
           </div>

@@ -48,14 +48,15 @@ const ScrollNavbar = ({ authenticated, user, alexBrushClass, josefinSansClass, p
               Home
             </Link>
           </li>
-          <li>
-            <Link href="/dress%20material" className="relative text-white/90 hover:text-white transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 hover:after:w-full">
-              Women&apos;s Wear
-            </Link>
-          </li>
+         
           <li>
             <Link href="/fabric" className="relative text-white/90 hover:text-white transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 hover:after:w-full">
               Fabrics
+            </Link>
+          </li>
+          <li>
+            <Link href="/dress%20material" className="relative text-white/90 hover:text-white transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 hover:after:w-full">
+              Women&apos;s Wear
             </Link>
           </li>
           <li>

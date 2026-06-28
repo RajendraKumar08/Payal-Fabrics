@@ -1,12 +1,19 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { Dancing_Script } from 'next/font/google'
-
+import { Dancing_Script, Poppins } from 'next/font/google'
 
 const dancingScript = Dancing_Script({
     subsets: ['latin'],
     weight: ['400', '700'],
 });
+
+const poppins = Poppins({
+    subsets: ['latin'],
+    weight: ['300', '400', '500'],
+});
+
+
+
 
 export default async function Women() {
 
@@ -22,133 +29,70 @@ export default async function Women() {
     const wears = await res.json();
 
     return (
-        <main className="min-h-screen bg-slate-50">
+        <main className="min-h-screen bg-white flex flex-col text-white">
 
-            {/* Hero Section */}
-            <section className="relative overflow-hidden bg-slate-950 py-24 px-6 text-center text-slate-900">
+            {/* ── Full-page Coming Soon ── */}
+            <section className="flex-1 flex flex-col items-center justify-center px-6 py-24 relative overflow-hidden">
 
-                <div className="absolute top-0 left-0 w-72 h-72 bg-purple-200/10 rounded-full blur-3xl"></div>
-                <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-400/10 rounded-full blur-3xl"></div>
+                {/* Background decorative blobs */}
+                <span className="absolute top-0 left-0 w-80 h-80 rounded-full bg-pink-500/20 blur-3xl -translate-x-1/2 -translate-y-1/2" />
+                <span className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-pink-300/20 blur-3xl translate-x-1/3 translate-y-1/3" />
+                <span className="absolute top-1/2 left-1/2 w-64 h-64 rounded-full bg-white/10 blur-2xl -translate-x-1/2 -translate-y-1/2" />
 
-                <p className="uppercase tracking-[6px] text-purple-600 text-sm mb-4">
-                    Payal Fabrics
-                </p>
+                {/* Content card */}
+                <div className="relative z-10 text-center max-w-lg bg-pink-900 border border-white/20 rounded-3xl p-10 shadow-2xl shadow-pink-900/40 backdrop-blur-xl">
 
-                <h1 className={`text-5xl md:text-7xl font-bold text-white mb-4 drop-shadow-lg ${dancingScript.className}`}>
-                    Women&apos;s Collection
-                </h1>
+                    {/* Sparkle icon */}
+                    <div className="flex justify-center mb-6">
+                        <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center shadow-lg shadow-pink-500/30">
+                            <span className="text-pink-700 text-4xl">✦</span>
+                        </div>
+                    </div>
 
-                <p className="max-w-2xl mx-auto text-gray-300 text-base md:text-lg leading-relaxed">
-                    Elegance woven into every thread — explore our premium ethnic wear collection.
-                </p>
+                    {/* Label */}
+                    <p className={`text-xs uppercase tracking-[0.3em] text-pink-100 mb-3 ${poppins.className}`}>
+                        Payal Fabrics · Accessories
+                    </p>
 
-                <div className="flex items-center justify-center gap-4 mt-8">
-                    <span className="h-[1px] w-16 bg-slate-300"></span>
-                    <span className="text-purple-600 text-xl">✦</span>
-                    <span className="h-[1px] w-16 bg-slate-300"></span>
+                    {/* Main heading */}
+                    <h1 className={`text-6xl md:text-7xl text-white leading-tight mb-4 ${dancingScript.className}`}>
+                        Coming Soon
+                    </h1>
+
+                    {/* Divider */}
+                    <div className="flex items-center justify-center gap-3 my-5">
+                        <span className="block h-px w-16 bg-pink-200/70" />
+                        <span className="text-pink-200 text-sm">✦</span>
+                        <span className="block h-px w-16 bg-pink-200/70" />
+                    </div>
+
+                    {/* Subtitle */}
+                    <p className={`text-pink-100 text-base leading-relaxed mb-8 ${poppins.className}`}>
+                        We&apos;re curating a beautiful collection of accessories — jewellery, bags, dupattas &amp; more.
+                        <br />
+                        <span className="text-white font-medium">Stay tuned, something lovely is on its way!</span>
+                    </p>
+
+                    {/* Decorative pill tags */}
+                    <div className={`flex flex-wrap justify-center gap-2 ${poppins.className}`}>
+                        {['Jewellery', 'Bags', 'Dupattas', 'Hair Accessories', 'Footwear'].map((tag) => (
+                            <span
+                                key={tag}
+                                className="text-xs text-pink-900 bg-white px-4 py-1.5 rounded-full font-semibold"
+                            >
+                                {tag}
+                            </span>
+                        ))}
+                    </div>
                 </div>
             </section>
 
-            {/* Products */}
-            <section className="max-w-7xl mx-auto px-6 py-20">
-
-                <h2 className={`text-center text-4xl md:text-5xl text-slate-900 mb-14 ${dancingScript.className}`}>
-                    Shop by Category
-                </h2>
-
-                {wears.length === 0 ? (
-                    <div className="text-center py-20">
-                        <p className="text-slate-500 text-lg">
-                            No wears available at the moment.
-                        </p>
-                    </div>
-                ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-
-                        {wears.map((wear: any, index: number) => (
-                            <div
-                                key={index}
-                                className="group relative  overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 ease-in-out cursor-pointer bg-white border border-slate-200"
-                            >
-
-                                {/* Image */}
-                                <div className="relative w-full h-[380px] overflow-hidden">
-
-                                    <Image
-                                        src={wear.image || "/noimage.jpg"}
-                                        alt={wear.name}
-                                        fill
-                                        className="object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out"
-                                    />
-
-                                    {/* Overlay */}
-                                    <Link href={`/product/${wear.id}`}>
-                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-8">
-
-                                            <div className="text-center">
-                                                <span className="text-white text-sm font-semibold tracking-[3px] uppercase border border-white/70 px-5 py-2 rounded-full backdrop-blur-md hover:bg-white/10 transition-colors cursor-pointer">
-                                                    Explore →
-                                                </span>
-                                            </div>
-
-                                        </div>
-                                    </Link>
-
-                                    {/* Featured Badge */}
-                                    {wear.highlight && (
-                                        <div className="absolute top-4 right-4 bg-gray-600 text-white text-xs font-semibold px-4 py-1.5 rounded-full shadow-sm">
-                                            Featured
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Footer */}
-                                <div className="px-6 py-5 border-t border-slate-200 bg-white">
-                                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                                        <div>
-                                            <h3 className={`text-2xl font-semibold text-slate-900 capitalize ${dancingScript.className}`}>
-                                                {wear.name}
-                                            </h3>
-
-                                            <p className="text-sm text-slate-500 mt-1">
-                                                ₹{wear.price.toFixed(2)}
-                                            </p>
-                                        </div>
-
-                                        <div className="flex flex-wrap items-center gap-3">
-                                            <span className="text-xs text-white bg-black border border-black px-4 py-1.5 rounded-full font-medium">
-                                                Premium
-                                            </span>
-                                            {wear.stock <= 0 && (
-                                                <span className="text-xs text-red-900 bg-red-100 border border-red-200 px-4 py-1.5 rounded-full font-medium">
-                                                    Out of Stock
-                                                </span>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-
-                    </div>
-                )}
-
-            </section>
-
-            {/* Bottom Banner */}
-            <section className="bg-slate-100 text-slate-900 text-center py-16 px-6">
-
-                <h2 className={`text-4xl mb-4 ${dancingScript.className}`}>
-                    Crafted with Love & Tradition
-                </h2>
-
-                <p className="text-slate-500 max-w-2xl mx-auto leading-relaxed">
-                    Every piece in our women&apos;s collection celebrates elegance,
-                    beauty, and authentic Indian craftsmanship.
+            {/* ── Bottom strip ── */}
+            <section className="bg-black text-white text-center py-8 px-6">
+                <p className={`text-sm text-white ${poppins.className}`}>
+                    © Payal Fabrics · Crafted with love for every woman
                 </p>
-
             </section>
-
         </main>
     )
 }
