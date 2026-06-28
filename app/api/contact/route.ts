@@ -13,6 +13,7 @@ export async function POST(req: NextRequest) {
     }
 
     const myPhone = process.env.WHATSAPP_PHONE;
+    console.log("myPhone", myPhone);
 
     const formattedMessage = `
 *New Contact Form Message*
