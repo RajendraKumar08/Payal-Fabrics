@@ -15,7 +15,10 @@ export async function POST(req: NextRequest) {
         const stock_unit = formData.get("stock_unit");
         const highlightValue = formData.get("highlight");
         const imageFile = formData.get("image");
-        const fabricCategory = formData.get("fabricCategory");
+        const mainCategory = formData.get("mainCategory");
+        const subCategory = formData.get("subCategory");
+        const material = formData.get("material");
+        const fabricType = formData.get("fabricType");
         const Color = formData.get("color")?.toString().toLowerCase();
         
 
@@ -62,8 +65,11 @@ export async function POST(req: NextRequest) {
                 category: String(category),
                 stock: Number(stock_quantity),
                 highlight: String(highlightValue) === "true",
-                fabricCategory: String(fabricCategory),
+                MainCategory: String(mainCategory),
+                SubCategory: String(subCategory),
+                Material: String(material),
                 Color: String(Color),
+                FabricType: String(fabricType),
             },
         });
 

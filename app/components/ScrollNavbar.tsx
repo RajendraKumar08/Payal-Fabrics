@@ -29,13 +29,12 @@ const ScrollNavbar = ({ authenticated, user, alexBrushClass, josefinSansClass, p
 
   return (
     <nav
-      className={`sticky top-0 z-[80] transform-gpu transition duration-800 ease-out ${
-        isScrolled
+      className={`sticky top-0 z-[80] transform-gpu transition duration-800 ease-out ${isScrolled
           ? "bg-black/95 text-white shadow-2xl shadow-black/40"
           : "bg-black text-white shadow-none"
-      }`}
-        >
-      <div className="max-w-7xl mx-auto px-6 py-4  flex flex-wrap items-center justify-between gap-4">
+        }`}
+    >
+      <div className="max-w-7xl mx-auto  py-4  flex flex-wrap items-center justify-between ">
         <Link href="/" className="flex flex-col leading-tight">
           <span className={`text-3xl text-white leading-none ${alexBrushClass}`}>Payal Fabric</span>
           <span className={`text-[10px] text-white/70 tracking-[0.2em] uppercase ${josefinSansClass}`}>
@@ -100,6 +99,15 @@ const ScrollNavbar = ({ authenticated, user, alexBrushClass, josefinSansClass, p
               </li>
             </>
           )}
+        </ul>
+        <ul className={`flex flex-wrap items-center gap-5 text-sm font-medium ${poppinsClass}`}>
+          <li>
+            <a href="https://wa.me/919898976916?text=Hello%20I%20want%20to%20know%20more"
+              target="_blank"
+              rel="noopener noreferrer">
+                💬 WhatsApp Karein
+              </a>
+          </li>
         </ul>
       </div>
     </nav>
