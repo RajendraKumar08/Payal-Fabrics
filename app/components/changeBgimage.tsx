@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Alex_Brush } from "next/font/google";
 import Link from "next/link";
-import  TypingText  from "@/app/components/TypingText";
+import TypingText from "@/app/components/TypingText";
 
 const alexBrush = Alex_Brush({
   subsets: ["latin"],
@@ -11,37 +10,22 @@ const alexBrush = Alex_Brush({
 });
 
 export default function ChangeBgImage() {
-    const images = ["https://res.cloudinary.com/dboijxh5b/image/upload/v1780837961/3_tlpmme.jpg",
-    "https://res.cloudinary.com/dboijxh5b/image/upload/v1780837959/1_iqgbfr.webp",
-    "https://res.cloudinary.com/dboijxh5b/image/upload/v1780837958/2_ikhl8t.jpg",
-    "https://res.cloudinary.com/dvlbebtbw/image/upload/v1779202455/ChatGPT_Image_May_19_2026_08_23_47_PM_f4kdkc.png"
-    ];
+  return (
+    <>
+      <div className="relative h-[70vh]">
+        {/* Fixed Background Image */}
+        <div
+          className="absolute inset-0 bg-cover bg-top"
+          style={{
+            backgroundImage:
+              "url(https://res.cloudinary.com/dvlbebtbw/image/upload/v1782669026/ChatGPT_Image_Jun_27_2026_03_40_24_PM_fpsr0o.png)",
+          }}
+        />
 
-    const [currentImage, setCurrentImage] = useState(0);
-    useEffect(() => {
-        const interval = setInterval(() => {
-        setCurrentImage((prev) => (prev + 1) % images.length);
-        }, 3000); // change every 3 seconds
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-slate-950/30"></div>
 
-        return () => clearInterval(interval);
-    }, []);
-
-    return <>
-      <div>
-        {images.map((img, index) => (
-            <div
-            key={index}
-            className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out ${
-                index === currentImage ? "opacity-100" : "opacity-0"
-            }`}
-            style={{
-                backgroundImage: `url(${img})`,
-            }}
-            />
-        ))}
-        <div className="absolute inset-0 bg-slate-950/60"></div>
-        
-
+        {/* Content */}
         <div className="relative z-10 text-center px-6 pt-34">
           <h1
             className={`${alexBrush.className} text-6xl md:text-7xl font-semibold text-white mb-4 tracking-wide mt-22`}
@@ -69,4 +53,5 @@ export default function ChangeBgImage() {
         </div>
       </div>
     </>
+  );
 }

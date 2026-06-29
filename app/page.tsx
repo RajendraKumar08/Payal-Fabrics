@@ -39,18 +39,18 @@ const Homepage = async () => {
               Highlights
             </h2>
 
-            <p className="text-center text-white mx-auto">
+            <p className="text-center text-black mx-auto">
               Explore our most loved and premium collections crafted with elegance,
               comfort, and timeless beauty.
             </p>
-            <span className="text-sm mb-2">Scroll Down</span>
+            <span className="text-sm mb-2 text-black">Scroll Down</span>
             <FaChevronDown className="text-2xl animate-bounce" />
           </div>
           
 
           {displayedHighlights.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-slate-600 text-lg">
+              <p className="text-black-600 text-lg">
                 No highlights available at the moment.
               </p>
             </div>

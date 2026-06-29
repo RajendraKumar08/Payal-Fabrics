@@ -247,10 +247,11 @@ export default function ProductDetail() {
                                 >
                                     Size Guide
                                 </button>
-                                <p> Fabric stitching ke liye WhatsApp par baat karein 👇 </p>
+                                <p className='text-left text-black mt-4 font-semibold'> Fabric stitching ke liye WhatsApp par baat karein 👇 </p>
                                 <a href="https://wa.me/919898976916?text=Hello%20I%20want%20to%20know%20more"
                                     target="_blank"
-                                    rel="noopener noreferrer">
+                                    rel="noopener noreferrer"
+                                    className="text-white bg-green-600 rounded-lg px-6 py-2 hover:bg-green-700 font-semibold mt-2 inline-block">
                                     💬 WhatsApp Karein
                                 </a>
 
@@ -311,12 +312,13 @@ export default function ProductDetail() {
                                                         <tr><td className="border p-3">Wrap Dress</td><td className="border p-3">5.5 & above</td></tr>
                                                     </tbody>
                                                 </table>
-                                                <div className="flex flex-col gap-2">
-                                                    <h1>Size ko lekar confused ho?</h1>
-                                                    <p>Bas hume WhatsApp karein, hum aapko sahi size aur best fit choose karne mein help karenge 😊</p>
+                                                <div className="flex flex-col gap-2 text-black mt-4">
+                                                    <h1 className='text-center font-bold'>Size ko lekar abhi bhi confused ho?</h1>
+                                                    <p className='text-center font-semibold'>Bas hume WhatsApp karein, hum aapko sahi size aur best fit choose karne mein help karenge 😊</p>
                                                     <a href="https://wa.me/919898976916?text=Hello%20I%20want%20to%20know%20more"
                                                         target="_blank"
-                                                        rel="noopener noreferrer">
+                                                        rel="noopener noreferrer"
+                                                        className="text-white text-center bg-green-600 rounded-lg px-6 py-2 hover:bg-green-700 font-semibold mt-2 inline-block">
                                                         💬 Humse Baat Karein
                                                     </a>
 
