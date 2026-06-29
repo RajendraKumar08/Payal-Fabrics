@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
                 description: String(description),
                 category: String(category),
                 stock: Number(stock_quantity),
-                highlight: String(highlightValue) === "true",
+                highlight: Boolean(highlightValue),
                 MainCategory: String(mainCategory),
                 SubCategory: String(subCategory),
                 Material: String(material),
