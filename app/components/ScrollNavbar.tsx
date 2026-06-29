@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { RegisterLink, LoginLink } from "@kinde-oss/kinde-auth-nextjs";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import CartBadge from "@/app/components/CartBadge";
@@ -16,6 +17,7 @@ type ScrollNavbarProps = {
 
 const ScrollNavbar = ({ authenticated, user, alexBrushClass, josefinSansClass, poppinsClass }: ScrollNavbarProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => {
@@ -27,11 +29,15 @@ const ScrollNavbar = ({ authenticated, user, alexBrushClass, josefinSansClass, p
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const isHome = pathname === "/";
+
   return (
     <nav
-      className={`sticky top-0 z-[80] transform-gpu transition duration-800 ease-out ${isScrolled
+      className={`sticky top-0 z-[80] transform-gpu transition duration-500 ease-out ${isScrolled
           ? "bg-black/95 text-white shadow-2xl shadow-black/40"
-          : "bg-black text-white shadow-none"
+          : isHome
+            ? "bg-transparent text-white shadow-none"
+            : "bg-black text-white shadow-none"
         }`}
     >
       <div className="max-w-7xl mx-auto  py-4  flex flex-wrap items-center justify-between ">
@@ -65,10 +71,18 @@ const ScrollNavbar = ({ authenticated, user, alexBrushClass, josefinSansClass, p
             </Link>
           </li>
           <li>
-            <Link href="/contact" className="relative text-white/90 hover:text-white transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 hover:after:w-full">
-              Contact
-            </Link>
-          </li>
+             <Link href="/search" className="relative text-white/90 hover:text-white transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 hover:after:w-full flex items-center gap-1.5">
+               <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+               </svg>
+               <span>Search</span>
+             </Link>
+           </li>
+           <li>
+             <Link href="/contact" className="relative text-white/90 hover:text-white transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 hover:after:w-full">
+               Contact
+             </Link>
+           </li>
           <li>
             <CartBadge />
           </li>

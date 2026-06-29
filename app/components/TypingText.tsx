@@ -6,23 +6,17 @@ const TypingText = () => {
     return (
         <TypeAnimation
             sequence={[
-                "Elegant Designs",
-                2000,
-                "",
-                500,
-                "Premium Fabrics",
-                2000,
-                "",
-                500,
-                "Perfect Stitching",
-                2000,
-                "",
-                500,
+                "Premium Ajrakh & Bagru collection in pure cotton, made for you.",
+                4000,
+                "Authentic hand block prints crafted by artisans, made for you.",
+                4000,
+                "Timeless heritage designs in breathable fabrics, made for you.",
+                4000,
             ]}
             wrapper="p"
-            speed={50}
+            speed={55}
             repeat={Infinity}
-            className="text-xl md:text-2xl text-white font-light tracking-[4px]"
+            className="text-sm md:text-base text-[#5c404f] font-medium leading-relaxed max-w-md text-left"
         />
     );
 };

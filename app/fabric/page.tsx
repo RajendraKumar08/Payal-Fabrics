@@ -1,154 +1,150 @@
-    
-    
-    import Image from 'next/image'
-    import Link from 'next/link'
-    import { Dancing_Script } from 'next/font/google'
+import Image from 'next/image'
+import Link from 'next/link'
+import { Playfair_Display } from 'next/font/google'
 
-    const dancingScript = Dancing_Script({
-        subsets: ['latin'],
-        weight: ['400', '700'],
+const playfair = Playfair_Display({
+    subsets: ['latin'],
+    weight: ['400', '600', '700'],
+    style: ['normal', 'italic'],
+});
+
+export default async function Fabrics() {
+    const res = await fetch(`${process.env.PUBLIC_BASE_URL}/api/getallitems?category=Fabric`, {
+        method: 'GET'
     });
+    if (!res.ok) {
+        throw new Error("Failed to fetch fabrics");
+    }
+    const fabrics = await res.json();
 
-    export default async function Fabrics() {
-        const res = await fetch(
-            `${process.env.PUBLIC_BASE_URL}/api/getallitems?category=fabric`,
-            {
-                cache: "no-store",
-            }
-        );
-        if(!res.ok){
-            throw new Error("Failed to fetch fabrics");
-        }
-        const fabrics = await res.json();
+    return (
+        <main className="min-h-screen bg-[#faf6f0] text-black">
 
-        return (
-            <main className="min-h-screen bg-slate-50">
+            {/* Hero Section */}
+            <section className="relative overflow-hidden bg-gradient-to-br from-[#e5d5c5] to-[#f4eae1] py-24 px-6 text-center text-slate-900 border-b border-pink-100/50">
 
-                {/* Hero Section */}
-                <section className="relative overflow-hidden bg-slate-950 py-24 px-6 text-center text-slate-900">
+                <p className="uppercase tracking-[0.25em] text-[#7d5069] text-xs font-bold mb-3">
+                    Payal Fabrics
+                </p>
 
-                    <div className="absolute top-0 left-0 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl"></div>
-                    <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-400/10 rounded-full blur-3xl"></div>
+                <h1 className={`text-4xl md:text-5xl lg:text-6xl font-bold text-[#3c1e2e] mb-4 tracking-tight ${playfair.className}`}>
+                    Our Fabrics
+                </h1>
 
-                    <p className="uppercase tracking-[6px] text-purple-600 text-sm mb-4">
-                        Payal Fabrics
-                    </p>
+                <p className="max-w-xl mx-auto text-[#5c404f] text-sm md:text-base leading-relaxed">
+                    Discover timeless elegance with our premium collection of luxurious fabrics,
+                    crafted with beauty, comfort, and rich handblock print tradition.
+                </p>
 
-                    <h1 className={`text-5xl md:text-7xl font-bold text-white mb-4 drop-shadow-lg ${dancingScript.className}`}>
-                        Our Fabrics
-                    </h1>
+                {/* Accent Divider with mandala icon */}
+                <div className="flex items-center justify-center gap-3 mt-6">
+                    <span className="h-[1px] w-12 bg-[#4d243d]/20"></span>
+                    <svg className="w-4 h-4 text-[#7d5069] shrink-0" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v18M3 12h18M5.5 5.5l13 13m-13 0l13-13M12 9a3 3 0 100 6 3 3 0 000-6z" />
+                    </svg>
+                    <span className="h-[1px] w-12 bg-[#4d243d]/20"></span>
+                </div>
+            </section>
 
-                    <p className="max-w-2xl mx-auto text-gray-300 text-base md:text-lg leading-relaxed">
-                        Discover timeless elegance with our premium collection of luxurious fabrics,
-                        crafted with beauty, comfort, and tradition.
-                    </p>
+            {/* Fabric Cards Grid */}
+            <section className="max-w-7xl mx-auto px-6 py-20">
 
-                    <div className="flex items-center justify-center gap-4 mt-8">
-                        <span className="h-[1px] w-16 bg-slate-300"></span>
-                        <span className="text-purple-600 text-xl">✦</span>
-                        <span className="h-[1px] w-16 bg-slate-300"></span>
+                <h2 className={`text-center text-3xl md:text-4xl font-extrabold text-[#3c1e2e] mb-12 tracking-tight ${playfair.className}`}>
+                    Shop by Fabric
+                </h2>
+
+                {fabrics.length === 0 ? (
+                    <div className="text-center py-20">
+                        <p className="text-slate-500 text-base">
+                            No fabrics available at the moment.
+                        </p>
                     </div>
-                </section>
+                ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
 
-                {/* Fabric Section */}
-                <section className="max-w-7xl mx-auto px-6 py-20">
+                        {fabrics.map((fabric: any, index: number) => (
+                            <div
+                                key={index}
+                                className="group relative overflow-hidden rounded-2xl shadow-md hover:shadow-xl border border-pink-100/50 hover:border-pink-200/50 bg-white transition-all duration-500 ease-in-out cursor-pointer flex flex-col"
+                            >
 
-                    <h2 className={`text-center text-4xl md:text-5xl text-slate-900 mb-14 ${dancingScript.className}`}>
-                        Shop by Fabric
-                    </h2>
+                                {/* Image */}
+                                <div className="relative w-full h-[380px] overflow-hidden">
 
-                    {fabrics.length === 0 ? (
-                        <div className="text-center py-20">
-                            <p className="text-slate-500 text-lg">
-                                No fabrics available at the moment.
-                            </p>
-                        </div>
-                    ) : (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+                                    <Image
+                                        src={fabric.image || "/noimage.jpg"}
+                                        alt={fabric.name}
+                                        fill
+                                        className="object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out"
+                                    />
 
-                            {fabrics.map((fabric: any, index: number) => (
-                                <div
-                                    key={index}
-                                    className="group relative overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 ease-in-out cursor-pointer bg-white border border-slate-200"
-                                >
+                                    {/* Overlay */}
+                                    <Link href={`/product/${fabric.id}`}>
+                                        <div className="absolute inset-0 bg-[#4d243d]/80 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-8 z-10">
 
-                                    {/* Image */}
-                                    <div className="relative w-full h-[380px] overflow-hidden">
-
-                                        <Image
-                                            src={fabric.image || "/noimage.jpg"}
-                                            alt={fabric.name}
-                                            fill
-                                            className="object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out"
-                                        />
-
-                                        {/* Overlay */}
-                                        <Link href={`/product/${fabric.id}`}>
-                                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-8">
-
-                                                <div className="text-center">
-                                                    <span className="text-white text-sm font-semibold tracking-[3px] uppercase border border-white/70 px-5 py-2 rounded-full backdrop-blur-md hover:bg-white/10 transition-colors cursor-pointer">
-                                                        Explore →
-                                                    </span>
-                                                </div>
-
-                                            </div>
-                                        </Link>
-
-                                        {/* Featured Badge */}
-                                        {fabric.highlight && (
-                                            <div className="absolute top-4 right-4 bg-gray-600 text-white text-xs font-semibold px-4 py-1.5 rounded-full shadow-sm">
-                                                Featured
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {/* Footer */}
-                                    <div className="px-6 py-5 border-t border-slate-200 bg-white">
-                                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                                            <div>
-                                                <h3 className={`text-2xl font-semibold text-slate-900 capitalize ${dancingScript.className}`}>
-                                                    {fabric.name}
-                                                </h3>
-
-                                                <p className="text-sm text-slate-500 mt-1">
-                                                    ₹{fabric.price.toFixed(2)}/Meter
-                                                </p>
-                                            </div>
-
-                                            <div className="flex flex-wrap items-center gap-3">
-                                                <span className="text-xs text-white bg-black border border-black px-4 py-1.5 rounded-full font-medium">
-                                                    Premium
+                                            <div className="text-center">
+                                                <span className="text-white text-xs font-bold tracking-[3px] uppercase border border-white/60 px-5 py-2.5 rounded-full hover:bg-white/10 transition-colors cursor-pointer">
+                                                    Explore →
                                                 </span>
-                                                {fabric.stock <= 0 && (
-                                                    <span className="text-xs text-red-900 bg-red-100 border border-red-200 px-4 py-1.5 rounded-full font-medium">
-                                                        Out of Stock
-                                                    </span>
-                                                )}
                                             </div>
+
+                                        </div>
+                                    </Link>
+
+                                    {/* Featured Badge */}
+                                    {fabric.highlight && (
+                                        <div className="absolute top-4 right-4 bg-[#4d243d] text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-md shadow-sm z-20">
+                                            Featured
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Card Text Content */}
+                                <div className="px-5 py-4 border-t border-slate-100 bg-white flex-1 flex flex-col justify-between">
+                                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                                        <div>
+                                            <h3 className={`text-lg font-bold text-[#3c1e2e] capitalize leading-snug group-hover:text-[#7d5069] transition-colors ${playfair.className}`}>
+                                                {fabric.name}
+                                            </h3>
+
+                                            <p className="text-xs font-semibold text-[#7d5069] mt-1.5">
+                                                ₹{fabric.price.toFixed(2)}/Meter
+                                            </p>
+                                        </div>
+
+                                        <div className="flex flex-wrap items-center gap-2 shrink-0">
+                                            <span className="text-[10px] font-bold text-[#7d5069] bg-[#4d243d]/5 border border-[#4d243d]/10 px-3 py-1 rounded-full uppercase tracking-wider">
+                                                Premium
+                                            </span>
+                                            {fabric.stock <= 0 && (
+                                                <span className="text-[10px] font-bold text-red-700 bg-red-50 border border-red-100 px-3 py-1 rounded-full uppercase tracking-wider">
+                                                    Out of Stock
+                                                </span>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
-                            ))}
+                            </div>
+                        ))}
 
-                        </div>
-                    )}
-                </section>
+                    </div>
+                )}
+            </section>
 
-                {/* Bottom Banner */}
-                <section className="bg-slate-100 text-slate-900 text-center py-16 px-6">
+            {/* Bottom Banner */}
+            <section className="bg-[#f4eae1] text-[#3c1e2e] text-center py-16 px-6 border-t border-pink-100/50">
 
-                    <h2 className={`text-4xl mb-4 ${dancingScript.className}`}>
-                        Woven with Tradition & Care
-                    </h2>
+                <h2 className={`text-3xl font-bold mb-4 tracking-tight ${playfair.className}`}>
+                    Woven with <span className="italic font-normal text-[#5a2e48]">Tradition & Care</span>
+                </h2>
 
-                    <p className="text-slate-500 max-w-2xl mx-auto leading-relaxed">
-                        Every fabric in our collection is carefully selected from the finest artisans
-                        across India, bringing together elegance, culture, and craftsmanship.
-                    </p>
+                <p className="text-[#5c404f] max-w-xl mx-auto text-sm leading-relaxed">
+                    Every fabric in our collection is carefully selected from the finest artisans
+                    across India, bringing together elegance, culture, and heritage craftsmanship.
+                </p>
 
-                </section>
+            </section>
 
-            </main>
-        )
-    }
+        </main>
+    )
+}
