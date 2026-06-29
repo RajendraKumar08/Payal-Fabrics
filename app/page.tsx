@@ -184,7 +184,7 @@ const Homepage = async () => {
             <ul className="space-y-3 text-slate-300">
               <li>
                 <Link
-                  href="https://www.instagram.com/payal_tailor10.06/"
+                  href="https://github.com/RajendraKumar08"
                   className="hover:text-white transition"
                 >
                   Rajendra
@@ -193,7 +193,7 @@ const Homepage = async () => {
 
               <li>
                 <Link
-                  href="https://www.instagram.com/payal_tailor10.06/"
+                  href="https://github.com/RajendraKumar08"
                   className="hover:text-white transition"
                 >
                   Sumit
