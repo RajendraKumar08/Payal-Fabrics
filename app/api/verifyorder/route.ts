@@ -82,25 +82,35 @@ export async function POST(req: NextRequest) {
             
             const orderedBy = dbuser.name || "Unknown";
             console.log("Creating order with amount:", totalAmount);
-        
 
-            const order = await prisma.order.create({
-                data: {
-                    userId: dbuser.id,
-                    totalAmount,
+            const createdorder = await prisma.order.findUnique({
+                where: {
                     razorpayOrderId : orderId,
+                }
+            })
+
+            if(!createdorder) return NextResponse.json({message : "unable to fetch the created order from razorpayid"}, {status : 500})
+
+            const neworder = await prisma.order.update({
+                where: {
+                    razorpayOrderId : orderId,
+                }, 
+                data: {
                     razorpayPaymentId: paymentId,
                     paymentStatus: "PAID",
-                    orderedBy: orderedBy,
-
                 }
-            });
-            console.log("Order created:", order.id);
+            })
+            
+            
+        
+
+            
+            console.log("Order created:", neworder.id);
             
             for (const item of dbuser.cartItems) {
                 await prisma.orderItem.create({
                     data: {
-                        orderId: order.id,
+                        orderId: neworder.id,
                         productId: item.productId,
                         productName: item.product.name,
                         quantity: item.quantity,

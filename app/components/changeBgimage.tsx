@@ -53,17 +53,17 @@ export default function ChangeBgImage() {
     ];
 
     return (
-        <div className="relative w-full h-screen flex items-center justify-start overflow-hidden bg-[#e5d5c5] -mt-[76px] pt-[76px]">
+        <div className="relative w-full h-[70vh] flex items-center justify-start overflow-hidden bg-[#e5d5c5] -mt-[76px] pt-[76px]">
             {/* Background image covering the layout */}
             <div
-                className="absolute inset-0 bg-cover bg-no-repeat bg-[center_right_20%] md:bg-[center_right_10%] lg:bg-center transition-all duration-700"
+                className="absolute inset-0 bg-cover bg-no-repeat bg-top transition-all duration-700"
                 style={{
-                    backgroundImage: "url('/hero-section-image.png')",
+                    backgroundImage: "url('https://res.cloudinary.com/dvlbebtbw/image/upload/v1782669026/ChatGPT_Image_Jun_27_2026_03_40_24_PM_fpsr0o.png')",
                 }}
             />
 
             {/* Soft organic beige gradient overlay to ensure text readability on all viewports */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#e5d5c5]/90 via-[#e5d5c5]/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#C7BBAD]/85 via-[#C7BBAD]/50 to-transparent" />
 
             {/* Content Container */}
             <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 lg:px-20 w-full flex flex-col justify-between py-10 md:py-16 h-full">
@@ -120,7 +120,7 @@ export default function ChangeBgImage() {
                                 <h3 className="text-xs font-bold uppercase tracking-wider text-[#4d243d]">
                                     {feat.title}
                                 </h3>
-                                <p className="text-[10px] text-slate-600 font-semibold mt-0.5 leading-snug">
+                                <p className="text-[10px] text-[#4d243d] font-semibold mt-0.5 leading-snug">
                                     {feat.desc}
                                 </p>
                             </div>

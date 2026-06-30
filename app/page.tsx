@@ -31,7 +31,7 @@ const Homepage = async () => {
       </div>
 
       {/* Highlights Section */}
-      <section className="bg-[#faf6f0] py-24 px-6 border-t border-pink-100/50">
+      <section className="bg-[#faf6f0] py-12 px-6 border-t border-pink-100/50">
         <div className="max-w-7xl mx-auto">
           {/* Section Header */}
           <div className="text-center max-w-2xl mx-auto mb-16">
