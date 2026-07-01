@@ -1,10 +1,15 @@
+
 import { redirect } from 'next/navigation';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { prisma } from '@/prisma-db';
 import { NextResponse } from 'next/server';
+// import { useState } from 'react';
+import OrdersClient from '../OrdersClient/page';
+
 
 export default async function UserOrderPage() {
     const { getUser } = getKindeServerSession();
+    // const [clickedorder, setclickedorder] = useState();
     const user = await getUser();
     if (!user) redirect('/login');
 
@@ -30,6 +35,8 @@ export default async function UserOrderPage() {
         const v = Number(n ?? 0);
         return `₹${v.toFixed(2)}`;
     };
+
+   
 
     return (
         <main className="min-h-screen bg-slate-50 text-slate-900 px-6 py-12">
@@ -62,6 +69,10 @@ export default async function UserOrderPage() {
                                         </span>
                                         <p className="mt-3 text-sm text-slate-700 font-medium">{fmtCurrency(order.totalAmount ?? order.amount ?? 0)}</p>
                                     </div>
+                                    <div className="flex items-center gap-2">
+                                        <OrdersClient razid={order.shiprocketId} />
+                                    </div>
+                                    
                                 </div>
 
                                 <div className="mt-4 border-t border-slate-100 pt-4">

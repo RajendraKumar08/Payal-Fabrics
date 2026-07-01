@@ -1,11 +1,22 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import {ratelimit} from "../../../../utils/ratelimiter";
 export async function GET(request: Request) {
     const orderid = request.url.split("/").pop();
+    const key = `shiprocket-${orderid}`;
+    const { success } = await ratelimit.limit(key);
+
+    if (!success) {
+        return NextResponse.json(
+            { message: "Rate limit exceeded", error: "RateLimit" },
+            { status: 429 }
+        );
+    }
     if (!orderid) {
         return NextResponse.json({ message: "Order ID is required" }, { status: 400 });
     }
 
+    console.log("orderid in getorder route for shiprocket:", orderid);
 
     const cokeisStore = await cookies();
     let token = cokeisStore.get("shiprocket_token")?.value;
@@ -30,6 +41,7 @@ export async function GET(request: Request) {
             return NextResponse.json({ message: "Failed to authenticate with ShipRocket", error }, { status: 500 });
         }
     }
+    console.log("Token for shiprocket:", token);
 
     try {
         const res = await fetch(`https://apiv2.shiprocket.in/v1/external/orders/show/${orderid}`, {

@@ -1,3 +1,4 @@
+import { prisma } from "@/prisma-db";
 import { NextRequest, NextResponse } from "next/server";
 
 interface OrderItem {
@@ -20,6 +21,16 @@ interface DeliveryData {
   breadth: number;
   height: number;
   weight: number;
+}
+
+function getUniqueSku(item: OrderItem, index: number) {
+  const baseSku = String(item.productId ?? "").trim();
+
+  if (!baseSku) {
+    return `item-${index + 1}`;
+  }
+
+  return `${baseSku}-${index + 1}`;
 }
 
 async function get_shiprocket_token() {
@@ -125,10 +136,10 @@ export async function POST(req: NextRequest) {
       shipping_is_billing: true,
 
       order_items: orderData.items.map(
-        (item: OrderItem) => ({
+        (item: OrderItem, index: number) => ({
           name: item.name,
 
-          sku: String(item.productId),
+          sku: getUniqueSku(item, index),
 
           units: item.quantity,
 
@@ -202,6 +213,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
+   
+
     const shipment_id = data.shipment_id;
 
     const assign_response = await fetch(
@@ -242,6 +255,11 @@ export async function POST(req: NextRequest) {
         }
       );
     }
+
+     const updatedorder = await prisma.order.update({
+      where: { razorpayOrderId: razorpayOrderId },
+      data: { shiprocketId: String(data.order_id) },
+    });
 
     return NextResponse.json({
       success: true,
