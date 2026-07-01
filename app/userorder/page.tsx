@@ -32,7 +32,7 @@ export default async function UserOrderPage() {
     };
 
     return (
-        <main className="min-h-screen bg-slate-50 text-slate-900 px-6 py-12">
+        <main className="min-h-screen bg-slate-50 text-slate-900 px-4 md:px-6 py-8 md:py-12">
             <div className="mx-auto max-w-6xl">
                 <header className="mb-8">
                     <h1 className="text-3xl font-semibold">My Orders</h1>
