@@ -21,6 +21,8 @@ model User {
   orders       Order[]
 }
 
+
+
 model Product {
   id          String      @id @default(cuid())
   name        String

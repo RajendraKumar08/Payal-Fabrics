@@ -3,6 +3,7 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { prisma } from "@/prisma-db";
 import ChangeBgImage from "@/app/components/changeBgimage";
 import { Playfair_Display } from "next/font/google";
+import Posts  from "@/app/components/posts";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -123,6 +124,11 @@ const Homepage = async () => {
               ))}
             </div>
           )}
+        </div>
+      </section>
+      <section className="bg-[#faf6f0] py-12 px-6 border-t border-pink-100/50">
+        <div className="max-w-7xl mx-auto">
+          <Posts />
         </div>
       </section>
 
