@@ -53,10 +53,10 @@ export default function ChangeBgImage() {
     ];
 
     return (
-        <div className="relative w-full h-screen flex items-center justify-start overflow-hidden bg-[#e5d5c5] -mt-[76px] pt-[76px]">
+        <div className="relative w-full h-[70vh] flex items-center justify-start overflow-hidden bg-[#e5d5c5] -mt-[76px] pt-[76px]">
             {/* Background image covering the layout */}
             <div
-                className="absolute inset-0 bg-cover bg-no-repeat bg-[center_right_20%] md:bg-[center_right_10%] lg:bg-center transition-all duration-700"
+                className="absolute inset-0 bg-cover bg-no-repeat bg-top md:bg-[center_right_10%] lg:bg-center transition-all duration-700"
                 style={{
                     backgroundImage: "url('/hero-section-image.png')",
                 }}

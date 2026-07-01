@@ -81,7 +81,6 @@ export default function Search() {
             materials: Array.from(materials).sort(),
         };
     }, [products]);
-
     // Compound filtering logic
     const filteredProducts = useMemo(() => {
         return products.filter((p) => {
@@ -129,6 +128,7 @@ export default function Search() {
         );
     }
 
+    console.log("filteroptions", filterOptions);
     return (
         <main className={`min-h-screen bg-[#faf6f0] text-slate-800 pb-20 ${poppins.className}`}>
             {/* Header Banner */}

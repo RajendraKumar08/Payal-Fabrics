@@ -29,6 +29,11 @@ interface Product {
     category: string;
     stock: number;
     highlight: boolean;
+    Color: string;
+    MainCategory: string;
+    SubCategory: string;
+    FabricType: string;
+    Material: string;
 }
 
 export default function ProductDetail() {
@@ -93,6 +98,8 @@ export default function ProductDetail() {
         fetchProduct();
     }, [id]);
     
+    const stock = product?.stock;
+
     const customSelectStyles = {
         control: (styles: any) => ({
             ...styles,
@@ -233,6 +240,35 @@ export default function ProductDetail() {
                                     {product.stock > 0 ? `${product.stock} ${product.category.toLowerCase() === 'fabric' ? 'Meters' : 'Items'}` : 'Out of Stock'}
                                 </p>
                             </div>
+                            
+                            <div className="border-l border-pink-100/40"></div>
+                            <div>
+                                <p className="text-[10px] text-[#7d5069] uppercase tracking-wider font-bold mb-1">Sub Category</p>
+                                <p className="text-base font-bold text-[#3c1e2e] capitalize">{product.SubCategory}</p>
+                            </div>
+                            <div className="border-l border-pink-100/40"></div>
+                            <div>
+                                <p className="text-[10px] text-[#7d5069] uppercase tracking-wider font-bold mb-1">Fabric Type</p>
+                                <p className="text-base font-bold text-[#3c1e2e] capitalize">{product.FabricType}</p>
+                            </div>
+                            <div className="border-l border-pink-100/40"></div>
+                            <div>
+                                <p className="text-[10px] text-[#7d5069] uppercase tracking-wider font-bold mb-1">Material</p>
+                                <p className="text-base font-bold text-[#3c1e2e] capitalize">{product.Material}</p>
+                            </div>
+                        </div>
+
+                        {/* colour and maincategory */}
+                        <div className="mb-6 flex gap-6">
+                            <div>
+                                <p className="text-[10px] text-[#7d5069] uppercase tracking-wider font-bold mb-1">Color</p>
+                                <p style={{color: product.Color, fontWeight: 'bold'}}>{product.Color.toUpperCase()}</p>
+                            </div>
+                            <div className="border-l border-pink-100/40"></div>
+                            <div>
+                                <p className="text-[10px] text-[#7d5069] uppercase tracking-wider font-bold mb-1">Main Category</p>
+                                <p className="text-base font-bold text-[#3c1e2e] capitalize">{product.MainCategory}</p>
+                            </div>
                         </div>
 
                         {/* Description */}
@@ -262,7 +298,11 @@ export default function ProductDetail() {
                                 )}
                                 
                                 <div className="flex-1">
-                                    {product.stock > 0 ? (
+                                    {product.stock < quantity ? (
+                                        <button disabled className="w-full px-8 py-3.5 bg-slate-200 text-slate-500 font-bold uppercase tracking-wider text-xs rounded-full cursor-not-allowed">
+                                            Please select the quantity within range
+                                        </button>
+                                    ): product.stock > 0  ?(
                                         <AddToCartButton
                                             product={{
                                                 id: product.id,
@@ -275,11 +315,11 @@ export default function ProductDetail() {
                                             }}
                                             authenticated={authenticated}
                                         />
-                                    ) : (
+                                    ): 
                                         <button disabled className="w-full px-8 py-3.5 bg-slate-200 text-slate-500 font-bold uppercase tracking-wider text-xs rounded-full cursor-not-allowed">
                                             Out of Stock
                                         </button>
-                                    )}
+                                    }
                                 </div>
                             </div>
                             
