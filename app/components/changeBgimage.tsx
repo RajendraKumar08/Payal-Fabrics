@@ -56,7 +56,7 @@ export default function ChangeBgImage() {
         <div className="relative w-full h-[70vh] flex items-center justify-start overflow-hidden bg-[#e5d5c5] -mt-[76px] pt-[76px]">
             {/* Background image covering the layout */}
             <div
-                className="absolute inset-0 bg-cover bg-no-repeat bg-top transition-all duration-700"
+                className="absolute inset-0 bg-cover bg-no-repeat bg-top md:bg-[center_right_10%] lg:bg-center transition-all duration-700"
                 style={{
                     backgroundImage: "url('https://res.cloudinary.com/dvlbebtbw/image/upload/v1782669026/ChatGPT_Image_Jun_27_2026_03_40_24_PM_fpsr0o.png')",
                 }}

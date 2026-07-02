@@ -242,7 +242,7 @@ export default function CartPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50 px-6 py-20 text-slate-900">
+    <main className="min-h-screen bg-slate-50 px-4 md:px-6 py-10 md:py-20 text-slate-900">
       <Script
         src="https://checkout.razorpay.com/v1/checkout.js"
         strategy="lazyOnload"
@@ -257,7 +257,7 @@ export default function CartPage() {
           </div>
         )}
 
-        <div className="flex flex-col gap-4 rounded-3xl bg-white p-8 shadow-xl">
+        <div className="flex flex-col gap-4 rounded-3xl bg-white p-4 sm:p-8 shadow-xl">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <h1 className="text-4xl font-bold">Your Cart</h1>

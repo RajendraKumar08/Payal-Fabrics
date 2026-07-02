@@ -36,7 +36,7 @@ export default function Contact() {
         <main className={`min-h-screen bg-[#faf6f0] text-slate-800 ${poppins.className}`}>
 
             {/* ── Hero Banner ── */}
-            <section className="relative bg-gradient-to-br from-[#e5d5c5] to-[#f4eae1] py-20 px-6 text-center overflow-hidden border-b border-pink-100/50">
+            <section className="relative bg-gradient-to-br from-[#e5d5c5] to-[#f4eae1] py-12 md:py-20 px-4 md:px-6 text-center overflow-hidden border-b border-pink-100/50">
                 <span className="absolute -top-10 -left-10 w-48 h-48 rounded-full bg-pink-100/30 blur-2xl" />
                 <span className="absolute -bottom-10 -right-10 w-64 h-64 rounded-full bg-white/20 blur-2xl" />
 
@@ -59,7 +59,7 @@ export default function Contact() {
             </section>
 
             {/* ── Main Content ── */}
-            <section className="max-w-6xl mx-auto px-6 py-16">
+            <section className="max-w-6xl mx-auto px-4 md:px-6 py-10 md:py-16">
 
                 {/* ── Contact Info Panel ── */}
                 <div className="flex flex-col gap-6 mb-12">
@@ -104,7 +104,7 @@ export default function Contact() {
             </section>
 
             {/* ── WhatsApp CTA Section ── */}
-            <section className="relative bg-gradient-to-br from-[#faf6f0] via-[#e8f5e9]/30 to-[#f4eae1] py-20 px-6 overflow-hidden border-t border-pink-100/50">
+            <section className="relative bg-gradient-to-br from-[#faf6f0] via-[#e8f5e9]/30 to-[#f4eae1] py-12 md:py-20 px-4 md:px-6 overflow-hidden border-t border-pink-100/50">
                 <span className="absolute -top-20 -left-20 w-72 h-72 rounded-full bg-pink-100/20 blur-3xl" />
                 <span className="absolute -bottom-20 -right-20 w-96 h-96 rounded-full bg-green-100/10 blur-3xl" />
 

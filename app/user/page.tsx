@@ -63,7 +63,7 @@ const UserPage = async () => {
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
       <div className="relative overflow-hidden">
-        <div className="relative max-w-6xl mx-auto px-6 py-16 lg:py-24">
+        <div className="relative max-w-6xl mx-auto px-4 md:px-6 py-10 md:py-16 lg:py-24">
           <div className="mb-12 max-w-3xl">
             <span className="inline-flex rounded-full border border-slate-200 bg-slate-100 px-4 py-2 text-xs uppercase tracking-[0.3em] text-slate-600">
               Account Dashboard

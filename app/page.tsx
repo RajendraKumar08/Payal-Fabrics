@@ -32,7 +32,7 @@ const Homepage = async () => {
       </div>
 
       {/* Highlights Section */}
-      <section className="bg-[#faf6f0] py-12 px-6 border-t border-pink-100/50">
+      <section className="bg-[#faf6f0] py-12 md:py-24 px-4 md:px-6 border-t border-pink-100/50">
         <div className="max-w-7xl mx-auto">
           {/* Section Header */}
           <div className="text-center max-w-2xl mx-auto mb-16">
@@ -60,14 +60,15 @@ const Homepage = async () => {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {displayedHighlights.map((highlight: any, index: number) => (
-                <div
+                <Link
                   key={index}
+                  href={`/product/${highlight.id}`}
                   className="group relative overflow-hidden rounded-2xl shadow-md hover:shadow-xl border border-pink-100/50 hover:border-pink-200/50 bg-white transition-all duration-500 ease-in-out cursor-pointer flex flex-col"
                 >
                   {/* Image */}
-                  <div className="relative w-full h-[380px] overflow-hidden">
+                  <div className="relative w-full h-[280px] sm:h-[320px] lg:h-[360px] overflow-hidden">
                     <img
                       src={highlight.image || "/noimage.jpg"}
                       alt={highlight.name}
@@ -75,15 +76,13 @@ const Homepage = async () => {
                     />
 
                     {/* Overlay */}
-                    <Link href={`/product/${highlight.id}`}>
-                      <div className="absolute inset-0 bg-[#4d243d]/80 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-8 z-10">
-                        <div className="text-center">
-                          <span className="text-white text-xs font-bold tracking-[3px] uppercase border border-white/60 px-5 py-2.5 rounded-full hover:bg-white/10 transition-colors cursor-pointer">
-                            Explore →
-                          </span>
-                        </div>
+                    <div className="absolute inset-0 bg-[#4d243d]/80 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-8 z-10">
+                      <div className="text-center">
+                        <span className="text-white text-xs font-bold tracking-[3px] uppercase border border-white/60 px-5 py-2.5 rounded-full hover:bg-white/10 transition-colors">
+                          Explore →
+                        </span>
                       </div>
-                    </Link>
+                    </div>
 
                     {/* Featured Badge */}
                     <div className="absolute top-4 right-4 bg-[#4d243d] text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-md shadow-sm z-20">
@@ -120,7 +119,7 @@ const Homepage = async () => {
                       </p>
                     )}
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           )}
@@ -132,8 +131,8 @@ const Homepage = async () => {
         </div>
       </section>
 
-      <footer className="bg-slate-950 text-slate-100 py-10 px-6">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10">
+      <footer className="bg-slate-950 text-slate-100 py-10 px-4 md:px-6">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
 
           <div>
             <h2 className="text-2xl font-bold mb-4 text-white">

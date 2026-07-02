@@ -7,7 +7,7 @@ export async function PATCH(req: NextRequest) {
 
         const body = await req.json();
 
-        const { id, name, price, description, category, stock } = body;
+        const { id, name, price, description, category, stock, Material, Color, FabricType, highlight } = body;
 
         if (!id) {
             return NextResponse.json(
@@ -19,11 +19,15 @@ export async function PATCH(req: NextRequest) {
         const updated_product = await prisma.product.update({
             where: { id },
             data: {
-                ...(name        && { name }),
-                ...(price       && { price: Number(price) }),
-                ...(description && { description }),
-                ...(category    && { category }),
-                ...(stock !== undefined && stock !== null && { stock: Number(stock) }),
+                name: name,
+                price: Number(price),
+                description: description,
+                category: category,
+                stock: Number(stock),
+                Material: Material,
+                Color: Color,
+                FabricType: FabricType,
+                highlight: highlight,
             },
         });
 

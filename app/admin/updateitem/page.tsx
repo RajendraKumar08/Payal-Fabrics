@@ -11,6 +11,12 @@ interface Product {
     stock: number;
     image?: string | null;
     createdAt: string;
+    highlight: boolean;
+    Color: string;
+    FabricType: string;
+    MainCategory: string;
+    Material: string;
+    SubCategory: string;
 }
 
 const UpdateItemPage = () => {
@@ -57,6 +63,10 @@ const UpdateItemPage = () => {
             description: formdata.get("description") as string,
             category: formdata.get("category") as string,
             stock: Number(formdata.get("stock")),
+            highlight: String(formdata.get("highlight")) === "true" ? true : false,
+            Color: formdata.get("Color") as string,
+            Material: formdata.get("Material") as string,
+            FabricType: formdata.get("FabricType") as string,
         };
         try {
             const res = await fetch("/api/updateitem", {
@@ -196,26 +206,48 @@ const UpdateItemPage = () => {
                                         <textarea id="description" name="description" className={`${inputClass} resize-none`} rows={4} defaultValue={selected.description} required />
                                     </div>
 
-                                    <div>
-                                        <select
-                                            className={`w-full border rounded-xl px-4 py-3 outline-none focus:ring-2 `}
-                                            name="highlight"
-                                            defaultValue=""
-                                        >
-                                            <option value="" disabled>
-                                                Select Highlights
-                                            </option>
-
-                                            <option value="true">
-                                                Yes
-                                            </option>
-
-                                            <option value="false">
-                                                No
-                                            </option>
+                                    {/* highlight */}
+                                    <div className="flex flex-col gap-1.5">
+                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider" htmlFor="highlight">Highlight</label>
+                                        <select id="highlight" name="highlight" className={inputClass} defaultValue={selected.highlight ? "Yes" : "No"} required>
+                                            <option value="" disabled>Select Highlight</option>
+                                            <option value="true">Yes</option>
+                                            <option value="false">No</option>
                                         </select>
+                                    </div>
 
-                                        
+                                    {/* colour */}
+                                    <div className="flex flex-col gap-1.5">
+                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider" htmlFor="Color">Colour</label>
+                                        <input id="Color" name="Color" className={inputClass} defaultValue={selected.Color} required />
+                                    </div>
+
+                                    {/* Material */}
+                                    <div className="flex flex-col gap-1.5">
+                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider" htmlFor="Material">Material</label>
+                                        <select id="Material" name="Material" className={inputClass} defaultValue={selected.Material} required>
+                                            <option value="" disabled>Select Material</option>
+                                            <option value="Cotton">Cotton</option>
+                                            <option value="Silk">Silk</option>
+                                            <option value="Silk cotton">Silk Cotton</option>
+                                            <option value="Linen">Linen</option>
+                                            <option value="Modal silk">Modal Silk</option>
+                                            <option value="Mulberry">Mulberry</option>
+                                            <option value="Woollen">Woollen</option>
+                                        </select>
+                                    </div>
+
+                                    {/* Fabric Type */}
+                                    <div className="flex flex-col gap-1.5">
+                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider" htmlFor="FabricType">Fabric Type</label>
+                                        <select id="FabricType" name="FabricType" className={inputClass} defaultValue={selected.FabricType} required>
+                                            <option value="" disabled>Select Fabric Type</option>
+                                            <option value="Handloom">Handloom</option>
+                                            <option value="Hand Block Print">Hand Block Print</option>
+                                            <option value="printed">Printed</option>
+                                            <option value="woven">Woven</option>
+                                            <option value="kantha work">Kantha Work</option>
+                                        </select>
                                     </div>
 
                                     {/* Feedback */}

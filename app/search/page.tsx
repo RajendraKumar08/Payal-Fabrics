@@ -42,6 +42,33 @@ export default function Search() {
     const [selectedColor, setSelectedColor] = useState<string>("");
     const [selectedFabricType, setSelectedFabricType] = useState<string>("");
     const [selectedMaterial, setSelectedMaterial] = useState<string>("");
+    const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+
+    // Calculate active filter count
+    const activeFilterCount = useMemo(() => {
+        let count = 0;
+        if (selectedCategory) count++;
+        if (selectedColor) count++;
+        if (selectedFabricType) count++;
+        if (selectedMaterial) count++;
+        return count;
+    }, [selectedCategory, selectedColor, selectedFabricType, selectedMaterial]);
+
+    // Lock body scrolling when mobile drawer is open
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            if (isMobileFiltersOpen) {
+                document.body.style.overflow = "hidden";
+            } else {
+                document.body.style.overflow = "";
+            }
+        }
+        return () => {
+            if (typeof window !== "undefined") {
+                document.body.style.overflow = "";
+            }
+        };
+    }, [isMobileFiltersOpen]);
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -81,7 +108,6 @@ export default function Search() {
             materials: Array.from(materials).sort(),
         };
     }, [products]);
-
     // Compound filtering logic
     const filteredProducts = useMemo(() => {
         return products.filter((p) => {
@@ -129,10 +155,11 @@ export default function Search() {
         );
     }
 
+    console.log("filteroptions", filterOptions);
     return (
         <main className={`min-h-screen bg-[#faf6f0] text-slate-800 pb-20 ${poppins.className}`}>
             {/* Header Banner */}
-            <section className="relative bg-gradient-to-br from-[#e5d5c5] to-[#f4eae1] py-16 px-6 text-center border-b border-pink-100/50">
+            <section className="relative bg-gradient-to-br from-[#e5d5c5] to-[#f4eae1] py-10 md:py-16 px-4 md:px-6 text-center border-b border-pink-100/50">
                 <div className="max-w-4xl mx-auto">
                     <p className="text-[10px] uppercase tracking-[0.25em] text-[#7d5069] font-bold mb-2">Search Catalog</p>
                     <h1 className={`text-4xl md:text-5xl font-extrabold text-[#3c1e2e] tracking-tight ${playfair.className}`}>
@@ -159,11 +186,11 @@ export default function Search() {
             </section>
 
             {/* Main Content Layout */}
-            <section className="max-w-7xl mx-auto px-6 py-12">
+            <section className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12">
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
                     
                     {/* Filters Sidebar */}
-                    <div className="lg:col-span-1">
+                    <div className="hidden lg:block lg:col-span-1">
                         <div className="bg-white border border-pink-100/50 rounded-3xl p-6 shadow-md lg:sticky lg:top-24 flex flex-col gap-6">
                             
                             <div className="flex items-center justify-between border-b border-pink-100/40 pb-4">
@@ -277,6 +304,68 @@ export default function Search() {
 
                     {/* Products Grid */}
                     <div className="lg:col-span-3">
+                        {/* Filters Toolbar & Result Status */}
+                        <div className="flex items-center justify-between gap-4 mb-6 border-b border-pink-100/30 pb-4">
+                            <div className="text-xs font-semibold text-slate-500">
+                                Showing <span className="font-bold text-[#3c1e2e]">{filteredProducts.length}</span> {filteredProducts.length === 1 ? 'product' : 'products'}
+                            </div>
+                            
+                            {/* Mobile Filters Toggle Button */}
+                            <button
+                                onClick={() => setIsMobileFiltersOpen(true)}
+                                className="lg:hidden flex items-center gap-2 px-4 py-2 bg-white border border-pink-100 hover:border-pink-200 rounded-full text-xs font-bold text-[#7d5069] shadow-sm active:scale-95 transition-all"
+                            >
+                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                                </svg>
+                                Filters {activeFilterCount > 0 && `(${activeFilterCount})`}
+                            </button>
+                        </div>
+
+                        {/* Active Filter Chips */}
+                        {activeFilterCount > 0 && (
+                            <div className="flex flex-wrap items-center gap-2 mb-6">
+                                <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold mr-1">Active:</span>
+                                {selectedColor && (
+                                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#4d243d]/5 border border-pink-100/50 rounded-full text-xs font-semibold text-[#7d5069]">
+                                        Color: {selectedColor}
+                                        <button onClick={() => setSelectedColor("")} className="text-slate-400 hover:text-[#4d243d] ml-0.5 focus:outline-none" title="Remove Color Filter">
+                                            ✕
+                                        </button>
+                                    </span>
+                                )}
+                                {selectedFabricType && (
+                                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#4d243d]/5 border border-pink-100/50 rounded-full text-xs font-semibold text-[#7d5069]">
+                                        Fabric: {selectedFabricType}
+                                        <button onClick={() => setSelectedFabricType("")} className="text-slate-400 hover:text-[#4d243d] ml-0.5 focus:outline-none" title="Remove Fabric Type Filter">
+                                            ✕
+                                        </button>
+                                    </span>
+                                )}
+                                {selectedMaterial && (
+                                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#4d243d]/5 border border-pink-100/50 rounded-full text-xs font-semibold text-[#7d5069]">
+                                        Material: {selectedMaterial}
+                                        <button onClick={() => setSelectedMaterial("")} className="text-slate-400 hover:text-[#4d243d] ml-0.5 focus:outline-none" title="Remove Material Filter">
+                                            ✕
+                                        </button>
+                                    </span>
+                                )}
+                                {selectedCategory && (
+                                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#4d243d]/5 border border-pink-100/50 rounded-full text-xs font-semibold text-[#7d5069]">
+                                        Category: {selectedCategory}
+                                        <button onClick={() => setSelectedCategory("")} className="text-slate-400 hover:text-[#4d243d] ml-0.5 focus:outline-none" title="Remove Category Filter">
+                                            ✕
+                                        </button>
+                                    </span>
+                                )}
+                                <button
+                                    onClick={handleResetFilters}
+                                    className="text-[10px] uppercase tracking-wider text-[#7d5069] hover:text-[#4d243d] font-bold ml-1 hover:underline transition-colors"
+                                >
+                                    Clear All
+                                </button>
+                            </div>
+                        )}
                         {error && (
                             <div className="text-center py-10 bg-red-50 border border-red-100 rounded-3xl p-6 mb-8">
                                 <p className="text-sm font-bold text-red-700">{error}</p>
@@ -298,14 +387,15 @@ export default function Search() {
                                 </button>
                             </div>
                         ) : (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
                                 {filteredProducts.map((p) => (
-                                    <div
+                                    <Link
                                         key={p.id}
+                                        href={`/product/${p.id}`}
                                         className="group relative overflow-hidden rounded-2xl shadow-md hover:shadow-xl border border-pink-100/50 hover:border-pink-200/50 bg-white transition-all duration-500 ease-in-out cursor-pointer flex flex-col"
                                     >
                                         {/* Image */}
-                                        <div className="relative w-full h-[360px] overflow-hidden bg-slate-50">
+                                        <div className="relative w-full h-[280px] sm:h-[320px] lg:h-[360px] overflow-hidden bg-slate-50">
                                             <img
                                                 src={p.image || "/noimage.jpg"}
                                                 alt={p.name}
@@ -313,15 +403,13 @@ export default function Search() {
                                             />
 
                                             {/* Explore Overlay */}
-                                            <Link href={`/product/${p.id}`}>
-                                                <div className="absolute inset-0 bg-[#4d243d]/80 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-8 z-10">
-                                                    <div className="text-center">
-                                                        <span className="text-white text-xs font-bold tracking-[3px] uppercase border border-white/60 px-5 py-2.5 rounded-full hover:bg-white/10 transition-colors cursor-pointer">
-                                                            Explore →
-                                                        </span>
-                                                    </div>
+                                            <div className="absolute inset-0 bg-[#4d243d]/80 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-8 z-10">
+                                                <div className="text-center">
+                                                    <span className="text-white text-xs font-bold tracking-[3px] uppercase border border-white/60 px-5 py-2.5 rounded-full hover:bg-white/10 transition-colors">
+                                                        Explore →
+                                                    </span>
                                                 </div>
-                                            </Link>
+                                            </div>
 
                                             {/* Featured Badge */}
                                             {p.highlight && (
@@ -375,7 +463,7 @@ export default function Search() {
                                                 </span>
                                             </div>
                                         </div>
-                                    </div>
+                                    </Link>
                                 ))}
                             </div>
                         )}
@@ -383,6 +471,148 @@ export default function Search() {
 
                 </div>
             </section>
+
+            {/* Mobile Filters Drawer Overlay */}
+            {isMobileFiltersOpen && (
+                <div className="fixed inset-0 z-[100] lg:hidden">
+                    {/* Backdrop */}
+                    <div
+                        className="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
+                        onClick={() => setIsMobileFiltersOpen(false)}
+                    />
+                    
+                    {/* Drawer Content */}
+                    <div className="fixed inset-y-0 right-0 w-full max-w-xs bg-[#faf6f0] shadow-2xl flex flex-col z-[101] overflow-hidden">
+                        {/* Drawer Header */}
+                        <div className="flex items-center justify-between px-5 py-4 border-b border-pink-100/40 bg-white">
+                            <h2 className={`text-base font-bold text-[#3c1e2e] ${playfair.className}`}>Filters</h2>
+                            <button
+                                onClick={() => setIsMobileFiltersOpen(false)}
+                                className="p-1.5 rounded-full text-slate-400 hover:bg-slate-50 hover:text-slate-600 transition-colors"
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        {/* Drawer Scrollable Filter List */}
+                        <div className="flex-1 overflow-y-auto p-5 flex flex-col gap-5">
+                            {/* Color Filter */}
+                            {filterOptions.colors.length > 0 && (
+                                <div className="border-b border-pink-100/30 pb-4">
+                                    <h3 className="text-[10px] font-bold text-[#7d5069] uppercase tracking-wider mb-2.5">Color</h3>
+                                    <div className="flex flex-wrap gap-1.5">
+                                        <button
+                                            onClick={() => setSelectedColor("")}
+                                            className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all border ${
+                                                !selectedColor
+                                                    ? "bg-[#4d243d] text-white border-[#4d243d] shadow-sm"
+                                                    : "bg-white text-slate-600 border-pink-100/60 hover:border-pink-200"
+                                            }`}
+                                        >
+                                            All
+                                        </button>
+                                        {filterOptions.colors.map((col) => (
+                                            <button
+                                                key={col}
+                                                onClick={() => setSelectedColor(col)}
+                                                className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all border ${
+                                                    selectedColor.toLowerCase() === col.toLowerCase()
+                                                        ? "bg-[#4d243d] text-white border-[#4d243d] shadow-sm"
+                                                        : "bg-white text-slate-600 border-pink-100/60 hover:border-pink-200"
+                                                }`}
+                                            >
+                                                {col}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Fabric Type Filter */}
+                            {filterOptions.fabricTypes.length > 0 && (
+                                <div className="border-b border-pink-100/30 pb-4">
+                                    <h3 className="text-[10px] font-bold text-[#7d5069] uppercase tracking-wider mb-2.5">Fabric Type</h3>
+                                    <div className="flex flex-wrap gap-1.5">
+                                        <button
+                                            onClick={() => setSelectedFabricType("")}
+                                            className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all border ${
+                                                !selectedFabricType
+                                                    ? "bg-[#4d243d] text-white border-[#4d243d] shadow-sm"
+                                                    : "bg-white text-slate-600 border-pink-100/60 hover:border-pink-200"
+                                            }`}
+                                        >
+                                            All
+                                        </button>
+                                        {filterOptions.fabricTypes.map((ft) => (
+                                            <button
+                                                key={ft}
+                                                onClick={() => setSelectedFabricType(ft)}
+                                                className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all border ${
+                                                    selectedFabricType.toLowerCase() === ft.toLowerCase()
+                                                        ? "bg-[#4d243d] text-white border-[#4d243d] shadow-sm"
+                                                        : "bg-white text-slate-600 border-pink-100/60 hover:border-pink-200"
+                                                }`}
+                                            >
+                                                {ft}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Material Filter */}
+                            {filterOptions.materials.length > 0 && (
+                                <div className="pb-2">
+                                    <h3 className="text-[10px] font-bold text-[#7d5069] uppercase tracking-wider mb-2.5">Material</h3>
+                                    <div className="flex flex-wrap gap-1.5">
+                                        <button
+                                            onClick={() => setSelectedMaterial("")}
+                                            className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all border ${
+                                                !selectedMaterial
+                                                    ? "bg-[#4d243d] text-white border-[#4d243d] shadow-sm"
+                                                    : "bg-white text-slate-600 border-pink-100/60 hover:border-pink-200"
+                                            }`}
+                                        >
+                                            All
+                                        </button>
+                                        {filterOptions.materials.map((mat) => (
+                                            <button
+                                                key={mat}
+                                                onClick={() => setSelectedMaterial(mat)}
+                                                className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all border ${
+                                                    selectedMaterial.toLowerCase() === mat.toLowerCase()
+                                                        ? "bg-[#4d243d] text-white border-[#4d243d] shadow-sm"
+                                                        : "bg-white text-slate-600 border-pink-100/60 hover:border-pink-200"
+                                                }`}
+                                            >
+                                                {mat}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Drawer Actions Footer */}
+                        <div className="p-4 border-t border-pink-100/40 bg-white flex gap-2">
+                            <button
+                                onClick={handleResetFilters}
+                                className="flex-1 py-2 border border-pink-100/80 rounded-full text-xs font-bold text-[#7d5069] hover:bg-slate-50 transition-colors"
+                            >
+                                Reset
+                            </button>
+                            <button
+                                onClick={() => setIsMobileFiltersOpen(false)}
+                                className="flex-1 py-2 bg-[#4d243d] text-white rounded-full text-xs font-bold shadow-md hover:bg-[#5e2e4b] transition-colors"
+                            >
+                                Show Results
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </main>
     );
 }

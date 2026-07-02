@@ -47,7 +47,7 @@ export default async function Fabrics() {
             </section>
 
             {/* Fabric Cards Grid */}
-            <section className="max-w-7xl mx-auto px-6 py-20">
+            <section className="max-w-7xl mx-auto px-4 md:px-6 py-10 md:py-20">
 
                 <h2 className={`text-center text-3xl md:text-4xl font-extrabold text-[#3c1e2e] mb-12 tracking-tight ${playfair.className}`}>
                     Shop by Fabric
@@ -60,16 +60,17 @@ export default async function Fabrics() {
                         </p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
 
                         {fabrics.map((fabric: any, index: number) => (
-                            <div
+                            <Link
                                 key={index}
+                                href={`/product/${fabric.id}`}
                                 className="group relative overflow-hidden rounded-2xl shadow-md hover:shadow-xl border border-pink-100/50 hover:border-pink-200/50 bg-white transition-all duration-500 ease-in-out cursor-pointer flex flex-col"
                             >
 
                                 {/* Image */}
-                                <div className="relative w-full h-[380px] overflow-hidden">
+                                <div className="relative w-full h-[280px] sm:h-[320px] lg:h-[360px] overflow-hidden">
 
                                     <Image
                                         src={fabric.image || "/noimage.jpg"}
@@ -79,17 +80,15 @@ export default async function Fabrics() {
                                     />
 
                                     {/* Overlay */}
-                                    <Link href={`/product/${fabric.id}`}>
-                                        <div className="absolute inset-0 bg-[#4d243d]/80 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-8 z-10">
+                                    <div className="absolute inset-0 bg-[#4d243d]/80 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-8 z-10">
 
-                                            <div className="text-center">
-                                                <span className="text-white text-xs font-bold tracking-[3px] uppercase border border-white/60 px-5 py-2.5 rounded-full hover:bg-white/10 transition-colors cursor-pointer">
-                                                    Explore →
-                                                </span>
-                                            </div>
-
+                                        <div className="text-center">
+                                            <span className="text-white text-xs font-bold tracking-[3px] uppercase border border-white/60 px-5 py-2.5 rounded-full hover:bg-white/10 transition-colors">
+                                                Explore →
+                                            </span>
                                         </div>
-                                    </Link>
+
+                                    </div>
 
                                     {/* Featured Badge */}
                                     {fabric.highlight && (
@@ -124,7 +123,7 @@ export default async function Fabrics() {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </Link>
                         ))}
 
                     </div>
