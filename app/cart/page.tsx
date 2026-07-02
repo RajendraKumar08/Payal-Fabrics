@@ -77,7 +77,7 @@ export default function CartPage() {
       const res = await fetch("http://localhost:3000/api/createorder", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: total * 100 }) // Razorpay expects amount in paise
+        body: JSON.stringify({ amount: total * 100,  pickupOption: pickupOption, billingPincode: deliveryFormData?.billing_pincode }) // Razorpay expects amount in paise
       });
 
       if (!res.ok) {
@@ -85,7 +85,8 @@ export default function CartPage() {
       }
 
       console.log("response from razorpay order creation", res);
-      const orderData = await res.json();
+      const { order, couriersoption } = await res.json();
+      const orderData = order;
 
       if (!orderData.id) {
         throw new Error("Invalid order data received from server.");
@@ -94,7 +95,7 @@ export default function CartPage() {
       const paymentOptions = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "", // Razorpay Key ID
 
-        amount: total * 100, // Amount in paise,
+        amount: orderData.amount, // Amount in paise,
         currency: orderData.currency,
 
         name: "Payal Fabrics",
@@ -141,7 +142,7 @@ export default function CartPage() {
             }
             if (data.isOk) {
               // Create ShipRocket order after payment verification
-              if (deliveryFormData && pickupOption === "home") {
+              if (deliveryFormData && pickupOption === "home" && couriersoption !== "PAYALFABRICS") {
                 try {
                   const shipRocketRes = await fetch('/api/shiprocket', {
                     method: 'POST',
