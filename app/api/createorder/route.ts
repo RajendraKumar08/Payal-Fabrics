@@ -86,6 +86,7 @@ export async function POST(req: NextRequest) {
 
     let { pickupOption, billingPincode, amount } = await req.json();
     const distanceinkm = await findddistance(billingPincode, "396360");
+    console.log("Distance in km between billing pincode and warehouse pincode:", distanceinkm);
 
 
     const razorpay = new Razorpay({
@@ -93,17 +94,20 @@ export async function POST(req: NextRequest) {
         key_secret: keySecret,
     });
 
-    
-    let couriersoption;
+
+    let couriersoption: string;
     if (pickupOption === "home" && distanceinkm > 20) {
         amount += 100 * 100;
         couriersoption = "HOME";
-    }
-    if(pickupOption === "Warehouse"){
+    } else if (pickupOption === "Warehouse") {
         couriersoption = "WAREHOUSE";
-    }
-    if(distanceinkm <= 20 && pickupOption === "home"){
+    } else if (pickupOption === "home" && distanceinkm <= 20) {
         couriersoption = "PAYALFABRICS";
+    } else {
+        return NextResponse.json(
+            { message: "Invalid pickup option" },
+            { status: 400 }
+        );
     }
 
 
@@ -127,5 +131,5 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ message: "Error creating order" }, { status: 500 });
     }
 
-    return NextResponse.json({order, couriersoption});
+    return NextResponse.json({ order, couriersoption });
 }

@@ -77,7 +77,7 @@ export default function CartPage() {
       const res = await fetch("http://localhost:3000/api/createorder", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: total * 100,  pickupOption: pickupOption, billingPincode: deliveryFormData?.billing_pincode }) // Razorpay expects amount in paise
+        body: JSON.stringify({ amount: total * 100, pickupOption: pickupOption, billingPincode: deliveryFormData?.billing_pincode }) // Razorpay expects amount in paise
       });
 
       if (!res.ok) {
@@ -176,7 +176,51 @@ export default function CartPage() {
                 }
               }
 
-              alert("Payment successful and verified! Click Ok to proceed.");
+              // send the message to user from 8233880779 on whatsapp about the order details and the payment confirmation
+              try {
+                const emails = await fetch('/api/sendemail', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    to: deliveryFormData?.billing_email,
+                    message: `<div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+    <h2 style="color: #2c3e50;">Order Confirmed ✅</h2>
+    
+    <p>Dear Customer,</p>
+    
+    <p>Thank you for shopping with <strong>Payal Fabrics</strong>.</p>
+    
+    <p>Your payment has been successfully received, and your order has been confirmed.</p>
+    
+    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">
+      <p><strong>Order Details:</strong></p>
+      <p>${items.map(item => item.name).join(', ')}</p>
+      <p><strong>Total Amount:</strong> ₹${total}</p>
+    </div>
+
+    <p>Our team will process your order shortly and keep you updated regarding shipping and delivery.</p>
+
+    <p>If you have any questions or need assistance, feel free to contact us:</p>
+    <p><strong>📞 Contact:</strong> 9898976916</p>
+
+    <br />
+    <p>Regards,</p>
+    <p><strong>Payal Fabrics Team</strong></p>
+  </div>`
+                  })
+                });
+                if (emails.ok) {
+                  const emailData = await emails.json();
+                  console.log("Email sent successfully response in cart page :", emailData);
+                }
+              } catch (err) {
+                console.error("Email integration error:", err);
+              }
+
+
+
+
+              alert("Payment successful! Your order has been confirmed. A confirmation email with your order details has been sent to your registered email address. If you do not see it in your inbox, please check your Spam or Promotions folder. Click OK to continue.");
               clearCart();
               setShowDeliveryForm(false);
               setLoading(false);

@@ -44,6 +44,10 @@ export default function DeliveryForm({ onSubmit, loading = false }: DeliveryForm
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [distanceKm, setDistanceKm] = useState<number | null>(null);
+  const [deliveryCharge, setDeliveryCharge] = useState<number | null>(null);
+  const [deliveryCheckMessage, setDeliveryCheckMessage] = useState<string | null>(null);
+  const [checkingDeliveryCharge, setCheckingDeliveryCharge] = useState(false);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -104,12 +108,66 @@ export default function DeliveryForm({ onSubmit, loading = false }: DeliveryForm
         [name]: "",
       }));
     }
+    if (name === "billing_pincode") {
+      setDistanceKm(null);
+      setDeliveryCharge(null);
+      setDeliveryCheckMessage(null);
+    }
   };
 
   const handleSubmit = (e?: React.FormEvent | React.MouseEvent) => {
     e?.preventDefault();
     if (validateForm()) {
       onSubmit(formData, pickupOption);
+    }
+  };
+
+  const handleCheckDeliveryCharge = async () => {
+    if (!/^\d{6}$/.test(formData.billing_pincode.trim())) {
+      setErrors((prev) => ({
+        ...prev,
+        billing_pincode: "Valid 6-digit pincode required",
+      }));
+      return;
+    }
+
+    setCheckingDeliveryCharge(true);
+    setDeliveryCheckMessage(null);
+    setDistanceKm(null);
+    setDeliveryCharge(null);
+
+    try {
+      const response = await fetch("/api/pincode-distance", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          pincode1: formData.billing_pincode.trim(),
+          pincode2: "396360",
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.message || "Unable to calculate delivery charge.");
+      }
+
+      const distance = Number(data.distanceInKm ?? 0);
+      setDistanceKm(distance);
+
+      const charge = distance > 20 ? 100 : 0;
+      setDeliveryCharge(charge);
+      setDeliveryCheckMessage(
+        distance > 20
+          ? `Delivery charge is ₹100 because the distance is greater than 20 km.`
+          : `Delivery is free because the distance is within 20 km.`
+      );
+    } catch (error) {
+      setDeliveryCheckMessage(
+        error instanceof Error ? error.message : "Delivery charge check failed."
+      );
+    } finally {
+      setCheckingDeliveryCharge(false);
     }
   };
 
@@ -137,8 +195,8 @@ export default function DeliveryForm({ onSubmit, loading = false }: DeliveryForm
                 onChange={(e) => setPickupOption(e.target.value)}
                 className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 shadow-sm transition focus:border-purple-500 focus:outline-none"
               >
-                <option value="warehouse">Warehouse (You Will take your order by yourself) </option>
-                <option value="home">Home (We will collect your order from your address)</option>
+                <option value="warehouse">Warehouse (You will collect the order yourself from our warehouse)</option>
+                <option value="home">Home (We will deliver the order to your house)</option>
               </select>
             </div>
           </div>
@@ -280,6 +338,60 @@ export default function DeliveryForm({ onSubmit, loading = false }: DeliveryForm
                       <p className="mt-1 text-sm text-red-600">{errors.billing_state}</p>
                     )}
                   </div>
+                </div>
+
+                <div className="rounded-3xl border border-purple-200 bg-purple-50 p-6 shadow-sm">
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <p className="text-sm font-semibold text-purple-700">Check delivery charge</p>
+                      <p className="mt-2 text-sm leading-6 text-slate-600">
+                        Enter your pincode and compare it with our warehouse pincode <span className="font-semibold">396360</span>.
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleCheckDeliveryCharge}
+                      disabled={checkingDeliveryCharge}
+                      className="rounded-full bg-purple-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-purple-700 disabled:cursor-not-allowed disabled:bg-slate-400"
+                    >
+                      {checkingDeliveryCharge ? "Checking..." : "Check charge"}
+                    </button>
+                  </div>
+
+                  <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                    <div className="rounded-2xl bg-white p-4 shadow-sm">
+                      <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Warehouse pincode</p>
+                      <p className="mt-2 text-lg font-semibold text-slate-900">396360</p>
+                    </div>
+                    <div className="rounded-2xl bg-white p-4 shadow-sm">
+                      <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Your pincode</p>
+                      <p className="mt-2 text-lg font-semibold text-slate-900">{formData.billing_pincode || "—"}</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-5 rounded-2xl bg-slate-100 p-4 text-sm text-slate-700">
+                    <p className="font-semibold">Delivery charge rule</p>
+                    <p className="mt-2">
+                      If the distance between your pincode and our warehouse pincode is greater than 20 km, ₹100 delivery charge will apply.
+                      If it is 20 km or less, delivery is free.
+                    </p>
+                  </div>
+
+                  {distanceKm !== null && (
+                    <div className="mt-4 rounded-2xl bg-white p-4 text-sm text-slate-900 shadow-sm">
+                      <p className="text-sm text-slate-500">Distance</p>
+                      <p className="mt-1 text-lg font-semibold">{distanceKm.toFixed(2)} km</p>
+                      <p className="mt-2 text-sm text-slate-600">
+                        {deliveryCharge && deliveryCharge > 0 ? `Delivery charge is ₹${deliveryCharge}.` : "Delivery is free."}
+                      </p>
+                    </div>
+                  )}
+
+                  {deliveryCheckMessage && (
+                    <div className="mt-4 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                      {deliveryCheckMessage}
+                    </div>
+                  )}
                 </div>
 
                 {/* Country */}
