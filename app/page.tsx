@@ -178,10 +178,10 @@ const Homepage = async () => {
             <ul className="space-y-3 text-slate-300">
               <li>
                 <Link
-                  href="https://github.com/RajendraKumar08"
+                  href="https://github.com/sumit-77-dev"
                   className="hover:text-white transition"
                 >
-                  Rajendra
+                  Sumit Gola
                 </Link>
               </li>
 
@@ -190,7 +190,7 @@ const Homepage = async () => {
                   href="https://github.com/RajendraKumar08"
                   className="hover:text-white transition"
                 >
-                  Sumit
+                  Rajendra Kumar
                 </Link>
               </li>
             </ul>
