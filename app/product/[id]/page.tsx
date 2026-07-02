@@ -46,6 +46,7 @@ export default function ProductDetail() {
     const { isAuthenticated } = useKindeBrowserClient();
     const authenticated = Boolean(isAuthenticated);
     const [quantity, setQuantity] = useState(0.5);
+
     const options = [
         { value: 0.5, label: "0.5 Meter" },
         { value: 1, label: "1.0 Meter" },
@@ -100,6 +101,7 @@ export default function ProductDetail() {
     }, [id]);
     
     const stock = product?.stock;
+     
 
     const customSelectStyles = {
         control: (styles: any) => ({
@@ -293,23 +295,21 @@ export default function ProductDetail() {
                                 )}
                                 
                                 <div className="flex-1">
-                                    {product.stock < quantity ? (
-                                        <button disabled className="w-full px-8 py-3.5 bg-slate-200 text-slate-500 font-bold uppercase tracking-wider text-xs rounded-full cursor-not-allowed">
-                                            Please select the quantity within range
-                                        </button>
-                                    ): product.stock > 0  ?(
-                                        <AddToCartButton
-                                            product={{
-                                                id: product.id,
-                                                name: product.name,
-                                                price: product.price,
-                                                image: product.image || '',
-                                                stock: product.stock,
-                                                category: product.category,
-                                                quantity: product.category.toLowerCase() === 'fabric' ? quantity : 1,
-                                            }}
-                                            authenticated={authenticated}
-                                        />
+                                    {product.stock > 0  ?(
+                                            <AddToCartButton
+                                                product={{
+                                                    id: product.id,
+                                                    name: product.name,
+                                                    price: product.price,
+                                                    image: product.image || '',
+                                                    stock: product.stock,
+                                                    category: product.category,
+                                                    quantity: product.category.toLowerCase() === 'fabric' ? quantity : 1,
+                                                }}
+                                                authenticated={authenticated}
+
+                                            />
+                                        
                                     ): 
                                         <button disabled className="w-full px-8 py-3.5 bg-slate-200 text-slate-500 font-bold uppercase tracking-wider text-xs rounded-full cursor-not-allowed">
                                             Out of Stock

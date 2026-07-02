@@ -410,7 +410,7 @@ export default function DeliveryForm({ onSubmit, loading = false }: DeliveryForm
                 </div>
 
                 {/* Package Dimensions */}
-                <div className="border-t border-slate-200 pt-6">
+                {/* <div className="border-t border-slate-200 pt-6">
                   <h3 className="text-lg font-semibold text-slate-900 mb-4">Package Dimensions</h3>
                   <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                     <div>
@@ -489,7 +489,7 @@ export default function DeliveryForm({ onSubmit, loading = false }: DeliveryForm
                       )}
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </form>
           )}
