@@ -28,7 +28,7 @@ const Posts = () => {
                     </svg>
                     <span className="block h-[1px] w-12 bg-[#4d243d]/20" />
                 </div>
-                <div className="flex flex-wrap gap-4">
+                <div className="flex flex-wrap gap-4 justify-center items-center">
                     {imageposts.map((post, index) => (
                         <iframe
                             key={index}
@@ -40,7 +40,7 @@ const Posts = () => {
                         />
                     ))}
                 </div>
-                <div className="flex flex-wrap gap-4">
+                <div className="flex flex-wrap gap-4 justify-center items-center">
                     {reels.map((reel, index) => (
                         <iframe
                             key={index}

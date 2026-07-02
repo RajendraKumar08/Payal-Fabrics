@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Playfair_Display, Poppins } from 'next/font/google'
+import Footer from '@/app/components/footer'
 
 const playfair = Playfair_Display({
     subsets: ['latin'],
@@ -81,6 +82,7 @@ export default async function Women() {
                     © Payal Fabrics · Crafted with love for every woman
                 </p>
             </section>
+            <Footer/>
         </main>
     )
 }

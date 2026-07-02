@@ -8,6 +8,7 @@ import AddToCartButton from '@/app/components/AddToCartButton';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import { Playfair_Display, Poppins } from 'next/font/google';
 import Select from 'react-select';
+import Footer from '@/app/components/footer';
 
 const playfair = Playfair_Display({
     subsets: ['latin'],
@@ -436,6 +437,7 @@ export default function ProductDetail() {
                     </div>
                 </div>
             </section>
+            <Footer />
         </main>
     );
 }

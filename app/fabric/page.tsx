@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Playfair_Display } from 'next/font/google'
+import Footer from '@/app/components/footer'
 
 const playfair = Playfair_Display({
     subsets: ['latin'],
@@ -143,6 +144,7 @@ export default async function Fabrics() {
                 </p>
 
             </section>
+            <Footer />
 
         </main>
     )

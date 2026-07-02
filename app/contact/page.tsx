@@ -1,6 +1,7 @@
 'use client'
 
 import { Playfair_Display, Poppins } from 'next/font/google'
+import Footer from '@/app/components/footer'
 
 const playfair = Playfair_Display({
     subsets: ['latin'],
@@ -165,6 +166,7 @@ export default function Contact() {
                     </div>
                 </div>
             </section>
+            <Footer />
         </main>
     )
 }
