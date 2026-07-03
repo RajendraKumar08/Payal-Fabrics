@@ -74,7 +74,7 @@ export default function CartPage() {
       setError(null);
       setLoading(true);
 
-      const res = await fetch("http://localhost:3000/api/createorder", {
+      const res = await fetch("/api/createorder", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount: total * 100, pickupOption: pickupOption, billingPincode: deliveryFormData?.billing_pincode }) // Razorpay expects amount in paise

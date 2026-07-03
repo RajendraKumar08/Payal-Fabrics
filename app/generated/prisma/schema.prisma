@@ -1,0 +1,93 @@
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../app/generated/prisma"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           Int        @id @default(autoincrement())
+  name         String?
+  email        String     @unique
+  createdAt    DateTime   @default(now())
+  kindeId      String?    @unique
+  profileImage String?
+  role         Role       @default(USER)
+  updatedAt    DateTime?  @updatedAt
+  cartItems    CartItem[]
+  orders       Order[]
+}
+
+model Product {
+  id           String      @id @default(cuid())
+  name         String
+  image        String?
+  price        Float
+  description  String
+  category     String
+  MainCategory String
+  SubCategory  String
+  Material     String
+  Color        String
+  FabricType   String
+  stock        Float
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  highlight    Boolean     @default(false)
+  cartItems    CartItem[]
+  orderItems   OrderItem[]
+}
+
+model CartItem {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  productId String
+  quantity  Float    @default(1)
+  createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+}
+
+model Order {
+  id                String        @id @default(cuid())
+  userId            Int
+  orderedBy         String
+  totalAmount       Float
+  razorpayOrderId   String?       @unique
+  razorpayPaymentId String?       @unique
+  paymentStatus     PaymentStatus @default(PENDING)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  shiprocketId      String?       @unique
+  pickOption        String
+  status            String        @default("PENDING")
+  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orderItems        OrderItem[]
+}
+
+model OrderItem {
+  id          Int     @id @default(autoincrement())
+  orderId     String
+  productId   String
+  productName String  @default("Product")
+  quantity    Float
+  price       Float
+  order       Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+}
+
+enum Role {
+  USER
+  ADMIN
+}
