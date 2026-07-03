@@ -51,7 +51,7 @@ const Footer = () => {
                   href="https://github.com/sumit-77-dev"
                   className="hover:text-white transition"
                 >
-                  Sumit Gola
+                  Sumit Kumar Gola
                 </Link>
               </li>
 
