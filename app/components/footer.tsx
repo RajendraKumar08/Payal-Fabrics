@@ -37,6 +37,14 @@ const Footer = () => {
                   Payal Tailor
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="https://www.instagram.com/payal_tailor10.06/"
+                  className="hover:text-white transition"
+                >
+                  Josana Tailor
+                </Link>
+              </li>
             </ul>
           </div>
 
