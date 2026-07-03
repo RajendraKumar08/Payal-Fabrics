@@ -32,25 +32,8 @@ function generateUid() {
     : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
 
-function dedupeCartItems(items: CartItem[]) {
-  const merged: CartItem[] = [];
-
-  for (const item of items) {
-    // For fabric items we want to keep separate entries (allow multiple meter selections)
-    if (item.category && String(item.category).toLowerCase() === "fabric") {
-      merged.push({ ...item });
-      continue;
-    }
-
-    const existing = merged.find((m) => m.id === item.id && !(m.category && String(m.category).toLowerCase() === "fabric"));
-    if (existing) {
-      existing.quantity = existing.quantity + item.quantity;
-    } else {
-      merged.push({ ...item });
-    }
-  }
-
-  return merged;
+function normalizeCartItems(items: CartItem[]) {
+  return items.map((item) => ({ ...item }));
 }
 
 function readCartStorage(): CartItem[] {
@@ -62,7 +45,7 @@ function readCartStorage(): CartItem[] {
     const parsed = JSON.parse(raw) as CartItem[];
     if (!Array.isArray(parsed)) return [];
 
-    const items = parsed
+    return parsed
       .filter((item) => item && typeof item === "object" && typeof item.id === "string")
       .map((item) => ({
         id: String(item.id),
@@ -75,8 +58,6 @@ function readCartStorage(): CartItem[] {
         uid: String(item.uid || generateUid()),
       }))
       .filter((item) => item.quantity > 0);
-
-    return dedupeCartItems(items);
   } catch {
     return [];
   }
@@ -84,7 +65,7 @@ function readCartStorage(): CartItem[] {
 
 function writeCartStorage(items: CartItem[]) {
   if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(dedupeCartItems(items)));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(normalizeCartItems(items)));
 }
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
@@ -139,7 +120,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!isInitialized) return;
 
-    const normalizedItems = dedupeCartItems(items);
+    const normalizedItems = normalizeCartItems(items);
     writeCartStorage(normalizedItems);
 
     // Try to persist to server; ignore failures (user not authenticated)
@@ -162,21 +143,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     const quantityToAdd = Number(product.quantity) || 1;
 
     setItems((current) => {
-      // If product is fabric, always add a new entry so different meter selections remain separate
-      if (product.category && String(product.category).toLowerCase() === "fabric") {
-        return [...current, { ...product, quantity: quantityToAdd, uid: generateUid() }];
-      }
-
-      const existingIndex = current.findIndex((item) => item.id === product.id);
-      if (existingIndex !== -1) {
-        const updated = [...current];
-        updated[existingIndex] = {
-          ...updated[existingIndex],
-          quantity: updated[existingIndex].quantity + quantityToAdd,
-        };
-        return updated;
-      }
-
       return [...current, { ...product, quantity: quantityToAdd, uid: generateUid() }];
     });
   };
