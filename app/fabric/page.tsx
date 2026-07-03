@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Playfair_Display } from 'next/font/google'
 import Footer from '@/app/components/footer'
+import { prisma } from '@/prisma-db'
 
 const playfair = Playfair_Display({
     subsets: ['latin'],
@@ -10,13 +11,9 @@ const playfair = Playfair_Display({
 });
 
 export default async function Fabrics() {
-    const res = await fetch(`${process.env.PUBLIC_BASE_URL}/api/getallitems?category=Fabric`, {
-        method: 'GET'
+    const fabrics = await prisma.product.findMany({
+        where: { category: { equals: 'Fabric', mode: 'insensitive' } },
     });
-    if (!res.ok) {
-        throw new Error("Failed to fetch fabrics");
-    }
-    const fabrics = await res.json();
 
     return (
         <main className="min-h-screen bg-[#faf6f0] text-black">

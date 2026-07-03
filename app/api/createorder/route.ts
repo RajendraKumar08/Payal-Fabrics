@@ -7,57 +7,49 @@ export async function POST(req: NextRequest) {
     const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
     const keySecret = process.env.RAZORPAY_SECRET_ID;
 
-    // ======distance calculation function======
+    // ======distance calculation helper======
+    const getCoordinates = async (pincode: string) => {
+        if (!process.env.OPENCAGE_API_KEY) {
+            throw new Error("OpenCage API key is not configured.");
+        }
+
+        const response = await fetch(
+            `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(`${pincode}, India`)}&key=${process.env.OPENCAGE_API_KEY}&limit=1`
+        );
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch coordinates.");
+        }
+
+        const data = await response.json();
+        if (!data.results || data.results.length === 0) {
+            throw new Error("No coordinates found for the provided pincode.");
+        }
+
+        return {
+            lat: data.results[0].geometry.lat,
+            lng: data.results[0].geometry.lng,
+        };
+    };
+
     const findddistance = async (pincode1: string, pincode2: string): Promise<number> => {
-        // Implement your logic to find the distance between two pincodes
-        // For demonstration, let's return a dummy value
-        const publicurl = process.env.PUBLIC_BASE_URL;
-        const res1 = await fetch(`${publicurl}/api/findcoordinates`, {
-            method: "POST",
-            body: JSON.stringify({ pincode: pincode1 }),
-            headers: {
-                "Content-Type": "application/json",
-            }
-        });
-        console.log("res1 in distance calculator", res1);
-        if (!res1) {
-            return 0;
-        }
-        const res2 = await fetch(`${publicurl}/api/findcoordinates`, {
-            method: "POST",
-            body: JSON.stringify({ pincode: pincode2 }),
-            headers: {
-                "Content-Type": "application/json",
-            }
-        });
-        console.log("res2 in distance calculator", res2);
-        if (!res2) {
-            return 0;
-        }
-        const data1 = await res1.json();
-        const data2 = await res2.json();
+        const from = await getCoordinates(pincode1);
+        const to = await getCoordinates(pincode2);
 
-        const lat1 = data1.lat;
-        const lng1 = data1.lng;
-        const lat2 = data2.lat;
-        const lng2 = data2.lng;
-
-        const R = 6371; // Earth radius in km
-
-        const dLat = (lat2 - lat1) * Math.PI / 180;
-        const dLon = (lng2 - lng1) * Math.PI / 180;
+        const toRadians = (deg: number) => (deg * Math.PI) / 180;
+        const R = 6371;
+        const dLat = toRadians(to.lat - from.lat);
+        const dLon = toRadians(to.lng - from.lng);
 
         const a =
             Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(lat1 * Math.PI / 180) *
-            Math.cos(lat2 * Math.PI / 180) *
+            Math.cos(toRadians(from.lat)) *
+            Math.cos(toRadians(to.lat)) *
             Math.sin(dLon / 2) * Math.sin(dLon / 2);
 
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
         return R * c;
-
-    }
+    };
 
     if (!keyId || !keySecret) {
         return NextResponse.json(
