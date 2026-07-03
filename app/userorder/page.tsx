@@ -2,7 +2,6 @@
 import { redirect } from 'next/navigation';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { prisma } from '@/prisma-db';
-import { NextResponse } from 'next/server';
 // import { useState } from 'react';
 import OrdersClient from '../OrdersClient/page';
 
@@ -14,7 +13,7 @@ export default async function UserOrderPage() {
     if (!user) redirect('/login');
 
     const dbUser = await prisma.user.findUnique({ where: { kindeId: user.id } });
-    if (!dbUser) return NextResponse.json({ message: 'User not found' }, { status: 404 });
+    if (!dbUser) redirect('/login');
 
     const orders = await prisma.order.findMany({
         where: { userId: dbUser.id },
