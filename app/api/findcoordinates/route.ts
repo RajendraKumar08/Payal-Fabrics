@@ -1,11 +1,20 @@
-import { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
-export async function POST(req: NextRequest) {
-    const { pincode } = await req.json();
+import { NextRequest, NextResponse } from "next/server";
 
-    try {
+export async function POST(req: NextRequest) {
+  const body = await req.json();
+  const pincode = String(body.pincode || "").trim();
+
+  if (!pincode) {
+    return NextResponse.json({ message: "Pincode is required." }, { status: 400 });
+  }
+
+  if (!process.env.OPENCAGE_API_KEY) {
+    return NextResponse.json({ message: "OpenCage API key is not configured." }, { status: 500 });
+  }
+
+  try {
     const res = await fetch(
-      `https://api.opencagedata.com/geocode/v1/json?q=${pincode},India&key=${process.env.OPENCAGE_API_KEY}&limit=1`
+      `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(`${pincode}, India`)}&key=${process.env.OPENCAGE_API_KEY}&limit=1`
     );
 
     const data = await res.json();
@@ -14,18 +23,20 @@ export async function POST(req: NextRequest) {
     console.log("coordinates data", data);
 
     if (!data.results || data.results.length === 0) {
-      throw new Error("No coordinates found");
-      
+      return NextResponse.json({ message: "No coordinates found for the provided pincode." }, { status: 404 });
     }
 
-    console.log("Geometry response : ",data.results[0].geometry);
+    console.log("Geometry response : ", data.results[0].geometry);
 
     return NextResponse.json({
       lat: data.results[0].geometry.lat,
       lng: data.results[0].geometry.lng,
     });
   } catch (error) {
-    console.log(error);
-    return null;
+    console.error(error);
+    return NextResponse.json(
+      { message: "Unable to fetch coordinates. Please try again later." },
+      { status: 500 }
+    );
   }
 }
