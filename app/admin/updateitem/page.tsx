@@ -195,8 +195,8 @@ const UpdateItemPage = () => {
                                         <label className="text-xs font-bold text-gray-500 uppercase tracking-wider" htmlFor="category">Category</label>
                                         <select id="category" name="category" className={inputClass} defaultValue={selected.category} required>
                                             <option value="" disabled>Select Category</option>
-                                            <option value="dress material">Dress Material</option>
                                             <option value="Fabric">Fabric</option>
+                                            <option value="dress material">Dress Material</option>
                                         </select>
                                     </div>
 
