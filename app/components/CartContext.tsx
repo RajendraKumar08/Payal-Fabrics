@@ -81,21 +81,20 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         if (res.ok) {
           const data = await res.json();
           if (Array.isArray(data.cart)) {
-            const serverCart = dedupeCartItems(
-              data.cart.map((it: unknown) => {
-                const item = it as Record<string, unknown>;
-                return {
-                  id: String(item.id),
-                  name: String(item.name ?? ""),
-                  price: Number(item.price) || 0,
-                  image: String(item.image ?? ""),
-                  stock: Number(item.stock) || 0,
-                  category: String(item.category ?? ""),
-                  quantity: Number(item.quantity) || 1,
-                  uid: generateUid(),
-                };
-              })
-            );
+            const serverCart = data.cart.map((it: unknown) => {
+  const item = it as Record<string, unknown>;
+
+  return {
+    id: String(item.id),
+    name: String(item.name ?? ""),
+    price: Number(item.price) || 0,
+    image: String(item.image ?? ""),
+    stock: Number(item.stock) || 0,
+    category: String(item.category ?? ""),
+    quantity: Number(item.quantity) || 1,
+    uid: generateUid(),
+  };
+});
 
             if (serverCart.length > 0) {
               setItems(serverCart);
