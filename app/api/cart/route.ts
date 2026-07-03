@@ -23,7 +23,7 @@ export async function GET() {
     },
   });
 
-  const cart = dbUser?.cartItems.map((item) => ({
+  const cart = dbUser?.cartItems.map((item : any) => ({
     id: item.productId,
     name: item.product.name,
     price: item.product.price,
