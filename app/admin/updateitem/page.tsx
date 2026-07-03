@@ -196,7 +196,7 @@ const UpdateItemPage = () => {
                                         <select id="category" name="category" className={inputClass} defaultValue={selected.category} required>
                                             <option value="" disabled>Select Category</option>
                                             <option value="dress material">Dress Material</option>
-                                            <option value="fabrics">Fabric</option>
+                                            <option value="Fabric">Fabric</option>
                                         </select>
                                     </div>
 
