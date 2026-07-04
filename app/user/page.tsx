@@ -32,6 +32,7 @@ const UserPage = async () => {
   const firstName = user?.given_name || "—";
   const lastName = user?.family_name || "—";
   const emailVerifiedText = user?.email_verified ? "Verified" : "Not verified";
+  const role = dbUser?.role;
 
   if (!user) {
     return (
@@ -88,7 +89,7 @@ const UserPage = async () => {
                       className="w-36 h-36 object-cover"
                     />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-slate-100 text-4xl font-semibold text-slate-700">
+                    <div className="flex mt-2 h-full w-full items-center justify-center bg-slate-100 text-4xl font-semibold text-slate-700">
                       {fullName.charAt(0)}
                     </div>
                   )}
@@ -96,6 +97,11 @@ const UserPage = async () => {
                 <div>
                   <p className="text-2xl font-semibold text-slate-900">{fullName}</p>
                   <p className="mt-2 text-sm text-slate-600">{user.email || "No email provided"}</p>
+                  {role === "ADMIN" && (
+                    <button>
+                      <Link className="inline-flex w-full sm:w-auto items-center justify-center rounded-3xl bg-slate-900/95 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800" href={'/admin'}>Admin</Link>
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -138,6 +144,7 @@ const UserPage = async () => {
                   <ProfileField label="Email" value={user.email || "—"} />
                   <ProfileField label="Full Name" value={fullName} />
                   <ProfileField label="Picture" value={user.picture ? "Available" : "Not available"} />
+                  
                 </div>
               </div>
 

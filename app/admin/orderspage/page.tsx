@@ -117,6 +117,37 @@ const OrdersInAdmin = () => {
 
     return (
         <main className="min-h-screen bg-gradient-to-br from-purple-50 to-slate-50 px-6 py-12">
+
+            <div className="max-w-3xl mx-auto p-6 bg-white rounded-2xl shadow-md mt-8 text-pink-500">
+                <h1 className="text-2xl font-bold mb-6 text-center text-pink-500">
+                    Pickup Options Information
+                </h1>
+
+                <div className="space-y-4">
+                    <div className="p-4 rounded-xl bg-gray-50 border-l-4">
+                        <h2 className="text-lg font-semibold">HOME</h2>
+                        <p className="text-gray-600">
+                            <strong>HOME</strong> when the order will be delivered to the customer’s home address through Shiprocket. Shiprocket courier partner will pick up the order and deliver it directly to the customer.
+                        </p>
+                    </div>
+
+                    <div className="p-4 rounded-xl bg-gray-50 border-l-4 ">
+                        <h2 className="text-lg font-semibold">WAREHOUSE</h2>
+                        <p className="text-gray-600">
+                            <strong>WAREHOUSE</strong> when the customer will personally visit the warehouse/shop to collect their order. No delivery service is required in this option.
+                        </p>
+                    </div>
+
+                    <div className="p-4 rounded-xl bg-gray-50 border-l-4 ">
+                        <h2 className="text-lg font-semibold">PAYALFABRIC</h2>
+                        <p className="text-gray-600">
+                            <strong>PAYALFABRIC</strong> when the customer is within 20 km distance and delivery can be handled by the Payal Fabrics team. A team member will personally deliver the order to the customer’s home.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
             <div className="mx-auto max-w-6xl">
                 {/* Header */}
                 <div className="mb-8">
@@ -235,9 +266,9 @@ const OrdersInAdmin = () => {
                                             </div>
                                             <div>
                                                 <p className="text-xs text-slate-500 uppercase tracking-wide mb-1">
-                                                    Pickup Option
+                                                    Delivery Option
                                                 </p>
-                                                 <p className="text-xs font-mono text-slate-700 truncate">
+                                                <p className="text-xs font-mono text-slate-700 truncate">
                                                     {order.pickOption}
                                                 </p>
                                             </div>

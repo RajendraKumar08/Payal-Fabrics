@@ -53,6 +53,7 @@ async function get_shiprocket_token() {
 
   const data = await response.json();
 
+
   console.log("ShipRocket Auth Response:", data);
 
   if (!response.ok) {
@@ -137,7 +138,7 @@ export async function POST(req: NextRequest) {
 
       order_items: orderData.items.map(
         (item: OrderItem, index: number) => ({
-          name: item.name,
+          name: item.name + " " + item.quantity + " meter",
 
           sku: getUniqueSku(item, index),
 

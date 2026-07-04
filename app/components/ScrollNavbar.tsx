@@ -54,13 +54,12 @@ const ScrollNavbar = ({ authenticated, user, alexBrushClass, josefinSansClass, p
 
   return (
     <nav
-      className={`sticky top-0 z-[80] text-white transform-gpu transition duration-500 ease-out ${
-        isScrolled
+      className={`sticky top-0 z-[80] text-white transform-gpu transition duration-500 ease-out ${isScrolled
           ? "bg-black shadow-2xl shadow-black/40"
           : isHome
             ? "bg-black lg:bg-transparent shadow-none"
             : "bg-black shadow-none"
-      }`}
+        }`}
     >
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 flex items-center justify-between">
         {/* Logo */}
@@ -78,7 +77,7 @@ const ScrollNavbar = ({ authenticated, user, alexBrushClass, josefinSansClass, p
               Home
             </Link>
           </li>
-         
+
           <li>
             <Link href="/fabric" className="relative text-white/90 hover:text-white transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 hover:after:w-full">
               Fabrics
@@ -95,18 +94,18 @@ const ScrollNavbar = ({ authenticated, user, alexBrushClass, josefinSansClass, p
             </Link>
           </li>
           <li>
-             <Link href="/search" className="relative text-white/90 hover:text-white transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 hover:after:w-full flex items-center gap-1.5">
-               <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-               </svg>
-               <span>Search</span>
-             </Link>
-           </li>
-           <li>
-             <Link href="/contact" className="relative text-white/90 hover:text-white transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 hover:after:w-full">
-               Contact
-             </Link>
-           </li>
+            <Link href="/search" className="relative text-white/90 hover:text-white transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 hover:after:w-full flex items-center gap-1.5">
+              <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <span>Search</span>
+            </Link>
+          </li>
+          <li>
+            <Link href="/contact" className="relative text-white/90 hover:text-white transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-white after:transition-all after:duration-300 hover:after:w-full">
+              Contact
+            </Link>
+          </li>
         </ul>
 
         {/* Desktop Auth & Actions */}
@@ -135,6 +134,7 @@ const ScrollNavbar = ({ authenticated, user, alexBrushClass, josefinSansClass, p
                   {user?.given_name || user?.email}
                 </Link>
               </li>
+
               <li>
                 <LogoutLink className="px-4 py-1.5 rounded-full border border-white/30 text-white/90 hover:bg-white/10 transition-colors duration-200 text-sm font-medium">
                   Logout
@@ -152,12 +152,14 @@ const ScrollNavbar = ({ authenticated, user, alexBrushClass, josefinSansClass, p
               💬 WhatsApp Karein
             </a>
           </li>
+          
+
         </ul>
 
         {/* Mobile Controls & Hamburger */}
         <div className="flex lg:hidden items-center gap-4">
           <CartBadge />
-          
+
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="text-white hover:text-white/80 focus:outline-none p-1.5 rounded-md hover:bg-white/10 transition-colors relative z-[110]"
@@ -183,7 +185,7 @@ const ScrollNavbar = ({ authenticated, user, alexBrushClass, josefinSansClass, p
           className="fixed inset-0 bg-black/70 backdrop-blur-sm"
           onClick={() => setIsMenuOpen(false)}
         />
-        
+
         {/* Slide-out Drawer Panel */}
         <div className={`fixed top-0 right-0 w-full max-w-[290px] h-fit bg-[#140b10] text-white shadow-2xl flex flex-col z-[101] border-l border-b border-pink-900/20 rounded-bl-3xl transition-transform duration-300 ease-in-out ${isMenuOpen ? "translate-x-0" : "translate-x-full"}`}>
           {/* Header inside drawer */}
@@ -239,7 +241,7 @@ const ScrollNavbar = ({ authenticated, user, alexBrushClass, josefinSansClass, p
                 </li>
               </ul>
             </div>
-            
+
             <div className="border-t border-pink-950/30 pt-6">
               <p className="text-[9px] font-bold text-pink-200/50 uppercase tracking-[0.2em] mb-4">Customer Care</p>
               <a href="https://wa.me/919898976916?text=Hello%20I%20want%20to%20know%20more"
