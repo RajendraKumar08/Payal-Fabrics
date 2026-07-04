@@ -225,6 +225,22 @@ const OrdersInAdmin = () => {
                                                     {order.razorpayPaymentId || 'N/A'}
                                                 </p>
                                             </div>
+                                            <div>
+                                                <p className="text-xs text-slate-500 uppercase tracking-wide mb-1">
+                                                    Customer Name
+                                                </p>
+                                                <p className="text-xs font-mono text-slate-700 truncate">
+                                                    {order.orderedBy}
+                                                </p>
+                                            </div>
+                                            <div>
+                                                <p className="text-xs text-slate-500 uppercase tracking-wide mb-1">
+                                                    Pickup Option
+                                                </p>
+                                                 <p className="text-xs font-mono text-slate-700 truncate">
+                                                    {order.pickOption}
+                                                </p>
+                                            </div>
                                         </div>
 
                                         {/* Additional Info */}
@@ -238,7 +254,7 @@ const OrdersInAdmin = () => {
                                                     : 'bg-green-600 text-white hover:bg-green-700'} ${orderstatusloading && !isOrderShipped(order) ? 'bg-yellow-500 cursor-wait hover:bg-yellow-500' : ''}`}
                                             >
                                                 {
-                                                    isOrderShipped(order) ? 'Already Shipped' : (orderstatusloading ? "Wait..." : "Mark as Shipped")
+                                                    isOrderShipped(order) ? 'Already Shipped' : (orderstatusloading ? "Wait..." : "Mark as Delivered")
                                                 }
                                             </button>
                                         </div>
