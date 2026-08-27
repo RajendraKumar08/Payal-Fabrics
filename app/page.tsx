@@ -20,6 +20,9 @@ const Homepage = async () => {
     where: {
       highlight: true,
     },
+    orderBy: {
+      updatedAt: 'desc',
+    },
     take: 6,
   });
   const displayedHighlights = Array.isArray(highlights) ? highlights.slice(0, 6) : [];

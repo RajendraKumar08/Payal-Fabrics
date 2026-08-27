@@ -10,6 +10,7 @@ const OrdersInAdmin = () => {
     const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
     const [shiprocketResponse, setShiprocketResponse] = useState<any>(null);
     const [orderstatusloading, setOrderStatusLoading] = useState(false);
+    const [filterTab, setFilterTab] = useState<'PENDING' | 'SHIPPED'>('PENDING');
 
     useEffect(() => {
         const fetch_orders = async () => {
@@ -65,6 +66,11 @@ const OrdersInAdmin = () => {
     };
 
     const isOrderShipped = (order: any) => order?.status?.toString().toUpperCase() === 'SHIPPED';
+
+    const displayedOrders = orders.filter((order) => {
+        const isShipped = isOrderShipped(order);
+        return filterTab === 'SHIPPED' ? isShipped : !isShipped;
+    });
 
     const handleshipbtn = async () => {
         if (!expandedOrderId) {
@@ -166,8 +172,24 @@ const OrdersInAdmin = () => {
                     </div>
                 )}
 
+                {/* Tabs */}
+                <div className="flex border-b border-slate-200 mb-6">
+                    <button
+                        onClick={() => setFilterTab('PENDING')}
+                        className={`py-3 px-6 text-sm font-semibold border-b-2 transition-colors ${filterTab === 'PENDING' ? 'border-purple-600 text-purple-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
+                    >
+                        Pending Orders
+                    </button>
+                    <button
+                        onClick={() => setFilterTab('SHIPPED')}
+                        className={`py-3 px-6 text-sm font-semibold border-b-2 transition-colors ${filterTab === 'SHIPPED' ? 'border-purple-600 text-purple-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
+                    >
+                        Shipped Orders
+                    </button>
+                </div>
+
                 {/* Orders List */}
-                {orders.length === 0 ? (
+                {displayedOrders.length === 0 ? (
                     <div className="rounded-xl border-2 border-dashed border-slate-300 bg-white p-12 text-center">
                         <p className="text-xl text-slate-600 mb-2">📦 No orders found</p>
                         <p className="text-slate-500">Orders will appear here once customers place them.</p>
@@ -175,9 +197,9 @@ const OrdersInAdmin = () => {
                 ) : (
                     <div className="space-y-4">
                         <div className="text-sm text-slate-600 mb-4">
-                            Showing {orders.length} order{orders.length !== 1 ? 's' : ''}
+                            Showing {displayedOrders.length} order{displayedOrders.length !== 1 ? 's' : ''}
                         </div>
-                        {orders.map((order: any) => (
+                        {displayedOrders.map((order: any) => (
                             <div
                                 key={order.id}
                                 className="rounded-lg border border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow"

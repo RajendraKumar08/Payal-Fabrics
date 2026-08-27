@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
     if (pickupOption === "home" && distanceinkm > 20) {
         amount += 100 * 100;
         couriersoption = "HOME";
-    } else if (pickupOption === "Warehouse") {
+    } else if (pickupOption === "warehouse") {
         couriersoption = "WAREHOUSE";
     } else if (pickupOption === "home" && distanceinkm <= 20) {
         couriersoption = "PAYALFABRICS";

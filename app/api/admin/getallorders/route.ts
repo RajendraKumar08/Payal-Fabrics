@@ -5,6 +5,8 @@ import { error } from "console";
 
 
 
+
+
 export async function GET(){
     const {getUser} = getKindeServerSession();
     const user = await getUser();
@@ -21,8 +23,12 @@ export async function GET(){
         return NextResponse.json({message: "Unauthorized"}, {status: 401});
     }
     try{
-        const response = await prisma.order.findMany()
-        
+        const response = await prisma.order.findMany({
+            orderBy: {
+                updatedAt: 'desc'
+            }
+        });
+        console.log("Responses in gerallorder page", response);
         return NextResponse.json(response);
     }
     catch(error){

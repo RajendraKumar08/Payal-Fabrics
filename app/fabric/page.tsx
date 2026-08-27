@@ -13,6 +13,7 @@ const playfair = Playfair_Display({
 export default async function Fabrics() {
     const fabrics = await prisma.product.findMany({
         where: { category: { equals: 'Fabric', mode: 'insensitive' } },
+        orderBy: { createdAt: 'desc' },
     });
 
     return (
